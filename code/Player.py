@@ -1,5 +1,7 @@
+from Headquarter import Headquarter
+
 
 class Player:
-    def __init__(self, n):
+    def __init__(self):
         self.army = list()
-        self.headquarter = self.Headquarter()
+        self.hq = Headquarter(hp=20, x=None, y=None)

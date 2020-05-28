@@ -1,6 +1,6 @@
 
 class Headquarter:
-    def __init__(self, x, y, hp):
+    def __init__(self, hp, x, y):
         self.hp = hp
         self.x = x
         self.y = y

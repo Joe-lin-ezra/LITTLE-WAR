@@ -5,5 +5,6 @@ class Army:
         self.hp = hp
         self.atk = atk
         self.atkRange = atkRange
+        self.vision = vision
         self.x = x
         self.y = y

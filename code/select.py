@@ -1,5 +1,7 @@
 import sqlite3
 import json
+from Player import Player
+from Army import Army
 
 
 # get 3 max rank, and userself rank
@@ -8,16 +10,16 @@ def selectRank(id):
     connection = sqlite3.connect("Gamedb.db")
     c = connection.cursor()
     c.execute("SELECT * FROM Player ORDER BY Win_times DESC")
-    for i in range(3):
-        j = c.fetchone()
-        dic.update({j[0]: {j[1]: j[2]}})
+    for i in range(1, 4):
+        row = c.fetchone()
+        dic.update({i: [row[0], row[1], row[2]]})
     c.execute("SELECT * FROM Player WHERE Player_ID = %d" % id)
-    tmp = c.fetchone()
-    dic.update({tmp[0]: {tmp[1]: tmp[2]}})
+    row = c.fetchone()
+    dic.update({"4": [row[0], row[1], row[2]]})
     return json.dumps(dic)
 
 
-#
+# get map information
 def selectMap(id):
     # dictionary to return
     dic = dict()
@@ -28,8 +30,7 @@ def selectMap(id):
     # get map size
     c.execute("SELECT T_size FROM Map WHERE Map_ID = %s" % id)
     size = c.fetchone()[0]
-    size = size.strip('()')
-    size = size.split(',')
+    size = size.strip('()').split(',')
     for i in range(len(size)):
         size[i] = int(size[i])
     dic.update({'x': size[0], 'y': size[1]})
@@ -37,8 +38,7 @@ def selectMap(id):
     # get Player1 HQ
     c.execute("SELECT Player1_HQ FROM Map WHERE Map_ID = %s" % id)
     HQ = c.fetchone()[0]
-    HQ = HQ.strip('()')
-    HQ = HQ.split(',')
+    HQ = HQ.strip('()').split(',')
     for i in range(len(HQ)):
         HQ[i] = int(HQ[i])
     dic.update({'Player1_HQ': {'x': HQ[0],'y': HQ[1]}})
@@ -46,8 +46,7 @@ def selectMap(id):
     # get Player2 HQ
     c.execute("SELECT Player2_HQ FROM Map WHERE Map_ID = %s" % id)
     HQ = c.fetchone()[0]
-    HQ = HQ.strip('()')
-    HQ = HQ.split(',')
+    HQ = HQ.strip('()').split(',')
     for i in range(len(HQ)):
         HQ[i] = int(HQ[i])
     dic.update({'Player2_HQ': {'x': HQ[0], 'y': HQ[1]}})
@@ -56,8 +55,7 @@ def selectMap(id):
     area = c.fetchone()[0]
     area = area.split(')(')
     for i in range(len(area)):
-        area[i] = area[i].strip('()')
-        area[i] = area[i].split(',')
+        area[i] = area[i].strip('()').split(',')
     for i in range(len(area)):
         for j in range(len(area[i])):
             area[i][j] = int(area[i][j])
@@ -68,21 +66,82 @@ def selectMap(id):
     area = c.fetchone()[0]
     area = area.split(')(')
     for i in range(len(area)):
-        area[i] = area[i].strip('()')
-        area[i] = area[i].split(',')
+        area[i] = area[i].strip('()').split(',')
     for i in range(len(area)):
         for j in range(len(area[i])):
             area[i][j] = int(area[i][j])
     dic.update({'Player2_Area': {'x1': area[0][0], 'y1': area[0][1], 'x2': area[1][0], 'y2': area[1][1]}})
     del area
+    # get water coordinate
     c.execute("SELECT Water FROM Map WHERE Map_ID = %s" % id)
-    for i, j in dic.items():
-        print(i, ':', j)
+    water = c.fetchone()[0]
+    water = water.split(')(')
+    for i in range(len(water)):
+        water[i] = water[i].strip(')(').split(',')
+        for j in range(len(water[i])):
+            water[i][j] = int(water[i][j])
+    dic.update({'water': water})
+    del water
+    # get mountain coordinate
+    c.execute("SELECT Mountain FROM Map WHERE Map_ID = %s" % id)
+    mountain = c.fetchone()[0]
+    mountain = mountain.split(')(')
+    for i in range(len(mountain)):
+        mountain[i] = mountain[i].strip(')(').split(',')
+        for j in range(len(mountain[i])):
+            mountain[i][j] = int(mountain[i][j])
+    dic.update({'mountain': mountain})
+    del mountain
+
+    # for i, j in dic.items():
+    #     print(i, ':', j)
+
+    return json.dumps(dic)
+
+
+# get deploy
+def selectDeploy(id):
+    dic = dict()
+    connection = sqlite3.connect("Gamedb.db")
+    c = connection.cursor()
+
+    c.execute("SELECT Player1_Unit FROM Deploy WHERE ID = %s" % id)
+    unit = c.fetchone()[0]
+    unit = unit.split(')(')
+    for i in range(len(unit)):
+        unit[i] = unit[i].strip('()').split(',')
+        for j in range(len(unit[i])):
+            unit[i][j] = int(unit[i][j])
+    counter = 0
+    for i in range(len(unit)):
+        for j in range(unit[i][1]):
+            c.execute("SELECT Type, Movement, Range, Ammo, Fuel, Vision FROM Land_Unit WHERE ArmyID = %d" % unit[i][0])
+            tmp = c.fetchone()
+            dic.update({counter: {'type': tmp[0], 'movement': tmp[1], 'range': tmp[2], 'ammo': tmp[3],
+                        'fuel': tmp[4], 'vision': tmp[5]}})
+            counter += 1
+
+    return json.dumps(dic)
+    # print(tmp, len(tmp))
+    # for j in range(unit[i][1]):
+    #     army = Army(type=tmp[0], hp=20, atk=None, atkRange=tmp[2], vision=tmp[5],x=None, y=None)
+    #     player1.army.append(army)
+
+    # for i in range(len(player1.army)):
+    #     print(player1.army[i].type, player1.army[i].hp, player1.army[i].atk,
+    #     player1.army[i].atkRange, player1.army[i].vision, player1.army[i].x, player1.army[i].y)
+
+
 
 def main():
-    selectMap(1)
-
+    # print(selectRank(1))
+    # map = selectMap(1)
+    # map = json.loads(map)
+    # for i, j in map.items():
+    #     print(i, ':', j)
+    selectDeploy(1)
+    pass
 
 
 if __name__ == '__main__':
-    main();
+    main()
