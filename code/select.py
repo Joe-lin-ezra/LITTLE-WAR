@@ -147,7 +147,7 @@ def constructPlayer(datas):
                                  x=None,
                                  y=None))
         # ** search datas and give hq (x,y)
-        Player.hq = Headquarter(hp=20, x=, y=)
+        Player.hq = Headquarter(hp=20, x=0, y=0)##我隨便打數字喔，因為跑不動 by DannisMa
 
 
 

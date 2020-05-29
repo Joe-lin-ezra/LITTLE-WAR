@@ -12,8 +12,8 @@ gameDisplay = pygame.display.set_mode((display_width, display_height))
 
 pygame.display.set_caption('Tanks')
 
-with open("UserRecords_Sample.json") as f:
-  data = json.loads(f.read())
+##with open("../Json/UserRecords_Sample.json") as f:
+  ##data = json.loads(f.read())
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -453,7 +453,7 @@ class MySprite(pygame.sprite.Sprite):
     def __init__(self):
         super(MySprite, self).__init__()
         # my_group = pygame.sprite.Group(self)
-        self.images = [pygame.image.load(img) for img in glob.glob("*.png")]
+        self.images = [pygame.image.load(img) for img in glob.glob("../img/loading-*.png")]
         self.index = 0
         self.rect = pygame.Rect( 3,-50, 150, 198)
 

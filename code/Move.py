@@ -9,7 +9,7 @@ def countRange(armyX,armyY,distanceX,distanceY):
        range = math.ceil(range.real)
        return range
 
-def move(player = Player(),i,x,y):##x y 是要過去的座標
+def move(player = Player(),i,x,y):## x y 是要過去的座標
        if (1<= player.army[i].type <=10):##合法兵種
               range = countRange(player.army[i].x, player.army[i].y, x, y)
        else:##錯誤軍種
