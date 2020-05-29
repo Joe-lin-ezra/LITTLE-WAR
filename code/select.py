@@ -2,6 +2,7 @@ import sqlite3
 import json
 from Player import Player
 from Army import Army
+from Headquarter import Headquarter
 
 
 # get 3 max rank, and userself rank
@@ -33,7 +34,7 @@ def selectMap(id):
     size = size.strip('()').split(',')
     for i in range(len(size)):
         size[i] = int(size[i])
-    dic.update({'x': size[0], 'y': size[1]})
+    dic.update({'sizeX': size[0], 'sizeY': size[1]})
     del size
     # get Player1 HQ
     c.execute("SELECT Player1_HQ FROM Map WHERE Map_ID = %s" % id)
@@ -131,6 +132,41 @@ def selectDeploy(id):
     #     print(player1.army[i].type, player1.army[i].hp, player1.army[i].atk,
     #     player1.army[i].atkRange, player1.army[i].vision, player1.army[i].x, player1.army[i].y)
 
+def constructPlayer(datas):
+    datas = json.loads(datas)
+    # print(datas['0'])
+    player1 = Player()
+    for i in range(len(datas)):
+        index = str(i)
+        player1.army.append(Army(type=datas[index]['type'],
+                                 hp=10,
+                                 movement=datas[index]['movement'],
+                                 atk=1,
+                                 atkRange=datas[index]['range'],
+                                 vision=datas[index]['vision'],
+                                 x=None,
+                                 y=None))
+        # ** search datas and give hq (x,y)
+        Player.hq = Headquarter(hp=20, x=, y=)
+
+
+
+def constructMap(datas):
+    datas = json.loads(datas)
+    global map
+    map = list()
+    for i in range(datas['sizeX']):
+        map.append([])
+        for j in range(datas['sizeY']):
+            map[i].append(0)
+
+    water = datas['water']
+    for i in range(len(water)):
+        map[ water[i][0] ][ water[i][1] ] = 1
+
+    mountain = datas['mountain']
+    for i in range(len(mountain)):
+        map[ mountain[i][0] ][ mountain[i][1] ] = 2
 
 
 def main():
@@ -139,7 +175,8 @@ def main():
     # map = json.loads(map)
     # for i, j in map.items():
     #     print(i, ':', j)
-    selectDeploy(1)
+    constructPlayer(selectDeploy(1))
+    # constructMap(selectMap(1))
     pass
 
 
