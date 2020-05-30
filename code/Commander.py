@@ -2,10 +2,31 @@ import CommandList
 import Move
 import Set
 import ATK
+
+##test
+import select
+import Player
+import Army
+import Headquarter
+import Constructer ##by Dan
+
+player1 = Player.Player()
+player2 = Player.Player()
+army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=4)
+player1.army.append(army)
+army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=5,y=5)
+player2.army.append(army)
+
+player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
+player2.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
+if (player1.army[0].moved == 0):
+    print("A")
+##test
+
+
 ##指令判斷
 def inputCommand(player,player2,ForS,command):##輸入指令
     while True:
-        # command = input("請輸入指令\n")##讀取指令
         comList = command.split()##字串切割，切割成list
         comList[0] = comList[0].upper()
         if(comList[0] == "MOVE"):
@@ -27,5 +48,6 @@ def inputCommand(player,player2,ForS,command):##輸入指令
         else:
             print("指令輸入錯誤")
         # print(comList[0])
-
-# inputCommand()
+while True:
+    command = input("請輸入指令\n")##讀取指令
+    inputCommand(player1,player2,1,command)

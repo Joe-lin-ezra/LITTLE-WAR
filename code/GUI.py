@@ -8,6 +8,9 @@ import sqlite3
 import numpy as np
 from network import Network
 import pygame_textinput
+import Player ##by Dan
+import Constructer ##by Dan
+import Commander ##by Dan
 
 pygame.init()
 
@@ -15,6 +18,9 @@ display_width = 1024
 display_height = 768
 n = Network()
 # player = 0
+
+player1 = Constructer.constructPlayer(select.selectDeploy(1)) ##生成自己玩家物件
+player2 = Constructer.constructPlayer(select.selectDeploy(2)) ##生成對方玩家物件
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 
