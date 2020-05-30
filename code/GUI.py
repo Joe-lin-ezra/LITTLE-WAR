@@ -15,8 +15,24 @@ gameDisplay = pygame.display.set_mode((display_width, display_height))
 
 pygame.display.set_caption('Tanks')
 
-##with open("../Json/UserRecords_Sample.json") as f:
-  ##data = json.loads(f.read())
+Json = {
+  "array": [
+    {
+      "ID": "",
+      "Name": "",
+      "win": ""
+    }
+  ]
+}
+try :
+    with open("../Json/0.json") as f:
+        data = json.loads(f.read())
+except :
+    with open("../Json/Test.json" , 'w') as file :
+        data = json.dumps(Json)
+        file.write(data)
+    with open("../Json/Test.json") as f :
+        data = json.loads(f.read())
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -300,47 +316,33 @@ def game_newgame():
 def Map(gameDisplay):
     gameDisplay.fill((255,255,000))
 
-    x1 = 137
-    pygame.draw.rect(gameDisplay,green,(x1,165,100,100)) #x, y, width, height
-    pygame.draw.rect(gameDisplay, green,(x1,265,100,100))
-    pygame.draw.rect(gameDisplay, light_gray,(x1,365,100,100))
-    pygame.draw.rect(gameDisplay, green,(x1,465,100,100))
+    map = select.selectMap(1)
+    map = select.constructMap(map)
+    # map -> color
+    # 0 - green (normal)
+    # 1 - blue (water)
+    # 2 - brown (mountain)
+    # print(map[1][0])
+    # print(len(map[1]))
 
-    x2 = 237
-    pygame.draw.rect(gameDisplay, brown,(x2,165,100,100))
-    pygame.draw.rect(gameDisplay, green,(x2,265,100,100))
-    pygame.draw.rect(gameDisplay, light_gray,(x2,365,100,100))
-    pygame.draw.rect(gameDisplay, green,(x2,465,100,100))
+    x=137
+    y=200
+    row = len(map)
+    col = print(len(map))  #row y,x
+    i = 0
 
-    x3 = 337
-    pygame.draw.rect(gameDisplay, light_gray,(x3,165,100,100))
-    pygame.draw.rect(gameDisplay, light_gray,(x3,265,100,100))
-    pygame.draw.rect(gameDisplay, light_gray,(x3,365,100,100))
-    pygame.draw.rect(gameDisplay, green,(x3,465,100,100))
+    while row:
+        if(map[i][1] == 0):
+            Color = light_green
+        elif(map[i][1] == 1):
+            Color = blue
+        elif(map[i][1] == 2):
+            Color = brown
+        pygame.draw.rect(gameDisplay,Color,(x,y,40,40))
+        x += 40
+        row -= 1
+        i += 1
 
-    x4 = 437
-    pygame.draw.rect(gameDisplay, light_gray,(x4,165,100,100))
-    pygame.draw.rect(gameDisplay, green,(x4,265,100,100))
-    pygame.draw.rect(gameDisplay, brown,(x4,365,100,100))
-    pygame.draw.rect(gameDisplay, green,(x4,465,100,100))
-
-    x5 = 537
-    pygame.draw.rect(gameDisplay, light_gray,(x5,165,100,100))
-    pygame.draw.rect(gameDisplay, light_gray,(x5,265,100,100))
-    pygame.draw.rect(gameDisplay, light_gray,(x5,365,100,100))
-    pygame.draw.rect(gameDisplay, green,(x5,465,100,100))
-
-    x6 = 637
-    pygame.draw.rect(gameDisplay, green,(x6,165,100,100))
-    pygame.draw.rect(gameDisplay, green,(x6,265,100,100))
-    pygame.draw.rect(gameDisplay, light_gray,(x6,365,100,100))
-    pygame.draw.rect(gameDisplay, green,(x6,465,100,100))
-
-    x7 = 737
-    pygame.draw.rect(gameDisplay, green,(x7,165,100,100))
-    pygame.draw.rect(gameDisplay, green,(x7,265,100,100))
-    pygame.draw.rect(gameDisplay, light_gray,(x7,365,100,100))
-    pygame.draw.rect(gameDisplay, green,(x7,465,100,100))
     pygame.display.update()
 
 
@@ -566,4 +568,4 @@ def gameLoop():
 
 # map.close()
 
-# game_newgame()
+game_newgame()

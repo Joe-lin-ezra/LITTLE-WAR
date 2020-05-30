@@ -1,6 +1,19 @@
 {
   "array": [
-    {"ID" : "P0001" , "Name":"Chin","win":4},
-    {"ID" : "P0002" , "Name":"Zen","win":3},
-    {"ID" : "P0003" , "Name":"Moon","win":6},
+    {
+      "ID": "P0001",
+      "Name": "Chin",
+      "win": 4
+    },
+    {
+      "ID": "P0002",
+      "Name": "Zen",
+      "win": 3
+    },
+    {
+      "ID": "P0003",
+      "Name": "Moon",
+      "win": 6
+    }
   ]
+}
