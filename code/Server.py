@@ -5,6 +5,7 @@ import pickle
 import json
 from GameRoom import Room
 from threading import Thread
+import select
 
 d = {'message': "done"}
 room = {'room': 1, 'turn': 1}
@@ -21,10 +22,9 @@ class Server():
             self.s.bind((IP, PORT))
         except socket.error as e:
             print(e)
-        self.s.listen(2)
+        self.s.listen(100)
     
     def loop(self, client, addr):
-        self.userlist.append(client)
         while True:
             try:
 
@@ -32,6 +32,7 @@ class Server():
 
                 if data:
                     payload = json.loads(data)
+                    print(payload)
             except socket.error:
                 break
             if payload['event'] == RequestType.joinevent:
@@ -64,22 +65,17 @@ class Server():
                                 payload['place'] = u
                                 self.userlist[u].send(bytes(json.dumps(payload).encode('utf-8')))
                                 self.userlist[payload['place']].send(bytes(json.dumps(d).encode('utf-8')))
-            if payload['event'] == RequestType.sync:
-                for r in self.rooms:
-                    if(payload['place'] in r.user):
-                        for u in r.user:
-                            if u == payload['place']:
-                                continue
-                            else:
-                                payload['place'] = u
-                                self.userlist[u].send(bytes(json.dumps(payload).encode('utf-8')))
+            if payload['event'] == RequestType.rank:
+                pay = select.selectRank(payload['ID'])
+                print(pay)
+                self.userlist[payload['player']].send(bytes(json.dumps(pay).encode('utf-8')))
 
     def update(self):
         client, addr = self.s.accept()
         print("Connected to:", addr)
 
         self.userlist.append(client)
-        data = {'place': (len(self.userlist)), 'message': 0}
+        data = {'player': (len(self.userlist)), 'message': 0}
         self.userlist[(len(self.userlist)-1)].send(bytes(json.dumps(data).encode('utf-8')))
         start_new_thread(self.loop, (client, str(addr[1])))
 
