@@ -10,7 +10,7 @@ map = select.constructMap(datas)
 areas = json.loads(datas)["Player1_Area"]  ##生成區域要判斷
 print(type(areas["x1"]))
 
-def set(player ,ForS,i,x,y):##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標
+def set(player ,ForS,i,x,y):##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標 ForS first or second
     if ForS == 1:##是player1
         areas = json.loads(datas)["Player1_Area"]  ##生成區域要判斷
     elif ForS == 2:##是player2
