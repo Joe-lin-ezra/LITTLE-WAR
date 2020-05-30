@@ -162,11 +162,11 @@ def constructMap(datas):
 
     water = datas['water']
     for i in range(len(water)):
-        map[ water[i][0] ][ water[i][1] ] = 1
+        map[ water[i][0]-1 ][ water[i][1]-1 ] = 1
 
     mountain = datas['mountain']
     for i in range(len(mountain)):
-        map[ mountain[i][0] ][ mountain[i][1] ] = 2
+        map[ mountain[i][0]-1 ][ mountain[i][1]-1 ] = 2
     return map
 
 def main():

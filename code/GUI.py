@@ -299,18 +299,23 @@ def game_setting():
 
 def game_newgame():
     run = True
-
+    text_box = TextBox(600, 70, 110, 650, callback=callback)
     while run:
         for event in pygame.event.get():
             # print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            elif event.type == pygame.KEYDOWN:          # if button == 0 (玩家回合)
+                text_box.key_down(event)
 
         gameDisplay.fill(yellow)
         Map(gameDisplay)
-        Title = largefont.render("Game Start!",True,gray)
-        gameDisplay.blit(Title,(270,30))
+
+        Title = largefont.render("Game Start!",True,gray)           # 會改! Your Turn ~
+        gameDisplay.blit(Title,(270,10))
+        text_box.draw(gameDisplay)
+        SendBtn = button("GO",770,650,150,70,blue,light_blue,action="EndTurn")
         pygame.display.update()
         clock.tick(15)
 
@@ -329,8 +334,8 @@ def Map(gameDisplay):
     # 1 - blue (water)
     # 2 - brown (mountain)
 
-    x=137
-    y=150
+    x=200
+    y=100
 
     xAis = len(map)         # 15
     yAis = len(map[1])      # 10
@@ -345,7 +350,7 @@ def Map(gameDisplay):
             break
         xIndex = 0
         y += 40
-        x = 137
+        x = 200
         while xAis:
             if (xIndex == xAis):
                 break
@@ -355,7 +360,7 @@ def Map(gameDisplay):
                 Color = blue
             elif (map[xIndex][yIndex] == 2):
                 Color = brown
-            pygame.draw.rect(gameDisplay, Color, (x, y, 40, 40))
+            pygame.draw.rect(gameDisplay, Color, (x, y, 50, 50))
             x += 40
             # y+=40
             xIndex += 1
