@@ -1,6 +1,4 @@
 import Player
-import Army
-import select
 import cmath
 import math
 
