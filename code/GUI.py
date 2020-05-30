@@ -3,6 +3,9 @@ import time
 import random
 import glob
 import json
+import select
+import sqlite3
+
 pygame.init()
 
 display_width = 1024
@@ -198,49 +201,59 @@ def game_rank():
         Win_txt = medfont.render("Win",True,black)
         gameDisplay.blit(Win_txt,(867,40))
 
-        FirstW = data['array'][0]['win']  # the number of win
-        FirstI = data['array'][0]['ID']  # the winner ID
-        FirstN = ''
-        for k in data['array']:
-            if FirstW < k['win']:
-                FirstW = k['win']
-                FirstI = k['ID']
-                FirstN = k['Name']
+        rank = json.loads(select.selectRank(2))#player ID
 
-        # print("First : ", FirstI,FirstW)
-        FI = medfont.render(FirstI,True,black)
-        gameDisplay.blit(FI,(87,140))
+        FirstI = rank["1"][0]
+        FI = medfont.render(str(FirstI), True, black)
+        gameDisplay.blit(FI, (87, 140))
 
-        FN = medfont.render(FirstN,True,black)
-        gameDisplay.blit(FN,(427,140))
+        FirstN = rank["1"][1]
+        FN = medfont.render(FirstN, True, black)
+        gameDisplay.blit(FN, (427, 140))
 
-        FW = medfont.render(str(FirstW),True,black)
-        gameDisplay.blit(FW,(870,140))
-        SecondW = 0
-        SecondI = ''
-        SecondN = ''
-        for k in data['array']:
-            if k['win'] == FirstW:
-                if k['ID'] != FirstI:
-                    SecondI = k['ID']
-                    SecondW = k['win']
-                    SecondN = k['Name']
-            elif SecondW < k['win']:
-                SecondW = k['win']
-                SecondI = k['ID']
-                SecondN = k['Name']
+        FirstW = rank["1"][2]
+        FW = medfont.render(str(FirstW), True, black)
+        gameDisplay.blit(FW, (870, 140))
 
-        # print("Second : ",SecondI,SecondW)
 
-        SI = medfont.render(SecondI,True,black)
-        gameDisplay.blit(SI,(87,240))
+        SecondI = rank["2"][0]
+        SI = medfont.render(str(SecondI), True, black)
+        gameDisplay.blit(SI, (87, 240))
 
-        SN = medfont.render(SecondN,True,black)
-        gameDisplay.blit(SN,(427,240))
+        SecondN = rank['2'][1]
+        SN = medfont.render(SecondN, True, black)
+        gameDisplay.blit(SN, (427, 240))
 
-        SW = medfont.render(str(SecondW),True,black)
-        gameDisplay.blit(SW,(870,240))
+        SecondW = rank['2'][2]
+        SW = medfont.render(str(SecondW), True, black)
+        gameDisplay.blit(SW, (870, 240))
 
+        ThirdI = rank['3'][0]
+        TI = medfont.render(str(ThirdI),True,black)
+        gameDisplay.blit(TI,(87,340))
+
+        ThirdN = rank['3'][1]
+        TN = medfont.render(ThirdN,True,black)
+        gameDisplay.blit(TN,(427,340))
+
+        ThirdW = rank['3'][2]
+        TW = medfont.render(str(ThirdW),True,black)
+        gameDisplay.blit(TW,(870,340))
+
+        line = medfont.render('------------------------------------------',True,black)
+        gameDisplay.blit(line,(70,440))
+
+        SelfI = rank['4'][0]
+        SI = medfont.render(str(SelfI),True,black)
+        gameDisplay.blit(SI,(87,540))
+
+        SelfN = rank['4'][1]
+        SN = medfont.render(SelfN,True,black)
+        gameDisplay.blit(SN,(427,540))
+
+        SelfW = rank['4'][2]
+        SW = medfont.render(str(SelfW),True,black)
+        gameDisplay.blit(SW,(870,540))
 
         button("Home", 60, 650, 157, 70, blue, light_blue, action="Home",btncolor=white)
 
@@ -437,11 +450,6 @@ def game_intro():
                     quit()
 
         gameDisplay.fill(yellow)
-        message_to_screen("Welcome to Tanks!", green, -100, size="large")
-        message_to_screen("The objective is to shoot and destroy", black, -30)
-        message_to_screen("the enemy tank before they destroy you.", black, 10)
-        message_to_screen("The more enemies you destroy, the harder they get.", black, 50)
-        # message_to_screen("Press C to play, P to pause or Q to quit",black,180)
 
         button("--- Click Here To Start ---", 0, 0, 1024, 768, yellow, yellow, action="LoadingPage")
 
@@ -550,7 +558,9 @@ def gameLoop():
 
 # game_user()
 
-game_intro()
+# game_intro()
+
+# game_rank()
 
 # gameLoop()
 
