@@ -5,7 +5,9 @@ import glob
 import json
 import select
 import sqlite3
+import numpy as np
 from network import Network
+import pygame_textinput
 
 pygame.init()
 
@@ -28,13 +30,13 @@ Json = {
   ]
 }
 try :
-    with open("Json/0.json") as f:
+    with open("../Json/0.json") as f:
         data = json.loads(f.read())
 except :
-    with open("Json/Test.json" , 'w') as file :
+    with open("../Json/Test.json" , 'w') as file :
         data = json.dumps(Json)
         file.write(data)
-    with open("Json/Test.json") as f :
+    with open("../Json/Test.json") as f :
         data = json.loads(f.read())
 
 white = (255, 255, 255)
@@ -93,87 +95,203 @@ def message_to_screen(msg, color, x_displace = 0,y_displace=0, size="small"):
     gameDisplay.blit(textSurf, textRect)
 
 
-class TextBox:
-    def __init__(self, w, h, x, y, font=None, callback=None):
+class TextInput:
+
+    """
+    This class lets the user input a piece of text, e.g. a name or a message.
+    This class let's the user input a short, one-lines piece of text at a blinking cursor
+    that can be moved using the arrow-keys. Delete, home and end work as well.
+    """
+    def __init__(
+            self,
+            initial_string="> ",
+            font_family="",
+            font_size=35,
+            antialias=True,        #反鋸齒
+            text_color=(255,255,255),
+            cursor_color=(0,0,1),   #游標color
+            repeat_keys_initial_ms=400,  #感應字元輸入速度
+            repeat_keys_interval_ms=35,
+            max_string_length=-1):
         """
-        :param w:文本框宽度
-        :param h:文本框高度
-        :param x:文本框坐标
-        :param y:文本框坐标
-        :param font:文本框中使用的字体
-        :param callback:在文本框按下回车键之后的回调函数
+        :param initial_string: Initial text to be displayed
+        :param font_family: name or list of names for font (see pygame.font.match_font for precise format)
+        :param font_size:  Size of font in pixels
+        :param antialias: Determines if antialias is applied to font (uses more processing power)
+        :param text_color: Color of text (duh)
+        :param cursor_color: Color of cursor
+        :param repeat_keys_initial_ms: Time in ms before keys are repeated when held
+        :param repeat_keys_interval_ms: Interval between key press repetition when held
+        :param max_string_length: Allowed length of text
         """
-        self.width = w
-        self.height = h
-        self.x = x
-        self.y = y
-        self.text = ""  # 文本框内容
-        self.callback = callback
-        # 创建
-        self.__surface = pygame.Surface((w, h))
-        self.__surface.fill((79,93,92))     #change textbox color
-        # 如果font为None,那么效果可能不太好，建议传入font，更好调节
-        if font is None:
-            self.font = pygame.font.Font(None, 60)  # 使用pygame自带字体
-        else:
-            self.font = font
 
-    def draw(self, dest_surf):
-        text_surf = self.font.render(self.text, True, (249,246,231))        # Change Font color
-        dest_surf.blit(self.__surface, (self.x, self.y))
-        dest_surf.blit(text_surf, (self.x, self.y + (self.height - text_surf.get_height())),
-                       (0, 0, self.width, self.height))
+        # Text related vars:
+        self.antialias = antialias
+        self.text_color = text_color
+        self.font_size = font_size
+        self.max_string_length = max_string_length
+        self.input_string = initial_string  # Inputted text
 
-    def key_down(self, event):
-        unicode = event.unicode
-        key = event.key
+        if not os.path.isfile(font_family):
+            font_family = pygame.font.match_font(font_family)
 
-        # 退位键
-        if key == 8:
-            self.text = self.text[:-1]
-            return
+        self.font_object = pygame.font.Font(font_family, font_size)
 
-        # 切换大小写键
-        if key == 301:
-            return
+        # Text-surface will be created during the first update call:
+        self.surface = pygame.Surface((1, 1))
+        self.surface.set_alpha(0)
 
-        # 回车键
-        if key == 13:
-            if self.callback is not None:
-                self.callback(self.text)
-            return
+        # Vars to make keydowns repeat after user pressed a key for some time:
+        self.keyrepeat_counters = {}  # {event.key: (counter_int, event.unicode)} (look for "***")
+        self.keyrepeat_intial_interval_ms = repeat_keys_initial_ms
+        self.keyrepeat_interval_ms = repeat_keys_interval_ms
 
-        if unicode != "":
-            char = unicode
-        else:
-            char = chr(key)
+        # Things cursor:
+        self.cursor_surface = pygame.Surface((int(self.font_size / 20 + 1), self.font_size))    # cursor 的width and height
+        self.cursor_surface.fill(cursor_color)
+        self.cursor_position = len(initial_string)  # Inside text
+        self.cursor_visible = True  # Switches every self.cursor_switch_ms ms
+        self.cursor_switch_ms = 500  # /|\
+        self.cursor_ms_counter = 0
 
-        self.text += char
+        self.clock = pygame.time.Clock()
 
+    def update(self, events):
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                self.cursor_visible = True  # So the user sees where he writes
 
-def callback(key):
-    print(key)
-    # To send the username to DB
+                # If none exist, create counter for that key:
+                if event.key not in self.keyrepeat_counters:
+                    self.keyrepeat_counters[event.key] = [0, event.unicode]
+
+                if event.key == pl.K_BACKSPACE:
+                    self.input_string = (
+                        self.input_string[:max(self.cursor_position - 1, 0)]
+                        + self.input_string[self.cursor_position:]
+                    )
+
+                    # Subtract one from cursor_pos, but do not go below zero:
+                    self.cursor_position = max(self.cursor_position - 1, 0)
+                elif event.key == pl.K_DELETE:
+                    self.input_string = (
+                        self.input_string[:self.cursor_position]
+                        + self.input_string[self.cursor_position + 1:]
+                    )
+
+                elif event.key == pl.K_RETURN:
+                    if self.callback is not None:
+                        print(self.input_string[2:])
+                        self.input_string = "> "
+                    return
+
+                elif event.key == pl.K_RIGHT:
+                    # Add one to cursor_pos, but do not exceed len(input_string)
+                    self.cursor_position = min(self.cursor_position + 1, len(self.input_string))
+
+                elif event.key == pl.K_LEFT:
+                    # Subtract one from cursor_pos, but do not go below zero:
+                    self.cursor_position = max(self.cursor_position - 1, 0)
+
+                elif event.key == pl.K_END:
+                    self.cursor_position = len(self.input_string)
+
+                elif event.key == pl.K_HOME:
+                    self.cursor_position = 0
+
+                elif len(self.input_string) < self.max_string_length or self.max_string_length == -1:
+                    # If no special key is pressed, add unicode of key to input_string
+                    self.input_string = (
+                        self.input_string[:self.cursor_position]
+                        + event.unicode
+                        + self.input_string[self.cursor_position:]
+                    )
+                    self.cursor_position += len(event.unicode)  # Some are empty, e.g. K_UP
+
+            elif event.type == pl.KEYUP:
+                # *** Because KEYUP doesn't include event.unicode, this dict is stored in such a weird way
+                if event.key in self.keyrepeat_counters:
+                    del self.keyrepeat_counters[event.key]
+            # print(self.cursor_position)
+        # Update key counters:
+        for key in self.keyrepeat_counters:
+            self.keyrepeat_counters[key][0] += self.clock.get_time()  # Update clock
+
+            # Generate new key events if enough time has passed:
+            if self.keyrepeat_counters[key][0] >= self.keyrepeat_intial_interval_ms:
+                self.keyrepeat_counters[key][0] = (
+                    self.keyrepeat_intial_interval_ms
+                    - self.keyrepeat_interval_ms
+                )
+
+                event_key, event_unicode = key, self.keyrepeat_counters[key][1]
+                pygame.event.post(pygame.event.Event(pl.KEYDOWN, key=event_key, unicode=event_unicode))
+
+        # Re-render text surface:
+        self.surface = self.font_object.render(self.input_string, self.antialias, self.text_color)
+
+        # Update self.cursor_visible
+        self.cursor_ms_counter += self.clock.get_time()
+        if self.cursor_ms_counter >= self.cursor_switch_ms:
+            self.cursor_ms_counter %= self.cursor_switch_ms
+            self.cursor_visible = not self.cursor_visible
+
+        if self.cursor_visible:
+            cursor_y_pos = self.font_object.size(self.input_string[:self.cursor_position])[0]
+            # Without this, the cursor is invisible when self.cursor_position > 0:
+            if self.cursor_position > 0:
+                cursor_y_pos -= self.cursor_surface.get_width()
+            self.surface.blit(self.cursor_surface, (cursor_y_pos, 0))
+
+        self.clock.tick()
+        return False
+
+    def get_surface(self):
+        return self.surface
+
+    def get_text(self):
+        return self.input_string
+
+    def get_cursor_position(self):
+        return self.cursor_position
+
+    def set_text_color(self, color):
+        self.text_color = color
+
+    def set_cursor_color(self, color):
+        self.cursor_surface.fill(color)
+
+    def clear_text(self):
+        self.input_string = ""
+        self.cursor_position = 0
+
+    def callback(key):
+        print(key)
 
 def game_user():
     run = True
-    text_box = TextBox(350, 50, 500, 100, callback=callback)
+    textinput = pygame_textinput.TextInput()
+
+    # text_box = TextBox(350, 50, 500, 100, callback=callback)
     while run:
+        events = pygame.event.get()
+
         for event in pygame.event.get():
             # print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            elif event.type == pygame.KEYDOWN:
-                text_box.key_down(event)
 
         gameDisplay.fill(yellow)
         # button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
         # button("Setting", 450, 250, 180, 70, red, light_red, action="Setting")
-        Text = smallfont.render("Please Input your Username : ",0,black)
-        gameDisplay.blit(Text,(150,100))
+        Text = smallfont.render("Please Input your Username : ", 0, black)
+        gameDisplay.blit(Text, (150, 100))
 
-        text_box.draw(gameDisplay)
+        # text_box.draw(gameDisplay)
+        if textinput.update(events):
+            print(textinput.get_text())
+        gameDisplay.blit(textinput.get_surface(), (100, 620))
 
         # Select Character
         button("GO!", 87, 579, 180, 70, blue, light_blue, action="Home")
@@ -200,89 +318,90 @@ def game_home():
         clock.tick(15)
 
 def game_rank():
-    run = True
-    d = {'event': 4, 'player': 0, 'ID': 1}
-    d['player'] = player-1
-    a = n.send(d)
-    # print(a,123)
-    b = n.recv()
-    # print(b)
-    while run:
-        for event in pygame.event.get():
-            # print(event)
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+    def game_rank():
+        run = True
+        # d = {'event': 4, 'player': 0, 'ID': 1}
+        # d['player'] = player-1
+        # a = n.send(d)
+        # print(a,123)
+        # b = n.recv()
+        # print(b)
+        while run:
+            for event in pygame.event.get():
+                # print(event)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
 
-        gameDisplay.fill(yellow)
+            gameDisplay.fill(yellow)
 
-        ID_txt = medfont.render("ID",True,black)
-        gameDisplay.blit(ID_txt,(87,40))
+            ID_txt = medfont.render("ID", True, black)
+            gameDisplay.blit(ID_txt, (87, 40))
 
-        Name_txt = medfont.render("Name",True,black)
-        gameDisplay.blit(Name_txt,(427,40))
+            Name_txt = medfont.render("Name", True, black)
+            gameDisplay.blit(Name_txt, (427, 40))
 
-        Win_txt = medfont.render("Win",True,black)
-        gameDisplay.blit(Win_txt,(867,40))
+            Win_txt = medfont.render("Win", True, black)
+            gameDisplay.blit(Win_txt, (867, 40))
 
-        # rank = json.loads(select.selectRank(2))#player ID
-        rank = json.loads(b)
-        FirstI = rank["1"][0]
-        FI = medfont.render(str(FirstI), True, black)
-        gameDisplay.blit(FI, (87, 140))
+            rank = json.loads(select.selectRank(2))  # player ID
+            # rank = json.loads(b)
 
-        FirstN = rank["1"][1]
-        FN = medfont.render(FirstN, True, black)
-        gameDisplay.blit(FN, (427, 140))
+            FirstI = rank["1"][0]
+            FI = medfont.render(str(FirstI), True, black)
+            gameDisplay.blit(FI, (87, 140))
 
-        FirstW = rank["1"][2]
-        FW = medfont.render(str(FirstW), True, black)
-        gameDisplay.blit(FW, (870, 140))
+            FirstN = rank["1"][1]
+            FN = medfont.render(FirstN, True, black)
+            gameDisplay.blit(FN, (427, 140))
 
+            FirstW = rank["1"][2]
+            FW = medfont.render(str(FirstW), True, black)
+            gameDisplay.blit(FW, (870, 140))
 
-        SecondI = rank["2"][0]
-        SI = medfont.render(str(SecondI), True, black)
-        gameDisplay.blit(SI, (87, 240))
+            SecondI = rank["2"][0]
+            SI = medfont.render(str(SecondI), True, black)
+            gameDisplay.blit(SI, (87, 240))
 
-        SecondN = rank['2'][1]
-        SN = medfont.render(SecondN, True, black)
-        gameDisplay.blit(SN, (427, 240))
+            SecondN = rank['2'][1]
+            SN = medfont.render(SecondN, True, black)
+            gameDisplay.blit(SN, (427, 240))
 
-        SecondW = rank['2'][2]
-        SW = medfont.render(str(SecondW), True, black)
-        gameDisplay.blit(SW, (870, 240))
+            SecondW = rank['2'][2]
+            SW = medfont.render(str(SecondW), True, black)
+            gameDisplay.blit(SW, (870, 240))
 
-        ThirdI = rank['3'][0]
-        TI = medfont.render(str(ThirdI),True,black)
-        gameDisplay.blit(TI,(87,340))
+            ThirdI = rank['3'][0]
+            TI = medfont.render(str(ThirdI), True, black)
+            gameDisplay.blit(TI, (87, 340))
 
-        ThirdN = rank['3'][1]
-        TN = medfont.render(ThirdN,True,black)
-        gameDisplay.blit(TN,(427,340))
+            ThirdN = rank['3'][1]
+            TN = medfont.render(ThirdN, True, black)
+            gameDisplay.blit(TN, (427, 340))
 
-        ThirdW = rank['3'][2]
-        TW = medfont.render(str(ThirdW),True,black)
-        gameDisplay.blit(TW,(870,340))
+            ThirdW = rank['3'][2]
+            TW = medfont.render(str(ThirdW), True, black)
+            gameDisplay.blit(TW, (870, 340))
 
-        line = medfont.render('------------------------------------------',True,black)
-        gameDisplay.blit(line,(70,440))
+            line = medfont.render('------------------------------------------', True, black)
+            gameDisplay.blit(line, (70, 440))
 
-        SelfI = rank['4'][0]
-        SI = medfont.render(str(SelfI),True,black)
-        gameDisplay.blit(SI,(87,540))
+            SelfI = rank['4'][0]
+            SI = medfont.render(str(SelfI), True, black)
+            gameDisplay.blit(SI, (87, 540))
 
-        SelfN = rank['4'][1]
-        SN = medfont.render(SelfN,True,black)
-        gameDisplay.blit(SN,(427,540))
+            SelfN = rank['4'][1]
+            SN = medfont.render(SelfN, True, black)
+            gameDisplay.blit(SN, (427, 540))
 
-        SelfW = rank['4'][2]
-        SW = medfont.render(str(SelfW),True,black)
-        gameDisplay.blit(SW,(870,540))
+            SelfW = rank['4'][2]
+            SW = medfont.render(str(SelfW), True, black)
+            gameDisplay.blit(SW, (870, 540))
 
-        button("Home", 60, 650, 157, 70, blue, light_blue, action="Home",btncolor=white)
+            button("Home", 60, 650, 157, 70, blue, light_blue, action="Home", btncolor=white)
 
-        pygame.display.update()
-        clock.tick(15)
+            pygame.display.update()
+            clock.tick(15)
 
 
 def game_setting():
@@ -306,55 +425,82 @@ def game_setting():
 
 def game_newgame():
     run = True
-    n.send({'event': 1, 'player': (player-1)})
+    # n.send({'event': 1, 'player': (player-1)})
+    textinput = pygame_textinput.TextInput()
+    # text_box = TextBox(600, 70, 110, 650, callback=callback)
     while run:
+        events = pygame.event.get()
+
         for event in pygame.event.get():
             # print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            # elif event.type == pygame.KEYDOWN:  # if button == 0 (玩家回合)
+            #     text_box.key_down(event)
 
         gameDisplay.fill(yellow)
         Map(gameDisplay)
-        Title = largefont.render("Game Start!",True,gray)
-        gameDisplay.blit(Title,(270,30))
+
+        Title = largefont.render("Game Start!", True, gray)  # 會改! Your Turn ~
+        gameDisplay.blit(Title, (270, 10))
+
+        # TextInputBox Create
+        pygame.draw.rect(gameDisplay, black, (80, 600, 650, 150))
+        if textinput.update(events):
+            print(textinput.get_text())
+        gameDisplay.blit(textinput.get_surface(), (100, 620))
+
+        SendBtn = button("GO", 770, 650, 150, 70, blue, light_blue, action="EndTurn")
         pygame.display.update()
         clock.tick(15)
 
 def Map(gameDisplay):
-    gameDisplay.fill((255,255,000))
+    gameDisplay.fill((255, 255, 000))
 
-    n.send({'event': 5, 'player': (player-1)})
-    map = n.recv()
-    print(map)
+    map = select.selectMap(2)
     map = select.constructMap(map)
-    # map = select.selectMap(1)
-    # map = select.constructMap(map)
 
+    # map = np.array(select.constructMap(map))
+    # map = map.transpose()
+
+    # print(map)
     # map -> color
     # 0 - green (normal)
     # 1 - blue (water)
     # 2 - brown (mountain)
-    # print(map[1][0])
-    # print(len(map[1]))
 
-    x=137
-    y=200
-    row = len(map)
-    col = print(len(map))  #row y,x
-    i = 0
+    x = 200
+    y = 100
 
-    while row:
-        if(map[i][1] == 0):
-            Color = light_green
-        elif(map[i][1] == 1):
-            Color = blue
-        elif(map[i][1] == 2):
-            Color = brown
-        pygame.draw.rect(gameDisplay,Color,(x,y,40,40))
-        x += 40
-        row -= 1
-        i += 1
+    xAis = len(map)  # 15
+    yAis = len(map[1])  # 10
+
+    xIndex = 0
+    yIndex = 0
+    # print(map[xIndex])
+    # print(map[xIndex][yIndex])
+
+    while yAis:
+        if (yIndex == yAis):
+            break
+        xIndex = 0
+        y += 40
+        x = 200
+        while xAis:
+            if (xIndex == xAis):
+                break
+            if (map[xIndex][yIndex] == 0):
+                Color = light_green
+            elif (map[xIndex][yIndex] == 1):
+                Color = blue
+            elif (map[xIndex][yIndex] == 2):
+                Color = brown
+            pygame.draw.rect(gameDisplay, Color, (x, y, 50, 50))
+            x += 40
+            # y+=40
+            xIndex += 1
+        yIndex += 1
 
     pygame.display.update()
 
@@ -487,10 +633,10 @@ class MySprite(pygame.sprite.Sprite):
         self.index += 1
 
 def game_loading():
-    a = n.getP()
-    # print(a)
-    global player
-    player = a['player']
+    # a = n.getP()
+    # # print(a)
+    # global player
+    # player = a['player']
     pygame.init()
     my_sprite = MySprite()
     my_group = pygame.sprite.Group(my_sprite)
@@ -577,7 +723,7 @@ def gameLoop():
 
 # game_user()
 
-game_intro()
+# game_intro()
 
 # game_rank()
 
@@ -585,4 +731,4 @@ game_intro()
 
 # map.close()
 
-# game_newgame()
+game_newgame()
