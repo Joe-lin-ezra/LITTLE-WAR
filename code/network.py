@@ -23,18 +23,12 @@ class Network():
             pass
 
     def recv(self):
-        try:
-            data = self.client.recv(2048).decode('utf-8')
-            pay = json.loads(data)
-            return pay
-        except socket.error as e:
-            print(e)
+        data = self.client.recv(2048).decode('utf-8')
+        return data
 
     def send(self, data):
         try:
             self.client.send(bytes(json.dumps(data).encode('utf-8')))
-            data = self.client.recv(2048).decode('utf-8')
-            payload = json.loads(data)
-            return payload
+            return "done"
         except socket.error as e:
             print(e)
