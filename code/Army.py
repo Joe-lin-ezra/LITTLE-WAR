@@ -9,4 +9,5 @@ class Army:
         self.vision = vision
         self.x = x
         self.y = y
-        self.moved = 0 ## 0 還未移動 1 已經移動
+        self.moved = 0 ## 0 尚未移動 1 已經移動
+        self.atked = 0 ## 0 尚未攻擊 1 已經攻擊

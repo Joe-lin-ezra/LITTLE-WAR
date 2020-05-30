@@ -3,6 +3,9 @@ import cmath
 import math
 import select
 import Army
+
+##尚未增加耗油部分
+
 datas = select.selectMap(1)
 map = select.constructMap(datas)
 # for i in range(len(map)):
