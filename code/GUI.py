@@ -5,12 +5,14 @@ import glob
 import json
 import select
 import sqlite3
-import numpy as np
+from network import Network
 
 pygame.init()
 
 display_width = 1024
 display_height = 768
+n = Network()
+# player = 0
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 
@@ -26,13 +28,13 @@ Json = {
   ]
 }
 try :
-    with open("../Json/0.json") as f:
+    with open("Json/0.json") as f:
         data = json.loads(f.read())
 except :
-    with open("../Json/Test.json" , 'w') as file :
+    with open("Json/Test.json" , 'w') as file :
         data = json.dumps(Json)
         file.write(data)
-    with open("../Json/Test.json") as f :
+    with open("Json/Test.json") as f :
         data = json.loads(f.read())
 
 white = (255, 255, 255)
@@ -199,7 +201,12 @@ def game_home():
 
 def game_rank():
     run = True
-
+    d = {'event': 4, 'player': 0, 'ID': 1}
+    d['player'] = player-1
+    a = n.send(d)
+    # print(a,123)
+    b = n.recv()
+    # print(b)
     while run:
         for event in pygame.event.get():
             # print(event)
@@ -218,8 +225,8 @@ def game_rank():
         Win_txt = medfont.render("Win",True,black)
         gameDisplay.blit(Win_txt,(867,40))
 
-        rank = json.loads(select.selectRank(2))#player ID
-
+        # rank = json.loads(select.selectRank(2))#player ID
+        rank = json.loads(b)
         FirstI = rank["1"][0]
         FI = medfont.render(str(FirstI), True, black)
         gameDisplay.blit(FI, (87, 140))
@@ -299,76 +306,55 @@ def game_setting():
 
 def game_newgame():
     run = True
-    text_box = TextBox(600, 70, 110, 650, callback=callback)
+    n.send({'event': 1, 'player': (player-1)})
     while run:
         for event in pygame.event.get():
             # print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            elif event.type == pygame.KEYDOWN:          # if button == 0 (玩家回合)
-                text_box.key_down(event)
 
         gameDisplay.fill(yellow)
         Map(gameDisplay)
-
-        Title = largefont.render("Game Start!",True,gray)           # 會改! Your Turn ~
-        gameDisplay.blit(Title,(270,10))
-        text_box.draw(gameDisplay)
-        SendBtn = button("GO",770,650,150,70,blue,light_blue,action="EndTurn")
+        Title = largefont.render("Game Start!",True,gray)
+        gameDisplay.blit(Title,(270,30))
         pygame.display.update()
         clock.tick(15)
 
 def Map(gameDisplay):
     gameDisplay.fill((255,255,000))
 
-    map = select.selectMap(2)
+    n.send({'event': 5, 'player': (player-1)})
+    map = n.recv()
+    print(map)
     map = select.constructMap(map)
+    # map = select.selectMap(1)
+    # map = select.constructMap(map)
 
-    # map = np.array(select.constructMap(map))
-    # map = map.transpose()
-
-    # print(map)
     # map -> color
     # 0 - green (normal)
     # 1 - blue (water)
     # 2 - brown (mountain)
+    # print(map[1][0])
+    # print(len(map[1]))
 
-    x=200
-    y=100
+    x=137
+    y=200
+    row = len(map)
+    col = print(len(map))  #row y,x
+    i = 0
 
-    xAis = len(map)         # 15
-    yAis = len(map[1])      # 10
-
-    xIndex = 0
-    yIndex = 0
-    # print(map[xIndex])
-    # print(map[xIndex][yIndex])
-
-    while yAis:
-        if(yIndex == yAis):
-            break
-        xIndex = 0
-        y += 40
-        x = 200
-        while xAis:
-            if (xIndex == xAis):
-                break
-            if (map[xIndex][yIndex] == 0):
-                Color = light_green
-            elif (map[xIndex][yIndex] == 1):
-                Color = blue
-            elif (map[xIndex][yIndex] == 2):
-                Color = brown
-            pygame.draw.rect(gameDisplay, Color, (x, y, 50, 50))
-            x += 40
-            # y+=40
-            xIndex += 1
-        yIndex += 1
-
-
-
-
+    while row:
+        if(map[i][1] == 0):
+            Color = light_green
+        elif(map[i][1] == 1):
+            Color = blue
+        elif(map[i][1] == 2):
+            Color = brown
+        pygame.draw.rect(gameDisplay,Color,(x,y,40,40))
+        x += 40
+        row -= 1
+        i += 1
 
     pygame.display.update()
 
@@ -490,7 +476,7 @@ class MySprite(pygame.sprite.Sprite):
     def __init__(self):
         super(MySprite, self).__init__()
         # my_group = pygame.sprite.Group(self)
-        self.images = [pygame.image.load(img) for img in glob.glob("../img/loading-*.png")]
+        self.images = [pygame.image.load(img) for img in glob.glob("img/loading-*.png")]
         self.index = 0
         self.rect = pygame.Rect( 3,-50, 150, 198)
 
@@ -501,6 +487,10 @@ class MySprite(pygame.sprite.Sprite):
         self.index += 1
 
 def game_loading():
+    a = n.getP()
+    # print(a)
+    global player
+    player = a['player']
     pygame.init()
     my_sprite = MySprite()
     my_group = pygame.sprite.Group(my_sprite)
@@ -587,7 +577,7 @@ def gameLoop():
 
 # game_user()
 
-# game_intro()
+game_intro()
 
 # game_rank()
 
@@ -595,4 +585,4 @@ def gameLoop():
 
 # map.close()
 
-game_newgame()
+# game_newgame()

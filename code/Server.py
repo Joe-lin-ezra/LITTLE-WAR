@@ -6,6 +6,7 @@ import json
 from GameRoom import Room
 from threading import Thread
 import select
+import random
 
 d = {'message': "done"}
 room = {'room': 1, 'turn': 1}
@@ -38,24 +39,26 @@ class Server():
             if payload['event'] == RequestType.joinevent:
                 if len(self.rooms) == 0:
                     self.rooms.append(Room())
+                    self.rooms[0].mapId = random.randint(1, 2)
                     room['room'] = 1
                     room['turn'] = 1
-                    self.userlist[payload['place']].send(bytes(json.dumps(room).encode('utf-8')))
+                    self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
                 else:
                     for r in self.rooms:
                         if r.isfull():
                             continue
-                        r.adduser(payload['place'])
+                        r.adduser(payload['player'])
                         room['room'] = 1
                         room['turn'] = 2
-                        self.userlist[payload['place']].send(bytes(json.dumps(room).encode('utf-8')))
+                        self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
                     else:
                         self.rooms.append(Room())
                         room['room'] = len(self.rooms)
+                        self.rooms[len(self.rooms)].mapId = random.randint(1, 2)
                         room['turn'] = 1
-                        self.userlist[payload['place']].send(bytes(json.dumps(room).encode('utf-8')))
+                        self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
 
-            if payload['event'] == RequestType.sync:
+            elif payload['event'] == RequestType.sync:
                 for r in self.rooms:
                     if(payload['place'] in r.user):
                         for u in r.user:
@@ -65,10 +68,19 @@ class Server():
                                 payload['place'] = u
                                 self.userlist[u].send(bytes(json.dumps(payload).encode('utf-8')))
                                 self.userlist[payload['place']].send(bytes(json.dumps(d).encode('utf-8')))
-            if payload['event'] == RequestType.rank:
+            elif payload['event'] == RequestType.rank:
+                # print(payload)
                 pay = select.selectRank(payload['ID'])
-                print(pay)
+                # print(pay)
                 self.userlist[payload['player']].send(bytes(json.dumps(pay).encode('utf-8')))
+            elif payload['event'] == RequestType.map:
+                for r in self.rooms:
+                    if(payload['player'] in r.user):
+                        pay = select.selectMap(r.mapId)
+                        print(pay)
+                        for u in r.user:
+                            if u == payload['player']:
+                                self.userlist[u].send(bytes(json.dumps(pay).encode('utf-8')))
 
     def update(self):
         client, addr = self.s.accept()
