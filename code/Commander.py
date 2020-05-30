@@ -3,9 +3,9 @@ import Move
 import Set
 import ATK
 ##指令判斷
-def inputCommand(player,player2,ForS):##輸入指令
+def inputCommand(player,player2,ForS,command):##輸入指令
     while True:
-        command = input("請輸入指令\n")##讀取指令
+        # command = input("請輸入指令\n")##讀取指令
         comList = command.split()##字串切割，切割成list
         comList[0] = comList[0].upper()
         if(comList[0] == "MOVE"):
