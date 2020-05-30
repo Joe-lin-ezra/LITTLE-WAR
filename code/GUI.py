@@ -5,6 +5,7 @@ import glob
 import json
 import select
 import sqlite3
+import numpy as np
 
 pygame.init()
 
@@ -316,32 +317,53 @@ def game_newgame():
 def Map(gameDisplay):
     gameDisplay.fill((255,255,000))
 
-    map = select.selectMap(1)
+    map = select.selectMap(2)
     map = select.constructMap(map)
+
+    # map = np.array(select.constructMap(map))
+    # map = map.transpose()
+
+    # print(map)
     # map -> color
     # 0 - green (normal)
     # 1 - blue (water)
     # 2 - brown (mountain)
-    # print(map[1][0])
-    # print(len(map[1]))
 
     x=137
-    y=200
-    row = len(map)
-    col = print(len(map))  #row y,x
-    i = 0
+    y=150
 
-    while row:
-        if(map[i][1] == 0):
-            Color = light_green
-        elif(map[i][1] == 1):
-            Color = blue
-        elif(map[i][1] == 2):
-            Color = brown
-        pygame.draw.rect(gameDisplay,Color,(x,y,40,40))
-        x += 40
-        row -= 1
-        i += 1
+    xAis = len(map)         # 15
+    yAis = len(map[1])      # 10
+
+    xIndex = 0
+    yIndex = 0
+    # print(map[xIndex])
+    # print(map[xIndex][yIndex])
+
+    while yAis:
+        if(yIndex == yAis):
+            break
+        xIndex = 0
+        y += 40
+        x = 137
+        while xAis:
+            if (xIndex == xAis):
+                break
+            if (map[xIndex][yIndex] == 0):
+                Color = light_green
+            elif (map[xIndex][yIndex] == 1):
+                Color = blue
+            elif (map[xIndex][yIndex] == 2):
+                Color = brown
+            pygame.draw.rect(gameDisplay, Color, (x, y, 40, 40))
+            x += 40
+            # y+=40
+            xIndex += 1
+        yIndex += 1
+
+
+
+
 
     pygame.display.update()
 

@@ -36,6 +36,21 @@ def selectMap(id):
         size[i] = int(size[i])
     dic.update({'sizeX': size[0], 'sizeY': size[1]})
     del size
+    # get Player1 HQ
+    c.execute("SELECT Player1_HQ FROM Map WHERE Map_ID = %s" % id)
+    HQ = c.fetchone()[0]
+    HQ = HQ.strip('()').split(',')
+    for i in range(len(HQ)):
+        HQ[i] = int(HQ[i])
+    dic.update({'Player1_HQ': {'x': HQ[0],'y': HQ[1]}})
+    del HQ
+    # get Player2 HQ
+    c.execute("SELECT Player2_HQ FROM Map WHERE Map_ID = %s" % id)
+    HQ = c.fetchone()[0]
+    HQ = HQ.strip('()').split(',')
+    for i in range(len(HQ)):
+        HQ[i] = int(HQ[i])
+    dic.update({'Player2_HQ': {'x': HQ[0], 'y': HQ[1]}})
     # get Player1 Area
     c.execute("SELECT Player1_Area FROM Map WHERE Map_ID = %s" % id)
     area = c.fetchone()[0]
@@ -117,8 +132,9 @@ def selectDeploy(id):
     #     print(player1.army[i].type, player1.army[i].hp, player1.army[i].atk,
     #     player1.army[i].atkRange, player1.army[i].vision, player1.army[i].x, player1.army[i].y)
 
-def constructPlayer(datas, ):
+def constructPlayer(datas):
     datas = json.loads(datas)
+    # print(datas['0'])
     player1 = Player()
     for i in range(len(datas)):
         index = str(i)
@@ -131,7 +147,7 @@ def constructPlayer(datas, ):
                                  x=None,
                                  y=None))
         # ** search datas and give hq (x,y)
-        # Player.hq = Headquarter(hp=20, x=, y=)
+        Player.hq = Headquarter(hp=20, x=0, y=0)##我隨便打數字喔，因為跑不動 by DannisMa
 
 
 
@@ -159,10 +175,8 @@ def main():
     # map = json.loads(map)
     # for i, j in map.items():
     #     print(i, ':', j)
-    # constructPlayer(selectDeploy(1))
-    # map = constructMap(selectMap(1))
-    # for i in range(len(map)):
-    #     print('%2d'%i, ':',map[i])
+    constructPlayer(selectDeploy(1))
+    constructMap(selectMap(1))
     pass
 
 
