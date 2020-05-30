@@ -6,11 +6,14 @@ import json
 import select
 import sqlite3
 import numpy as np
+from network import Network
 
 pygame.init()
 
 display_width = 1024
 display_height = 768
+n = Network()
+# player = 0
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 
@@ -199,7 +202,12 @@ def game_home():
 
 def game_rank():
     run = True
-
+    d = {'event': 4, 'player': 0, 'ID': 1}
+    d['player'] = player-1
+    a = n.send(d)
+    # print(a,123)
+    b = n.recv()
+    # print(b)
     while run:
         for event in pygame.event.get():
             # print(event)
@@ -218,8 +226,9 @@ def game_rank():
         Win_txt = medfont.render("Win",True,black)
         gameDisplay.blit(Win_txt,(867,40))
 
-        rank = json.loads(select.selectRank(2))#player ID
-
+        # rank = json.loads(select.selectRank(2))#player ID
+        rank = json.loads(b)
+        
         FirstI = rank["1"][0]
         FI = medfont.render(str(FirstI), True, black)
         gameDisplay.blit(FI, (87, 140))
@@ -501,6 +510,10 @@ class MySprite(pygame.sprite.Sprite):
         self.index += 1
 
 def game_loading():
+    a = n.getP()
+    # print(a)
+    global player
+    player = a['player']
     pygame.init()
     my_sprite = MySprite()
     my_group = pygame.sprite.Group(my_sprite)
