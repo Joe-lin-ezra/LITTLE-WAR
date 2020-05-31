@@ -7,12 +7,11 @@ import select
 import sqlite3
 import numpy as np
 from network import Network
+import pygame.locals as pl
 import pygame_textinput
-import Player ##by Dan
-import Constructer ##by Dan
-# import Commander ##by Dan
-import os.path     #By Chin
-import pygame.locals as pl #By Chin
+import os.path
+
+
 
 pygame.init()
 
@@ -21,54 +20,33 @@ display_height = 768
 n = Network()
 # player = 0
 
-# player1 = Constructer.constructPlayer(select.selectDeploy(1)) ##生成自己玩家物件
-# player2 = Constructer.constructPlayer(select.selectDeploy(2)) ##生成對方玩家物件
-
-##test  - Dan
-import select
-import Player
-import Army
-import Headquarter
-import Constructer ##by Dan
-
-player1 = Player.Player()
-player2 = Player.Player()
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=4)
-player1.army.append(army)
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=5,y=5)
-player2.army.append(army)
-
-player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
-player2.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
-##test-Dan
-
-
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 
 pygame.display.set_caption('Tanks')
 
 Json = {
-  "array": [
-    {
-      "ID": "",
-      "Name": "",
-      "win": ""
-    }
-  ]
+    "array": [
+        {
+            "ID": "",
+            "Name": "",
+            "win": ""
+        }
+    ]
 }
-try :
+
+try:
     with open("../Json/0.json") as f:
         data = json.loads(f.read())
-except :
-    with open("../Json/Test.json" , 'w') as file :
+except:
+    with open("../Json/Test.json", 'w') as file:
         data = json.dumps(Json)
         file.write(data)
-    with open("../Json/Test.json") as f :
+    with open("../Json/Test.json") as f:
         data = json.loads(f.read())
 
 white = (255, 255, 255)
 black = (0, 0, 0)
-yellow = (255,255,000)
+yellow = (255, 255, 000)
 
 blue = (51, 102, 255)
 light_blue = (102, 153, 255)
@@ -92,76 +70,13 @@ largefont = pygame.font.SysFont("comicsansms", 85)
 
 FPS = 3
 
+
 # map = open("map.json",'r')
 
 def score(score):
     text = smallfont.render("Score: " + str(score), True, black)
     gameDisplay.blit(text, [0, 0])
 
-def button(text, x, y, width, height, inactive_color, active_color, action=None, btncolor = black):
-    cur = pygame.mouse.get_pos()
-    print(cur)
-    click = pygame.mouse.get_pressed()
-    if x + width > cur[0] > x and y + height > cur[1] > y:
-        pygame.draw.rect(gameDisplay, active_color, (x, y, width, height))
-        if click[0] == 1 and action != None:
-            if action == "quit":
-                pygame.quit()
-                quit()
-
-            if action == "controls":
-                game_controls()
-
-            if action == "play":
-                gameLoop()
-
-            if action == "main":
-                game_intro()
-
-            if action == "LoadingPage":
-                game_loading()
-
-            if action == "Ranking":
-                game_rank()
-
-            if action == "Home":
-                game_home()
-
-            if action == "Setting":
-                game_setting()
-
-            if action == "NewGame":
-                game_newgame()
-    else:
-        pygame.draw.rect(gameDisplay, inactive_color, (x, y, width, height))
-
-    text_to_button(text, btncolor, x, y, width, height)
-
-def button_draw(Btn):               # Btn stands for button         Use for newgamepage (By Chin)
-    # font = pygame.font.SysFont("comicsansms", 20)
-
-    mouse = pygame.mouse.get_pos()
-
-    if Btn['rect'].collidepoint(mouse):
-        color = Btn['ac']
-    else:
-        color = Btn['ic']
-
-    pygame.draw.rect(gameDisplay, color, Btn['rect'])
-
-    image, rect = text_objects(Btn['msg'],black)
-    rect.center = Btn['rect'].center
-    gameDisplay.blit(image, rect)
-
-def button_check(Btn):          #User for newgame Page (By Chin)
-
-    mouse = pygame.mouse.get_pos()
-    click = pygame.mouse.get_pressed()
-
-    if Btn['rect'].collidepoint(mouse):
-        if click[0] == 1 and Btn['action']:
-            print(Btn['action'])
-            Btn['action']()
 
 def text_objects(text, color, size="small"):
     if size == "small":
@@ -180,14 +95,13 @@ def text_to_button(msg, color, buttonx, buttony, buttonwidth, buttonheight, size
     gameDisplay.blit(textSurf, textRect)
 
 
-def message_to_screen(msg, color, x_displace = 0,y_displace=0, size="small"):
+def message_to_screen(msg, color, x_displace=0, y_displace=0, size="small"):
     textSurf, textRect = text_objects(msg, color, size)
     textRect.center = (int(x_displace / 2), int(display_height / 2) + y_displace)
     gameDisplay.blit(textSurf, textRect)
 
 
 class TextInput:
-
     """
     This class lets the user input a piece of text, e.g. a name or a message.
     This class let's the user input a short, one-lines piece of text at a blinking cursor
@@ -272,7 +186,7 @@ class TextInput:
 
                 elif event.key == pl.K_RETURN:
                     if self.callback is not None:
-                        # print(self.input_string[2:])
+                        print(self.input_string[2:])
                         self.input_string = "> "
                     return
 
@@ -353,11 +267,15 @@ class TextInput:
 
     def clear_text(self):
         self.input_string = "> "
-        self.cursor_position = 0
+        self.cursor_position = 2
 
     def callback(key):
-        1
-        # print(key)
+        print(key)
+
+# def callback(key):
+#     print(key[2:])                      # print 出所輸入的字元(>和空格不會顥示於此)
+#     # To send the username to DB
+
 
 def game_user():
     run = True
@@ -380,16 +298,16 @@ def game_user():
         gameDisplay.blit(Text, (150, 100))
 
         # text_box.draw(gameDisplay)
-        pygame.draw.rect(gameDisplay, gray, (480,90,350,50))
         if textinput.update(events):
             print(textinput.get_text())
-        gameDisplay.blit(textinput.get_surface(), (500, 100))
+        gameDisplay.blit(textinput.get_surface(), (100, 620))
 
         # Select Character
         button("GO!", 87, 579, 180, 70, blue, light_blue, action="Home")
 
         pygame.display.update()
         clock.tick(15)
+
 
 def game_home():
     run = True
@@ -409,95 +327,15 @@ def game_home():
         pygame.display.update()
         clock.tick(15)
 
-# def game_rank():
-#     def game_rank():
-#         run = True
-#         # d = {'event': 4, 'player': 0, 'ID': 1}
-#         # d['player'] = player-1
-#         # a = n.send(d)
-#         # print(a,123)
-#         # b = n.recv()
-#         # print(b)
-#         while run:
-#             for event in pygame.event.get():
-#                 # print(event)
-#                 if event.type == pygame.QUIT:
-#                     pygame.quit()
-#                     quit()
-#
-#             gameDisplay.fill(yellow)
-#
-#             ID_txt = medfont.render("ID", True, black)
-#             gameDisplay.blit(ID_txt, (87, 40))
-#
-#             Name_txt = medfont.render("Name", True, black)
-#             gameDisplay.blit(Name_txt, (427, 40))
-#
-#             Win_txt = medfont.render("Win", True, black)
-#             gameDisplay.blit(Win_txt, (867, 40))
-#
-#             rank = json.loads(select.selectRank(2))  # player ID
-#             # rank = json.loads(b)
-#
-#             FirstI = rank["1"][0]
-#             FI = medfont.render(str(FirstI), True, black)
-#             gameDisplay.blit(FI, (87, 140))
-#
-#             FirstN = rank["1"][1]
-#             FN = medfont.render(FirstN, True, black)
-#             gameDisplay.blit(FN, (427, 140))
-#
-#             FirstW = rank["1"][2]
-#             FW = medfont.render(str(FirstW), True, black)
-#             gameDisplay.blit(FW, (870, 140))
-#
-#             SecondI = rank["2"][0]
-#             SI = medfont.render(str(SecondI), True, black)
-#             gameDisplay.blit(SI, (87, 240))
-#
-#             SecondN = rank['2'][1]
-#             SN = medfont.render(SecondN, True, black)
-#             gameDisplay.blit(SN, (427, 240))
-#
-#             SecondW = rank['2'][2]
-#             SW = medfont.render(str(SecondW), True, black)
-#             gameDisplay.blit(SW, (870, 240))
-#
-#             ThirdI = rank['3'][0]
-#             TI = medfont.render(str(ThirdI), True, black)
-#             gameDisplay.blit(TI, (87, 340))
-#
-#             ThirdN = rank['3'][1]
-#             TN = medfont.render(ThirdN, True, black)
-#             gameDisplay.blit(TN, (427, 340))
-#
-#             ThirdW = rank['3'][2]
-#             TW = medfont.render(str(ThirdW), True, black)
-#             gameDisplay.blit(TW, (870, 340))
-#
-#             line = medfont.render('------------------------------------------', True, black)
-#             gameDisplay.blit(line, (70, 440))
-#
-#             SelfI = rank['4'][0]
-#             SI = medfont.render(str(SelfI), True, black)
-#             gameDisplay.blit(SI, (87, 540))
-#
-#             SelfN = rank['4'][1]
-#             SN = medfont.render(SelfN, True, black)
-#             gameDisplay.blit(SN, (427, 540))
-#
-#             SelfW = rank['4'][2]
-#             SW = medfont.render(str(SelfW), True, black)
-#             gameDisplay.blit(SW, (870, 540))
-#
-#             button("Home", 60, 650, 157, 70, blue, light_blue, action="Home", btncolor=white)
-#
-#             pygame.display.update()
-#             clock.tick(15)
 
 def game_rank():
     run = True
-
+    # d = {'event': 4, 'player': 0, 'ID': 1}
+    # d['player'] = player-1
+    # a = n.send(d)
+    # print(a,123)
+    # b = n.recv()
+    # print(b)
     while run:
         for event in pygame.event.get():
             # print(event)
@@ -507,16 +345,17 @@ def game_rank():
 
         gameDisplay.fill(yellow)
 
-        ID_txt = medfont.render("ID",True,black)
-        gameDisplay.blit(ID_txt,(87,40))
+        ID_txt = medfont.render("ID", True, black)
+        gameDisplay.blit(ID_txt, (87, 40))
 
-        Name_txt = medfont.render("Name",True,black)
-        gameDisplay.blit(Name_txt,(427,40))
+        Name_txt = medfont.render("Name", True, black)
+        gameDisplay.blit(Name_txt, (427, 40))
 
-        Win_txt = medfont.render("Win",True,black)
-        gameDisplay.blit(Win_txt,(867,40))
+        Win_txt = medfont.render("Win", True, black)
+        gameDisplay.blit(Win_txt, (867, 40))
 
-        rank = json.loads(select.selectRank(2))#player ID
+        rank = json.loads(select.selectRank(2))  # player ID
+        # rank = json.loads(b)
 
         FirstI = rank["1"][0]
         FI = medfont.render(str(FirstI), True, black)
@@ -529,7 +368,6 @@ def game_rank():
         FirstW = rank["1"][2]
         FW = medfont.render(str(FirstW), True, black)
         gameDisplay.blit(FW, (870, 140))
-
 
         SecondI = rank["2"][0]
         SI = medfont.render(str(SecondI), True, black)
@@ -544,33 +382,33 @@ def game_rank():
         gameDisplay.blit(SW, (870, 240))
 
         ThirdI = rank['3'][0]
-        TI = medfont.render(str(ThirdI),True,black)
-        gameDisplay.blit(TI,(87,340))
+        TI = medfont.render(str(ThirdI), True, black)
+        gameDisplay.blit(TI, (87, 340))
 
         ThirdN = rank['3'][1]
-        TN = medfont.render(ThirdN,True,black)
-        gameDisplay.blit(TN,(427,340))
+        TN = medfont.render(ThirdN, True, black)
+        gameDisplay.blit(TN, (427, 340))
 
         ThirdW = rank['3'][2]
-        TW = medfont.render(str(ThirdW),True,black)
-        gameDisplay.blit(TW,(870,340))
+        TW = medfont.render(str(ThirdW), True, black)
+        gameDisplay.blit(TW, (870, 340))
 
-        line = medfont.render('------------------------------------------',True,black)
-        gameDisplay.blit(line,(70,440))
+        line = medfont.render('------------------------------------------', True, black)
+        gameDisplay.blit(line, (70, 440))
 
         SelfI = rank['4'][0]
-        SI = medfont.render(str(SelfI),True,black)
-        gameDisplay.blit(SI,(87,540))
+        SI = medfont.render(str(SelfI), True, black)
+        gameDisplay.blit(SI, (87, 540))
 
         SelfN = rank['4'][1]
-        SN = medfont.render(SelfN,True,black)
-        gameDisplay.blit(SN,(427,540))
+        SN = medfont.render(SelfN, True, black)
+        gameDisplay.blit(SN, (427, 540))
 
         SelfW = rank['4'][2]
-        SW = medfont.render(str(SelfW),True,black)
-        gameDisplay.blit(SW,(870,540))
+        SW = medfont.render(str(SelfW), True, black)
+        gameDisplay.blit(SW, (870, 540))
 
-        button("Home", 60, 650, 157, 70, blue, light_blue, action="Home",btncolor=white)
+        button("Home", 60, 650, 157, 70, blue, light_blue, action="Home", btncolor=white)
 
         pygame.display.update()
         clock.tick(15)
@@ -588,16 +426,16 @@ def game_setting():
 
         gameDisplay.fill(yellow)
         # message_to_screen("Change ColorTheme",black,50,50,size="large")
-        Title = largefont.render("Change Color Theme",True,green)
-        gameDisplay.blit(Title,(80,70))
+        Title = largefont.render("Change Color Theme", True, green)
+        gameDisplay.blit(Title, (80, 70))
         button("Home", 87, 650, 180, 70, blue, light_blue, action="Home")
 
         pygame.display.update()
         clock.tick(15)
 
+
 def game_newgame():
     run = True
-    # n.send({'event': 1, 'player': (player-1)})
     textinput = pygame_textinput.TextInput()
     # text_box = TextBox(600, 70, 110, 650, callback=callback)
     while run:
@@ -626,6 +464,7 @@ def game_newgame():
         SendBtn = button("GO", 770, 650, 150, 70, blue, light_blue, action="EndTurn")
         pygame.display.update()
         clock.tick(15)
+
 
 def Map(gameDisplay):
     gameDisplay.fill((255, 255, 000))
@@ -703,6 +542,46 @@ def game_controls():
         clock.tick(15)
 
 
+def button(text, x, y, width, height, inactive_color, active_color, action=None, btncolor=black):
+    cur = pygame.mouse.get_pos()
+    # print(cur)
+    click = pygame.mouse.get_pressed()
+    if x + width > cur[0] > x and y + height > cur[1] > y:
+        pygame.draw.rect(gameDisplay, active_color, (x, y, width, height))
+        if click[0] == 1 and action != None:
+            if action == "quit":
+                pygame.quit()
+                quit()
+
+            if action == "controls":
+                game_controls()
+
+            if action == "play":
+                gameLoop()
+
+            if action == "main":
+                game_intro()
+
+            if action == "LoadingPage":
+                game_loading()
+
+            if action == "Ranking":
+                game_rank()
+
+            if action == "Home":
+                game_home()
+
+            if action == "Setting":
+                game_setting()
+
+            if action == "NewGame":
+                game_newgame()
+    else:
+        pygame.draw.rect(gameDisplay, inactive_color, (x, y, width, height))
+
+    text_to_button(text, btncolor, x, y, width, height)
+
+
 def pause():
     paused = True
     message_to_screen("Paused", black, -100, size="large")
@@ -751,14 +630,13 @@ def game_intro():
         clock.tick(15)
 
 
-
 class MySprite(pygame.sprite.Sprite):
     def __init__(self):
         super(MySprite, self).__init__()
         # my_group = pygame.sprite.Group(self)
         self.images = [pygame.image.load(img) for img in glob.glob("../img/loading-*.png")]
         self.index = 0
-        self.rect = pygame.Rect( 3,-50, 150, 198)
+        self.rect = pygame.Rect(3, -50, 150, 198)
 
     def update(self):
         if self.index >= len(self.images):
@@ -766,9 +644,10 @@ class MySprite(pygame.sprite.Sprite):
         self.image = self.images[self.index]
         self.index += 1
 
+
 def game_loading():
     # a = n.getP()
-    # # print(a)
+    # print(a)
     # global player
     # player = a['player']
     pygame.init()
@@ -867,4 +746,4 @@ def gameLoop():
 
 # map.close()
 
-# game_newgame()
+game_newgame()
