@@ -8,6 +8,9 @@ import sqlite3
 import numpy as np
 from network import Network
 import pygame_textinput
+import os.path
+import pygame.locals as pl
+
 
 pygame.init()
 
@@ -181,7 +184,7 @@ class TextInput:
 
                 elif event.key == pl.K_RETURN:
                     if self.callback is not None:
-                        print(self.input_string[2:])
+                        print(self.input_string[2:])                # get input text
                         self.input_string = "> "
                     return
 
@@ -449,6 +452,7 @@ def game_newgame():
         pygame.draw.rect(gameDisplay, black, (80, 600, 650, 150))
         if textinput.update(events):
             print(textinput.get_text())
+            # print('hi')
         gameDisplay.blit(textinput.get_surface(), (100, 620))
 
         SendBtn = button("GO", 770, 650, 150, 70, blue, light_blue, action="EndTurn")
@@ -533,7 +537,7 @@ def game_controls():
 
 def button(text, x, y, width, height, inactive_color, active_color, action=None, btncolor = black):
     cur = pygame.mouse.get_pos()
-    print(cur)
+    # print(cur)
     click = pygame.mouse.get_pressed()
     if x + width > cur[0] > x and y + height > cur[1] > y:
         pygame.draw.rect(gameDisplay, active_color, (x, y, width, height))
@@ -622,7 +626,7 @@ class MySprite(pygame.sprite.Sprite):
     def __init__(self):
         super(MySprite, self).__init__()
         # my_group = pygame.sprite.Group(self)
-        self.images = [pygame.image.load(img) for img in glob.glob("img/loading-*.png")]
+        self.images = [pygame.image.load(img) for img in glob.glob("img/loading-*.png")]        #生產img
         self.index = 0
         self.rect = pygame.Rect( 3,-50, 150, 198)
 
