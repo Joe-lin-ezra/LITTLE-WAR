@@ -12,7 +12,7 @@ import Player ##by Dan
 import Constructer ##by Dan
 import Commander ##by Dan
 import os.path     #By Chin
-import pygame.locals as pl #By Chin 
+import pygame.locals as pl #By Chin
 
 pygame.init()
 
@@ -630,7 +630,7 @@ class MySprite(pygame.sprite.Sprite):
     def __init__(self):
         super(MySprite, self).__init__()
         # my_group = pygame.sprite.Group(self)
-        self.images = [pygame.image.load(img) for img in glob.glob("img/loading-*.png")]
+        self.images = [pygame.image.load(img) for img in glob.glob("img/loading-*.png")]                #img 顯示方式
         self.index = 0
         self.rect = pygame.Rect( 3,-50, 150, 198)
 
