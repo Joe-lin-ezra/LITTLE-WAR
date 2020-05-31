@@ -497,11 +497,10 @@ def game_home():
 
 def game_rank():
     run = True
-    d = {'event': 4, 'player': 0, 'ID': 1}
-    d['player'] = player-1
-    a = n.send(d)
-    b = n.recv()
-
+    #d = {'event': 4, 'player': 0, 'ID': 1}
+    #d['player'] = player-1
+    #a = n.send(d)
+    #b = n.recv()
     while run:
         for event in pygame.event.get():
             # print(event)
@@ -520,7 +519,7 @@ def game_rank():
         Win_txt = medfont.render("Win",True,black)
         gameDisplay.blit(Win_txt,(867,40))
 
-        rank = json.loads(b)#player ID
+        rank = json.loads(json.dumps(select.selectRank(2)))#player ID
 
         FirstI = rank["1"][0]
         FI = medfont.render(str(FirstI), True, black)
@@ -601,16 +600,17 @@ def game_setting():
 
 def game_newgame():
     run = True
-    a = n.send({'event': 1, 'player': (player-1)})
-    b = n.recv()
-    r = json.loads(b)
-    global room
-    room = r['room']
+    #a = n.send({'event': 1, 'player': (player-1)})
+    #b = n.recv()
+    #r = json.loads(b)
+    #global room
+    #room = r['room']
     textinput = pygame_textinput.TextInput()
     # text_box = TextBox(600, 70, 110, 650, callback=callback)
-    a = n.send({'event': 5, 'player': (player - 1), 'room': room})
-    map = n.recv()
-    map = select.constructMap(map)
+    #a = n.send({'event': 5, 'player': (player - 1), 'room': room})
+    #map = n.recv()
+    map = select.selectMap(2)
+    map = select.constructMap(json.dumps(map))
     while run:
         events = pygame.event.get()
 
@@ -775,10 +775,10 @@ class MySprite(pygame.sprite.Sprite):
         self.index += 1
 
 def game_loading():
-    a = n.getP()
-    print(a)
-    global player
-    player = a['player']
+    #a = n.getP()
+    #print(a)
+    #global player
+    #player = a['player']
     pygame.init()
     my_sprite = MySprite()
     my_group = pygame.sprite.Group(my_sprite)
