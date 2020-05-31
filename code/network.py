@@ -24,6 +24,7 @@ class Network():
 
     def recv(self):
         data = self.client.recv(2048).decode('utf-8')
+        print(data)
         return data
 
     def send(self, data):

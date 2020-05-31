@@ -17,7 +17,7 @@ def selectRank(id):
     c.execute("SELECT * FROM Player WHERE Player_ID = %d" % id)
     row = c.fetchone()
     dic.update({"4": [row[0], row[1], row[2]]})
-    return json.dumps(dic)
+    return dic
 
 
 # get map information
@@ -97,7 +97,7 @@ def selectMap(id):
     # for i, j in dic.items():
     #     print(i, ':', j)
 
-    return json.dumps(dic)
+    return dic
 
 
 # get deploy

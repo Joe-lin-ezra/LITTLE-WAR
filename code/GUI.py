@@ -13,11 +13,6 @@ import Constructer ##by Dan
 # import Commander ##by Dan
 import os.path     #By Chin
 import pygame.locals as pl #By Chin
-# NewGame Page 系列 - By Chin
-# import GUINewGamePage
-import GUINewGamePageButtonClick
-import GUINewGamePageMap
-import GUINewGamePageTextBox
 
 pygame.init()
 
@@ -105,7 +100,7 @@ def score(score):
 
 def button(text, x, y, width, height, inactive_color, active_color, action=None, btncolor = black):
     cur = pygame.mouse.get_pos()
-    # print(cur)
+    print(cur)
     click = pygame.mouse.get_pressed()
     if x + width > cur[0] > x and y + height > cur[1] > y:
         pygame.draw.rect(gameDisplay, active_color, (x, y, width, height))
@@ -136,7 +131,6 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
                 game_setting()
 
             if action == "NewGame":
-                # print("Comming Soon")
                 game_newgame()
     else:
         pygame.draw.rect(gameDisplay, inactive_color, (x, y, width, height))
@@ -373,15 +367,11 @@ def game_user():
     while run:
         events = pygame.event.get()
 
-        for event in events:
+        for event in pygame.event.get():
             # print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
 
         gameDisplay.fill(yellow)
         # button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
@@ -410,10 +400,6 @@ def game_home():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
 
         gameDisplay.fill(yellow)
         button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
@@ -518,10 +504,6 @@ def game_rank():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
 
         gameDisplay.fill(yellow)
 
@@ -613,63 +595,86 @@ def game_setting():
         pygame.display.update()
         clock.tick(15)
 
-
 def game_newgame():
-    intro = True
-    # 都是 TextBox 的東西 By Chin - Head#
-    n = 0
-    y = 0
-    x = 0
-    count = 0
-
-    textinput = GUINewGamePageTextBox.TextInput()           # 建立一個Textinput 的地方
-    ResponseArea = pygame.Surface((600,150))
-    ResponseArea.fill(black)
-    # 都是 TextBox 的東西 By Chin - Foot#
-
-    # 呢邊是 Button 的東西 By Chin - Head #
-    SendBtn = GUINewGamePageButtonClick.button(blue,750,590,170,120,"GO")  # color , x, y, width, height , text
-    token = True        # 模仿回合的結束 用來不給玩家在不是自己的回合中輸入
-    # 呢邊是 Button 的東西 By Chin - Foot #
-
-    while intro:
-        gameDisplay.fill(yellow)
-        message_to_screen("Game Start", black, 1000, -340, size='large')
-        gameDisplay.blit(ResponseArea, (80, 580))
-        SendBtn.draw(gameDisplay)
+    run = True
+    # n.send({'event': 1, 'player': (player-1)})
+    textinput = pygame_textinput.TextInput()
+    # text_box = TextBox(600, 70, 110, 650, callback=callback)
+    while run:
         events = pygame.event.get()
-        for event in events:
-            pos = pygame.mouse.get_pos()
+
+        for event in pygame.event.get():
+            # print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if SendBtn.isOver(pos):
-                   print("Button Click!")
-                   token = False                # 還未做出下一回合, 回恢權限 By Chin
-            if event.type == pygame.MOUSEMOTION:
-                if SendBtn.isOver(pos):
-                    SendBtn.color = (light_blue)
-                else :
-                    SendBtn.color = (blue)
+            # elif event.type == pygame.KEYDOWN:  # if button == 0 (玩家回合)
+            #     text_box.key_down(event)
 
+        gameDisplay.fill(yellow)
+        Map(gameDisplay)
 
-        if count < 4 and token:
-            if textinput.update(events):              # 輸入指令的地方 By Chin
-                # if count >= 3:
-                    # 會否考慮顥示訊息 讓玩家知道不能輸入? By Chin
-                ResponseArea.blit(textinput.get_surface(), (10, 30 + (y * n)))
-                n += 1
-                y = 30
-                print(textinput.get_text())  # 透過get_text() 取得輸入的資訊 By Chin
-                count += 1
+        Title = largefont.render("Game Start!", True, gray)  # 會改! Your Turn ~
+        gameDisplay.blit(Title, (270, 10))
 
-        gameDisplay.blit(textinput.get_surface(), (90, 585))         # TextInput position By Chin
-        GUINewGamePageMap.Map(gameDisplay)
+        # TextInputBox Create
+        pygame.draw.rect(gameDisplay, black, (80, 600, 650, 150))
+        if textinput.update(events):
+            print(textinput.get_text())
+        gameDisplay.blit(textinput.get_surface(), (100, 620))
 
+        SendBtn = button("GO", 770, 650, 150, 70, blue, light_blue, action="EndTurn")
         pygame.display.update()
-        clock.tick(30)
+        clock.tick(15)
 
+def Map(gameDisplay):
+    gameDisplay.fill((255, 255, 000))
+
+    map = select.selectMap(2)
+    map = select.constructMap(map)
+
+    # map = np.array(select.constructMap(map))
+    # map = map.transpose()
+
+    # print(map)
+    # map -> color
+    # 0 - green (normal)
+    # 1 - blue (water)
+    # 2 - brown (mountain)
+
+    x = 200
+    y = 100
+
+    xAis = len(map)  # 15
+    yAis = len(map[1])  # 10
+
+    xIndex = 0
+    yIndex = 0
+    # print(map[xIndex])
+    # print(map[xIndex][yIndex])
+
+    while yAis:
+        if (yIndex == yAis):
+            break
+        xIndex = 0
+        y += 40
+        x = 200
+        while xAis:
+            if (xIndex == xAis):
+                break
+            if (map[xIndex][yIndex] == 0):
+                Color = light_green
+            elif (map[xIndex][yIndex] == 1):
+                Color = blue
+            elif (map[xIndex][yIndex] == 2):
+                Color = brown
+            pygame.draw.rect(gameDisplay, Color, (x, y, 50, 50))
+            x += 40
+            # y+=40
+            xIndex += 1
+        yIndex += 1
+
+    pygame.display.update()
 
 
 def game_controls():
@@ -681,10 +686,6 @@ def game_controls():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
 
         gameDisplay.fill(white)
         message_to_screen("Controls", green, -100, size="large")
@@ -709,6 +710,7 @@ def pause():
     pygame.display.update()
     while paused:
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -731,8 +733,12 @@ def game_intro():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
+                if event.key == pygame.K_c:
+                    intro = False
+                elif event.key == pygame.K_q:
+
                     pygame.quit()
                     quit()
 
@@ -778,10 +784,6 @@ def game_loading():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 loop = 0
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
 
         current_time = pygame.time.get_ticks()
 
@@ -857,7 +859,7 @@ def gameLoop():
 
 # game_user()
 
-game_intro()
+# game_intro()
 
 # game_rank()
 
@@ -865,3 +867,4 @@ game_intro()
 
 # map.close()
 
+# game_newgame()
