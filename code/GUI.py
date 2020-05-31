@@ -11,6 +11,8 @@ import pygame_textinput
 import Player ##by Dan
 import Constructer ##by Dan
 import Commander ##by Dan
+import os.path     #By Chin
+import pygame.locals as pl #By Chin 
 
 pygame.init()
 
