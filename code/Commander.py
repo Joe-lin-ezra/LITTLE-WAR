@@ -10,18 +10,18 @@ import Army
 import Headquarter
 import Constructer ##by Dan
 
-player1 = Player.Player()
-player2 = Player.Player()
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=4)
-player1.army.append(army)
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=5,y=5)
-player2.army.append(army)
-
-player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
-player2.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
-if (player1.army[0].moved == 0):
-    print("A")
-##test
+# player1 = Player.Player()
+# player2 = Player.Player()
+# army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=4)
+# player1.army.append(army)
+# army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=5,y=5)
+# player2.army.append(army)
+#
+# player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
+# player2.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
+# if (player1.army[0].moved == 0):
+#     print("A")
+# ##test
 
 
 ##指令判斷
@@ -43,11 +43,16 @@ def inputCommand(player,player2,ForS,command):##輸入指令
             TorF = Set.set(player ,ForS,comList[1],comList[2],comList[3])##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標
             return TorF
         elif(comList[0] == "LEAVE"):
-            print("玩家跳出輸入框")
+            print(player.army[0].atked)
+            print(player.army[0].moved)
+            for i in range (len(player.army)):
+                player.army[i].moved = 0
+                player.army[i].atked = 0
+            print("下一回合")
             break
         else:
             print("指令輸入錯誤")
         # print(comList[0])
-while True:
-    command = input("請輸入指令\n")##讀取指令
-    inputCommand(player1,player2,1,command)
+# while True:
+#     command = input("請輸入指令\n")##讀取指令
+#     inputCommand(player1,player2,1,command)
