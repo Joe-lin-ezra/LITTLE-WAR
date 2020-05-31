@@ -6,6 +6,8 @@ import math
 hp = 10
 
 def atk(player1,player2,armyID,EnermyID):##需要傳入自己player與對方player物件，並且傳入攻擊以及被攻擊軍隊的ID
+    armyID = int(armyID)
+    EnermyID = int(EnermyID)
     if(player1.army[armyID].atked == 0):##尚未攻擊
         range = Move.countRange(player1.army[armyID].x,player1.army[armyID].y,player1.army[EnermyID].x,player1.army[EnermyID].y)
         if (range <= player1.army[armyID].atkRange):  ##合法攻擊範圍
