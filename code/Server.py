@@ -1,10 +1,8 @@
 from config import IP, PORT, RequestType
 from _thread import *
 import socket
-import pickle
 import json
 from GameRoom import Room
-from threading import Thread
 import select
 import random
 
@@ -37,24 +35,26 @@ class Server():
             except socket.error:
                 break
             if payload['event'] == RequestType.joinevent:
+                print(len(self.rooms))
                 if len(self.rooms) == 0:
                     self.rooms.append(Room())
-                    self.rooms[0].mapId = random.randint(1, 2)
-                    room['room'] = 1
+                    self.rooms[len(self.rooms)-1].mapId = random.randint(1, 2)
+                    room['room'] = len(self.rooms)
                     room['turn'] = 1
+                    print(room)
                     self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
                 else:
                     for r in self.rooms:
                         if r.isfull():
                             continue
                         r.adduser(payload['player'])
-                        room['room'] = 1
+                        room['room'] = len(self.rooms)
                         room['turn'] = 2
                         self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
                     else:
                         self.rooms.append(Room())
+                        self.rooms[len(self.rooms)-1].mapId = random.randint(1, 2)
                         room['room'] = len(self.rooms)
-                        self.rooms[len(self.rooms)].mapId = random.randint(1, 2)
                         room['turn'] = 1
                         self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
 
@@ -74,13 +74,10 @@ class Server():
                 # print(pay)
                 self.userlist[payload['player']].send(bytes(json.dumps(pay).encode('utf-8')))
             elif payload['event'] == RequestType.map:
-                for r in self.rooms:
-                    if(payload['player'] in r.user):
-                        pay = select.selectMap(r.mapId)
-                        print(pay)
-                        for u in r.user:
-                            if u == payload['player']:
-                                self.userlist[u].send(bytes(json.dumps(pay).encode('utf-8')))
+                map = select.selectMap(self.rooms[(payload['room']-1)].mapId)
+                print(map)
+                self.userlist[payload['player']].send(bytes(json.dumps(map).encode('utf-8')))
+
 
     def update(self):
         client, addr = self.s.accept()

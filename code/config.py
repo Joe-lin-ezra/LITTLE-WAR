@@ -8,3 +8,4 @@ class RequestType:
     request = 2
     sync = 3
     rank = 4
+    map = 5

@@ -19,7 +19,7 @@ pygame.init()
 display_width = 1024
 display_height = 768
 n = Network()
-# player = 0
+player = 0
 
 # player1 = Constructer.constructPlayer(select.selectDeploy(1)) ##生成自己玩家物件
 # player2 = Constructer.constructPlayer(select.selectDeploy(2)) ##生成對方玩家物件
@@ -497,6 +497,10 @@ def game_home():
 
 def game_rank():
     run = True
+    d = {'event': 4, 'player': 0, 'ID': 1}
+    d['player'] = player-1
+    a = n.send(d)
+    b = n.recv()
 
     while run:
         for event in pygame.event.get():
@@ -516,7 +520,7 @@ def game_rank():
         Win_txt = medfont.render("Win",True,black)
         gameDisplay.blit(Win_txt,(867,40))
 
-        rank = json.loads(select.selectRank(2))#player ID
+        rank = json.loads(b)#player ID
 
         FirstI = rank["1"][0]
         FI = medfont.render(str(FirstI), True, black)
@@ -597,9 +601,16 @@ def game_setting():
 
 def game_newgame():
     run = True
-    # n.send({'event': 1, 'player': (player-1)})
+    a = n.send({'event': 1, 'player': (player-1)})
+    b = n.recv()
+    r = json.loads(b)
+    global room
+    room = r['room']
     textinput = pygame_textinput.TextInput()
     # text_box = TextBox(600, 70, 110, 650, callback=callback)
+    a = n.send({'event': 5, 'player': (player - 1), 'room': room})
+    map = n.recv()
+    map = select.constructMap(map)
     while run:
         events = pygame.event.get()
 
@@ -612,7 +623,7 @@ def game_newgame():
             #     text_box.key_down(event)
 
         gameDisplay.fill(yellow)
-        Map(gameDisplay)
+        Map(gameDisplay,map)
 
         Title = largefont.render("Game Start!", True, gray)  # 會改! Your Turn ~
         gameDisplay.blit(Title, (270, 10))
@@ -627,11 +638,8 @@ def game_newgame():
         pygame.display.update()
         clock.tick(15)
 
-def Map(gameDisplay):
+def Map(gameDisplay,map):
     gameDisplay.fill((255, 255, 000))
-
-    map = select.selectMap(2)
-    map = select.constructMap(map)
 
     # map = np.array(select.constructMap(map))
     # map = map.transpose()
@@ -767,10 +775,10 @@ class MySprite(pygame.sprite.Sprite):
         self.index += 1
 
 def game_loading():
-    # a = n.getP()
-    # # print(a)
-    # global player
-    # player = a['player']
+    a = n.getP()
+    print(a)
+    global player
+    player = a['player']
     pygame.init()
     my_sprite = MySprite()
     my_group = pygame.sprite.Group(my_sprite)
@@ -859,7 +867,7 @@ def gameLoop():
 
 # game_user()
 
-# game_intro()
+game_intro()
 
 # game_rank()
 
