@@ -18,6 +18,7 @@ class TextInput:
     This class let's the user input a short, one-lines piece of text at a blinking cursor
     that can be moved using the arrow-keys. Delete, home and end work as well.
     """
+    # Update!
     def __init__(
             self,
             initial_string="> ",
@@ -128,7 +129,6 @@ class TextInput:
                 # *** Because KEYUP doesn't include event.unicode, this dict is stored in such a weird way
                 if event.key in self.keyrepeat_counters:
                     del self.keyrepeat_counters[event.key]
-            print(self.cursor_position)
         # Update key counters:
         for key in self.keyrepeat_counters:
             self.keyrepeat_counters[key][0] += self.clock.get_time()  # Update clock
@@ -178,8 +178,8 @@ class TextInput:
         self.cursor_surface.fill(color)
 
     def clear_text(self):
-        self.input_string = ""
-        self.cursor_position = 0
+        self.input_string = "> "
+        self.cursor_position = 2
 
     def callback(key):
         print(key)
