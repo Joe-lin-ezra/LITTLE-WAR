@@ -6,11 +6,13 @@ import select
 import Player
 import Army
 import Headquarter
+import json
 import Constructer ##by Dan
+
 
 player1 = Player.Player()
 player2 = Player.Player()
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=None,y=None)
+army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=2,y=1)
 player1.army.append(army)
 army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=2)
 player2.army.append(army)
@@ -19,11 +21,14 @@ player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
 player2.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
 
 datas = select.selectMap(1)
+datas = json.dumps(datas)
 map = select.constructMap(datas)
 
 transCommandList = {'event':3,'player':1,}##player格子要再改
 transComman = []
 
+for i in range(len(map)):
+    print(map[i])
 while True:
     command = input("plz input ur command :\n")
     if (command == "leave"):
@@ -35,7 +40,7 @@ while True:
         print("下一回合")
         break
     else:
-        TorF = Commander.inputCommand(player1, player2, 1, command)  ##這裡應該使GUI呼叫我的地方，我會回傳true or false
+        TorF = Commander.inputCommand(player1, player2, 1, command,map)  ##這裡應該使GUI呼叫我的地方，我會回傳true or false
         if TorF == True:
             print("記錄下來")
             transComman.append(command)
@@ -44,5 +49,4 @@ while True:
 print(transCommandList)
     ##先完善軍隊死亡(血量等於0)
     ##完成紀律指令
-    # for i in range(len(map)):
-    #     print(map[i])
+

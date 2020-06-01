@@ -2,15 +2,17 @@ import Player
 import Army
 import select
 import json
-datas = select.selectMap(1)
-map = select.constructMap(datas)
+# datas = select.selectMap(1)
+# map = select.constructMap(datas)
 # for i in range(len(map)):
 #     print(map[i])
 ## 0:路 1:水 2:山
+datas = select.selectMap(1)
+datas = json.dumps(datas)
 areas = json.loads(datas)["Player1_Area"]  ##生成區域要判斷
 # print(type(areas["x1"]))
 
-def set(player ,ForS,i,x,y):##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標 ForS first or second
+def set(player ,ForS,i,x,y,map):##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標 ForS first or second
     try:  ##如我軍對已經SET過
         i = int(i)
         X = int(player.army[i].x)

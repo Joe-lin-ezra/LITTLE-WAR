@@ -6,8 +6,8 @@ import Army
 
 ##尚未增加耗油部分
 
-datas = select.selectMap(1)
-map = select.constructMap(datas)
+# datas = select.selectMap(1)
+# map = select.constructMap(datas)
 # for i in range(len(map)):
 #     print(map[i])
 # print(map[2][2])
@@ -27,7 +27,7 @@ def countRange(armyX,armyY,distanceX,distanceY):
 #     distanceY = int(input("y2\n"))
 #     countRange(armyX,armyY,distanceX,distanceY)
 
-def move(player,i,x,y):## x y 是要過去的座標
+def move(player,i,x,y,map):## x y 是要過去的座標
        road = 0 ##定義路面數字
        try:##如我軍對已經SET過
               i = int(i)
