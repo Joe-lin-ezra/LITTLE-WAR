@@ -1,5 +1,4 @@
 import pygame
-import select
 
 
 white = (255, 255, 255)
@@ -23,10 +22,7 @@ light_gray = (230, 230, 230)
 clock = pygame.time.Clock()
 # gameDisplay = pygame.display.set_mode((1024, 768))
 
-map = select.selectMap(2)
-map = select.constructMap(map)
-
-def Map(gameDisplay):
+def Map(gameDisplay,map):
     # gameDisplay.fill((255, 255, 000))
 
     # map = np.array(select.constructMap(map))

@@ -1,5 +1,4 @@
 import pygame
-
 import GUINewGamePageMap
 import GUINewGamePageTextBox
 import GUINewGamePageButtonClick
@@ -10,7 +9,7 @@ display_height = 768
 
 gameDisplay = pygame.display.set_mode((1024, 768))
 
-# pygame.display.set_caption('Tanks')
+pygame.display.set_caption('Tanks')
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -54,7 +53,7 @@ def message_to_screen(msg, color, x_displace=0, y_displace=0, size="small"):
 
 
 
-def game_newgame(gameDisplay):
+def game_newgame():
     pygame.init()
 
     intro = True
@@ -100,16 +99,19 @@ def game_newgame(gameDisplay):
             if textinput.update(events):              # 輸入指令的地方 By Chin
                 # if count >= 3:
                     # 會否考慮顥示訊息 讓玩家知道不能輸入? By Chin
-                ResponseArea.blit(textinput.get_surface(), (10, 30 + (y * n)))
+                ResponseArea.blit(textinput.get_surface(), (10, 20 + (y * n)))
                 n += 1
                 y = 30
                 print(textinput.get_text())  # 透過get_text() 取得輸入的資訊 By Chin
                 count += 1
 
-        gameDisplay.blit(textinput.get_surface(), (90, 585))         # TextInput position By Chin
+        gameDisplay.blit(textinput.get_surface(), (80, 550))         # TextInput position By Chin
         GUINewGamePageMap.Map(gameDisplay)
 
         pygame.display.update()
         clock.tick(30)
 
-game_newgame(gameDisplay)
+
+
+
+# game_newgame()

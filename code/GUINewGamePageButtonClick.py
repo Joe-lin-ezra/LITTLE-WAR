@@ -2,6 +2,9 @@ import pygame
 
 pygame.init()
 
+# win = pygame.display.set_mode((1024,768))
+# win.fill((255,200,2))
+
 
 class button():
     def __init__(self, color, x, y, width, height, text=''):
@@ -32,6 +35,9 @@ class button():
 
         return False
 
+# def redrawWindow():
+#     win.fill((255,200,2))
+#     greenButton.draw(win)
 
 # run = True
 # greenButton = button ((0,255,0) , 150 ,255,250,100,'Hello')

@@ -3,7 +3,6 @@ import time
 import random
 import glob
 import json
-import select
 import sqlite3
 import numpy as np
 from network import Network
@@ -14,12 +13,18 @@ import Constructer ##by Dan
 import os.path     #By Chin
 import pygame.locals as pl #By Chin
 
+# NewGame Page 系列 - By Chin
+# import GUINewGamePage
+import GUINewGamePageButtonClick
+import GUINewGamePageMap
+import GUINewGamePageTextBox
+
 pygame.init()
 
 display_width = 1024
 display_height = 768
 n = Network()
-player = 0
+# player = 0
 
 # player1 = Constructer.constructPlayer(select.selectDeploy(1)) ##生成自己玩家物件
 # player2 = Constructer.constructPlayer(select.selectDeploy(2)) ##生成對方玩家物件
@@ -100,7 +105,7 @@ def score(score):
 
 def button(text, x, y, width, height, inactive_color, active_color, action=None, btncolor = black):
     cur = pygame.mouse.get_pos()
-    print(cur)
+    # print(cur)
     click = pygame.mouse.get_pressed()
     if x + width > cur[0] > x and y + height > cur[1] > y:
         pygame.draw.rect(gameDisplay, active_color, (x, y, width, height))
@@ -131,6 +136,7 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
                 game_setting()
 
             if action == "NewGame":
+                # print("Comming Soon")
                 game_newgame()
     else:
         pygame.draw.rect(gameDisplay, inactive_color, (x, y, width, height))
@@ -361,17 +367,21 @@ class TextInput:
 
 def game_user():
     run = True
-    textinput = pygame_textinput.TextInput()
+    textinput = GUINewGamePageTextBox.TextInput()
 
     # text_box = TextBox(350, 50, 500, 100, callback=callback)
     while run:
         events = pygame.event.get()
 
-        for event in pygame.event.get():
+        for event in events:
             # print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
 
         gameDisplay.fill(yellow)
         # button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
@@ -400,6 +410,10 @@ def game_home():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
 
         gameDisplay.fill(yellow)
         button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
@@ -409,104 +423,26 @@ def game_home():
         pygame.display.update()
         clock.tick(15)
 
-# def game_rank():
-#     def game_rank():
-#         run = True
-#         # d = {'event': 4, 'player': 0, 'ID': 1}
-#         # d['player'] = player-1
-#         # a = n.send(d)
-#         # print(a,123)
-#         # b = n.recv()
-#         # print(b)
-#         while run:
-#             for event in pygame.event.get():
-#                 # print(event)
-#                 if event.type == pygame.QUIT:
-#                     pygame.quit()
-#                     quit()
-#
-#             gameDisplay.fill(yellow)
-#
-#             ID_txt = medfont.render("ID", True, black)
-#             gameDisplay.blit(ID_txt, (87, 40))
-#
-#             Name_txt = medfont.render("Name", True, black)
-#             gameDisplay.blit(Name_txt, (427, 40))
-#
-#             Win_txt = medfont.render("Win", True, black)
-#             gameDisplay.blit(Win_txt, (867, 40))
-#
-#             rank = json.loads(select.selectRank(2))  # player ID
-#             # rank = json.loads(b)
-#
-#             FirstI = rank["1"][0]
-#             FI = medfont.render(str(FirstI), True, black)
-#             gameDisplay.blit(FI, (87, 140))
-#
-#             FirstN = rank["1"][1]
-#             FN = medfont.render(FirstN, True, black)
-#             gameDisplay.blit(FN, (427, 140))
-#
-#             FirstW = rank["1"][2]
-#             FW = medfont.render(str(FirstW), True, black)
-#             gameDisplay.blit(FW, (870, 140))
-#
-#             SecondI = rank["2"][0]
-#             SI = medfont.render(str(SecondI), True, black)
-#             gameDisplay.blit(SI, (87, 240))
-#
-#             SecondN = rank['2'][1]
-#             SN = medfont.render(SecondN, True, black)
-#             gameDisplay.blit(SN, (427, 240))
-#
-#             SecondW = rank['2'][2]
-#             SW = medfont.render(str(SecondW), True, black)
-#             gameDisplay.blit(SW, (870, 240))
-#
-#             ThirdI = rank['3'][0]
-#             TI = medfont.render(str(ThirdI), True, black)
-#             gameDisplay.blit(TI, (87, 340))
-#
-#             ThirdN = rank['3'][1]
-#             TN = medfont.render(ThirdN, True, black)
-#             gameDisplay.blit(TN, (427, 340))
-#
-#             ThirdW = rank['3'][2]
-#             TW = medfont.render(str(ThirdW), True, black)
-#             gameDisplay.blit(TW, (870, 340))
-#
-#             line = medfont.render('------------------------------------------', True, black)
-#             gameDisplay.blit(line, (70, 440))
-#
-#             SelfI = rank['4'][0]
-#             SI = medfont.render(str(SelfI), True, black)
-#             gameDisplay.blit(SI, (87, 540))
-#
-#             SelfN = rank['4'][1]
-#             SN = medfont.render(SelfN, True, black)
-#             gameDisplay.blit(SN, (427, 540))
-#
-#             SelfW = rank['4'][2]
-#             SW = medfont.render(str(SelfW), True, black)
-#             gameDisplay.blit(SW, (870, 540))
-#
-#             button("Home", 60, 650, 157, 70, blue, light_blue, action="Home", btncolor=white)
-#
-#             pygame.display.update()
-#             clock.tick(15)
 
 def game_rank():
     run = True
-    #d = {'event': 4, 'player': 0, 'ID': 1}
-    #d['player'] = player-1
-    #a = n.send(d)
-    #b = n.recv()
+
+    # Server Part By Paco - Head #
+    #rank_get = {'event': 5 , 'player': player1-1}
+    #n.send(rank_get)
+    #b = n.recv
+    # Server Part By Paco - Foot#
+
     while run:
         for event in pygame.event.get():
             # print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
 
         gameDisplay.fill(yellow)
 
@@ -519,7 +455,7 @@ def game_rank():
         Win_txt = medfont.render("Win",True,black)
         gameDisplay.blit(Win_txt,(867,40))
 
-        rank = json.loads(json.dumps(select.selectRank(2)))#player ID
+        rank = json.loads(select.selectRank(2))#player ID
 
         FirstI = rank["1"][0]
         FI = medfont.render(str(FirstI), True, black)
@@ -598,91 +534,66 @@ def game_setting():
         pygame.display.update()
         clock.tick(15)
 
-def game_newgame():
-    run = True
-    #a = n.send({'event': 1, 'player': (player-1)})
-    #b = n.recv()
-    #r = json.loads(b)
-    #global room
-    #room = r['room']
-    textinput = pygame_textinput.TextInput()
-    # text_box = TextBox(600, 70, 110, 650, callback=callback)
-    #a = n.send({'event': 5, 'player': (player - 1), 'room': room})
-    #map = n.recv()
-    map = select.selectMap(2)
-    map = select.constructMap(json.dumps(map))
-    while run:
-        events = pygame.event.get()
 
-        for event in pygame.event.get():
-            # print(event)
+def game_newgame():
+    intro = True
+    # 都是 TextBox 的東西 By Chin - Head#
+    n = 0
+    y = 0
+    x = 0
+    count = 0
+
+    textinput = GUINewGamePageTextBox.TextInput()           # 建立一個Textinput 的地方
+    ResponseArea = pygame.Surface((600,150))
+    ResponseArea.fill(black)
+    # 都是 TextBox 的東西 By Chin - Foot#
+
+    # 呢邊是 Button 的東西 By Chin - Head #
+    SendBtn = GUINewGamePageButtonClick.button(blue,750,590,170,120,"GO")  # color , x, y, width, height , text
+    token = True        # 模仿回合的結束 用來不給玩家在不是自己的回合中輸入
+    # 呢邊是 Button 的東西 By Chin - Foot #
+
+    map = select.selectMap(2)
+    map = select.constructMap(map)
+
+    while intro:
+        gameDisplay.fill(yellow)
+        message_to_screen("Game Start", black, 1000, -340, size='large')
+        gameDisplay.blit(ResponseArea, (80, 580))
+        SendBtn.draw(gameDisplay)
+        events = pygame.event.get()
+        for event in events:
+            pos = pygame.mouse.get_pos()
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            # elif event.type == pygame.KEYDOWN:  # if button == 0 (玩家回合)
-            #     text_box.key_down(event)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if SendBtn.isOver(pos):
+                   print("TextBox Locked!")
+                   token = False                # 還未做出下一回合, 回恢權限 By Chin
+            if event.type == pygame.MOUSEMOTION:
+                if SendBtn.isOver(pos):
+                    SendBtn.color = (light_blue)
+                else :
+                    SendBtn.color = (blue)
 
-        gameDisplay.fill(yellow)
-        Map(gameDisplay,map)
 
-        Title = largefont.render("Game Start!", True, gray)  # 會改! Your Turn ~
-        gameDisplay.blit(Title, (270, 10))
+        if count < 4 and token:
+            if textinput.update(events):              # 輸入指令的地方 By Chin
+                # if count >= 3:
+                    # 會否考慮顥示訊息 讓玩家知道不能輸入? By Chin
+                ResponseArea.blit(textinput.get_surface(), (10, 30 + (y * n)))
+                n += 1
+                y = 30
+                print(textinput.get_text())  # 透過get_text() 取得輸入的資訊 By Chin
+                count += 1
 
-        # TextInputBox Create
-        pygame.draw.rect(gameDisplay, black, (80, 600, 650, 150))
-        if textinput.update(events):
-            print(textinput.get_text())
-        gameDisplay.blit(textinput.get_surface(), (100, 620))
+        gameDisplay.blit(textinput.get_surface(), (90, 585))         # TextInput position By Chin
+        GUINewGamePageMap.Map(gameDisplay,map)
 
-        SendBtn = button("GO", 770, 650, 150, 70, blue, light_blue, action="EndTurn")
         pygame.display.update()
-        clock.tick(15)
+        clock.tick(30)
 
-def Map(gameDisplay,map):
-    gameDisplay.fill((255, 255, 000))
-
-    # map = np.array(select.constructMap(map))
-    # map = map.transpose()
-
-    # print(map)
-    # map -> color
-    # 0 - green (normal)
-    # 1 - blue (water)
-    # 2 - brown (mountain)
-
-    x = 200
-    y = 100
-
-    xAis = len(map)  # 15
-    yAis = len(map[1])  # 10
-
-    xIndex = 0
-    yIndex = 0
-    # print(map[xIndex])
-    # print(map[xIndex][yIndex])
-
-    while yAis:
-        if (yIndex == yAis):
-            break
-        xIndex = 0
-        y += 40
-        x = 200
-        while xAis:
-            if (xIndex == xAis):
-                break
-            if (map[xIndex][yIndex] == 0):
-                Color = light_green
-            elif (map[xIndex][yIndex] == 1):
-                Color = blue
-            elif (map[xIndex][yIndex] == 2):
-                Color = brown
-            pygame.draw.rect(gameDisplay, Color, (x, y, 50, 50))
-            x += 40
-            # y+=40
-            xIndex += 1
-        yIndex += 1
-
-    pygame.display.update()
 
 
 def game_controls():
@@ -694,6 +605,10 @@ def game_controls():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
 
         gameDisplay.fill(white)
         message_to_screen("Controls", green, -100, size="large")
@@ -718,7 +633,6 @@ def pause():
     pygame.display.update()
     while paused:
         for event in pygame.event.get():
-
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -741,12 +655,8 @@ def game_intro():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_c:
-                    intro = False
-                elif event.key == pygame.K_q:
-
+                if event.key == pygame.K_q:
                     pygame.quit()
                     quit()
 
@@ -775,10 +685,10 @@ class MySprite(pygame.sprite.Sprite):
         self.index += 1
 
 def game_loading():
-    #a = n.getP()
-    #print(a)
-    #global player
-    #player = a['player']
+    # a = n.getP()
+    # # print(a)
+    # global player
+    # player = a['player']
     pygame.init()
     my_sprite = MySprite()
     my_group = pygame.sprite.Group(my_sprite)
@@ -792,6 +702,10 @@ def game_loading():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 loop = 0
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
 
         current_time = pygame.time.get_ticks()
 
@@ -867,12 +781,9 @@ def gameLoop():
 
 # game_user()
 
-game_intro()
-
+# game_intro()
+game_newgame()
 # game_rank()
 
 # gameLoop()
 
-# map.close()
-
-# game_newgame()
