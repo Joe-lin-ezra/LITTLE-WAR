@@ -30,13 +30,14 @@ def inputCommand(player,player2,ForS,command,map):##輸入指令
         comList = command.split()##字串切割，切割成list
         comList[0] = comList[0].upper()
         num = len(comList)
-        print(num)
+        # print(num)
         if(comList[0] == "MOVE" and num == 4):
             print("玩家要求移動")
             TorF = Move.move(player,comList[1],comList[2],comList[3],map)##傳入player物件，player的army的ID，以及此軍隊的X和Y
             return TorF
         elif(comList[0] == "ATK" and num == 3):
             print("玩家要求攻擊")
+            comList[2] = comList[2].upper()
             TorF = ATK.atk(player,player2,comList[1],comList[2],map)##需要傳入自己player與對方player物件，並且傳入攻擊以及被攻擊軍隊的ID
             return TorF
         elif(comList[0] == "SET" and num == 4):

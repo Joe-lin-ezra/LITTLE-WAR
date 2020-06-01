@@ -9,7 +9,7 @@ from network import Network
 import pygame_textinput
 import Player ##by Dan
 import Constructer ##by Dan
-# import Commander ##by Dan
+import Commander ##by Dan
 import os.path     #By Chin
 import pygame.locals as pl #By Chin
 
@@ -38,13 +38,15 @@ import Constructer ##by Dan
 
 player1 = Player.Player()
 player2 = Player.Player()
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=4)
+army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=2,y=1)
 player1.army.append(army)
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=5,y=5)
+army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=2)
 player2.army.append(army)
 
 player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
 player2.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
+
+transComman = []##紀錄指令的地方
 ##test-Dan
 
 
@@ -554,7 +556,11 @@ def game_newgame():
     # 呢邊是 Button 的東西 By Chin - Foot #
 
     map = select.selectMap(2)
+    map = json.dumps(map)
     map = select.constructMap(map)
+
+    head_font = pygame.font.SysFont(None, 60)  ##建立文字物件 by Dan
+    text_surface = head_font.render('illegal instruction', True, (255, 255, 255))  ##宣告文字物件的格式by Dan
 
     while intro:
         gameDisplay.fill(yellow)
@@ -582,10 +588,17 @@ def game_newgame():
             if textinput.update(events):              # 輸入指令的地方 By Chin
                 # if count >= 3:
                     # 會否考慮顥示訊息 讓玩家知道不能輸入? By Chin
-                ResponseArea.blit(textinput.get_surface(), (10, 30 + (y * n)))
+                # ResponseArea.blit(textinput.get_surface(), (10, 30 + (y * n)))
                 n += 1
                 y = 30
-                print(textinput.get_text())  # 透過get_text() 取得輸入的資訊 By Chin
+                command = textinput.get_text()
+                print(command)  # 透過get_text() 取得輸入的資訊 By Chin
+                TorF = Commander.inputCommand(player1,player2,1,command,map)##呼叫commander來解析指令 by Dan
+                if TorF == True:##如果回傳值是true 就要記錄下來 by Dan
+                    transComman.append(command)
+                else:##指令有問題
+
+                    ResponseArea.blit(text_surface, (10, 30 + (y * n))) ##顯示文字物件 by Dan
                 count += 1
 
         gameDisplay.blit(textinput.get_surface(), (90, 585))         # TextInput position By Chin

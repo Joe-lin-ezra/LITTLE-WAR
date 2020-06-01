@@ -12,13 +12,13 @@ import Constructer ##by Dan
 
 player1 = Player.Player()
 player2 = Player.Player()
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=2,y=1)
+army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=None,y=None)
 player1.army.append(army)
 army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=2)
 player2.army.append(army)
 
 player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
-player2.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
+player2.hq = Headquarter.Headquarter(hp=20, x=0, y=0)
 
 datas = select.selectMap(1)
 datas = json.dumps(datas)
@@ -30,8 +30,11 @@ transComman = []
 for i in range(len(map)):
     print(map[i])
 while True:
+    print(player2.hq.hp)
+    print("X: "+str(player1.army[0].x))
+    print("Y: "+str(player1.army[0].y))
     command = input("plz input ur command :\n")
-    if (command == "leave"):
+    if (command == "leave"): ##button按下去要做的事情
         for i in range(len(player1.army)):
             player1.army[i].moved = 0
             player1.army[i].atked = 0
