@@ -48,6 +48,7 @@ class TextInput:
         self.max_string_length = max_string_length
         self.input_string = initial_string  # Inputted text
         self.tmp_string = self.input_string
+        self.check = True               # 用來回傳玩家Set Infantry 的值 (True = OK , False = Not OK) - By Chin
 
         if not os.path.isfile(font_family):
             font_family = pygame.font.match_font(font_family)
@@ -98,10 +99,6 @@ class TextInput:
                     self.tmp_string = self.input_string
 
                 elif event.key == pl.K_RETURN:
-                    # if self.callback is not None:
-                        # self.cursor_surface.fill((123,206,206))
-                        # ans = self.input_string[2:]
-                    # print(self.input_string[2:])
                     self.input_string = "> "
                     return True
 

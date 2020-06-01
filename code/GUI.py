@@ -49,6 +49,15 @@ player2.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
 transComman = []##紀錄指令的地方
 ##test-Dan
 
+Infantry_Self = pygame.image.load('../img/Infantry-self.png')
+Infantry_Self = pygame.transform.scale(Infantry_Self,(45,45))
+
+Infantry_Enemy = pygame.image.load('../img/Infantry-enmy.png')
+Infantry_Enemy = pygame.transform.scale(Infantry_Enemy,(45,45))
+
+HQ = pygame.image.load("../img/HQ.png")
+HQ = pygame.transform.scale(HQ,(45,45))
+
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 
@@ -559,8 +568,14 @@ def game_newgame():
     map = json.dumps(map)
     map = select.constructMap(map)
 
-    head_font = pygame.font.SysFont(None, 60)  ##建立文字物件 by Dan
+    head_font = smallfont  ##建立文字物件 by Dan  Changed : pygame.font.SysFont(None, 60) -> smallfont (By Chin)
     text_surface = head_font.render('illegal instruction', True, (255, 255, 255))  ##宣告文字物件的格式by Dan
+
+    Sx = 200  # Set up Army position x Default Value - By Chin
+    Sy = 90  # Set up Army position y Default Value - By Chin
+
+    msg = smallfont  # 用於顯示不是目前玩家的回合
+    MSG = msg.render("Not Your Turn", True, red)
 
     while intro:
         gameDisplay.fill(yellow)
@@ -601,8 +616,22 @@ def game_newgame():
                     ResponseArea.blit(text_surface, (10, 30 + (y * n))) ##顯示文字物件 by Dan
                 count += 1
 
+        # 如不是玩家回合則顯示MSG - By Chin
+        if token == False:
+            gameDisplay.blit(MSG,(750,720))
+
         gameDisplay.blit(textinput.get_surface(), (90, 585))         # TextInput position By Chin
+
         GUINewGamePageMap.Map(gameDisplay,map)
+
+        # draw HQ position - By Chin
+        gameDisplay.blit(HQ, (200, 360))
+        # draw Infantry - Start By Chin
+        # for i in len(Player.army):
+        # Sx = Player.army[i].x
+        # Sy = Player.army[i].y
+        gameDisplay.blit(Infantry_Self, (Sx, Sy))
+        # draw Infantry - End By Chin
 
         pygame.display.update()
         clock.tick(30)
@@ -794,8 +823,10 @@ def gameLoop():
 
 # game_user()
 
-# game_intro()
-game_newgame()
+game_intro()
+
+# game_newgame()
+
 # game_rank()
 
 # gameLoop()
