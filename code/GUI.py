@@ -18,6 +18,8 @@ import pygame.locals as pl #By Chin
 import GUINewGamePageButtonClick
 import GUINewGamePageMap
 import GUINewGamePageTextBox
+import GUIUserPage
+import GUIUserPageCreateGame
 
 
 # player = 0
@@ -116,7 +118,8 @@ def score(score):
     text = smallfont.render("Score: " + str(score), True, black)
     gameDisplay.blit(text, [0, 0])
 
-def button(text, x, y, width, height, inactive_color, active_color, action=None, btncolor = black):
+
+def button(text, x, y, width, height, inactive_color, active_color, action=None, btncolor=black):
     cur = pygame.mouse.get_pos()
     # print(cur)
     click = pygame.mouse.get_pressed()
@@ -151,6 +154,13 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
             if action == "NewGame":
                 # print("Comming Soon")
                 game_newgame()
+
+            if action == "Browse":
+                return GUIUserPageCreateGame.game_CreateGame()
+
+            if action == "CreateGame":
+                GUIUserPageCreateGame.game_CreateGame()
+
     else:
         pygame.draw.rect(gameDisplay, inactive_color, (x, y, width, height))
 
@@ -442,7 +452,7 @@ def game_newgame():
                 if TorF == True:##如果回傳值是true 就要記錄下來 by Dan
                     transComman.append(command)
                 else:##指令有問題
-
+                    print(player1.army[0].x, player1.army[0].y)
                     ResponseArea.blit(text_surface, (10, 30 + (y * n))) ##顯示文字物件 by Dan
                 count += 1
 

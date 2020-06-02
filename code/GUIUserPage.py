@@ -1,7 +1,7 @@
 import pygame
 import GUINewGamePageTextBox
 import GUIBrowser
-
+import GUIUserPageCreateGame
 pygame.init()
 
 display_width = 1024
@@ -67,6 +67,13 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
             if action == "NewGame":
                 # print("Comming Soon")
                 game_newgame()
+
+            if action == "Browse":
+                return GUIUserPageCreateGame.game_CreateGame(2)
+
+            if action == "CreateGame":
+                GUIUserPageCreateGame.game_CreateGame(1)
+
     else:
         pygame.draw.rect(gameDisplay, inactive_color, (x, y, width, height))
 
@@ -98,9 +105,15 @@ def game_user():
     IDTitle = MsgFontSize.render("ID", True, black)
     NameTitle = MsgFontSize.render("Name",True,black)
     # text_box = TextBox(350, 50, 500, 100, callback=callback)
-    while run:
-        events = pygame.event.get()
 
+
+    MSG = smallfont.render("No Any Record", True, red)
+    BrowseReply = pygame.Surface((300, 100))
+
+    while run:
+        # BrowseReply.fill(black)
+
+        events = pygame.event.get()
         for event in events:
             # print(event)
             if event.type == pygame.QUIT:
@@ -112,28 +125,9 @@ def game_user():
                     quit()
 
         gameDisplay.fill(yellow)
-        # button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
-        # button("Setting", 450, 250, 180, 70, red, light_red, action="Setting")
-        Text = TextStyle.render("Please Input your Username : ", 0, black)
-        gameDisplay.blit(Text, (90, 45))
-
-        # text_box.draw(gameDisplay)
-        pygame.draw.rect(gameDisplay, gray, (480,40,350,50))
-        if textinput.update(events):
-            FileName = textinput.get_text()
-            if GUIBrowser.FileCheck(FileName,gameDisplay):
-                print("Success!")
-            else:
-                print("Fail!")
-
-        gameDisplay.blit(textinput.get_surface(), (500, 50))
-
-        gameDisplay.blit(IDTitle,(200,110))
-        gameDisplay.blit(NameTitle,(550,110))
-
-        # Select Character
-        button("GO!", 87, 600, 180, 70, blue, light_blue, action="Home")
-
+        # gameDisplay.blit(BrowseReply, (550, 500))
+        button("CreateGame", 150, 300, 300, 170, red, light_red, action="CreateGame")
+        button("Browse", 550, 300, 300, 170, green, light_green, action="Browse")
         pygame.display.update()
         clock.tick(15)
 
