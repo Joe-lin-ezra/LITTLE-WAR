@@ -33,7 +33,7 @@ import Headquarter
 import Constructer ##by Dan
 
 pygame.init()
-# n = Network()
+net = Network()
 
 
 display_width = 1024
@@ -269,9 +269,10 @@ def game_rank():
     run = True
 
     # Server Part By Paco - Head #
-    #rank_get = {'event': 5 , 'player': player1-1}
-    #n.send(rank_get)
-    #b = n.recv
+    rank_get = {'event': 4, 'player': player-1, 'ID': 2}
+    a = net.send(rank_get)
+    b = net.recv()
+    #print(b)
     # Server Part By Paco - Foot#
 
     while run:
@@ -296,7 +297,7 @@ def game_rank():
         Win_txt = medfont.render("Win",True,black)
         gameDisplay.blit(Win_txt,(867,40))
 
-        rank = json.loads(select.selectRank(2))#player ID
+        rank = json.loads(b)#player ID
 
         FirstI = rank["1"][0]
         FI = medfont.render(str(FirstI), True, black)
@@ -383,6 +384,14 @@ def game_newgame():
     y = 0
     x = 0
     count = 0
+    myTurn = False
+
+    a = net.send({'event': 1, 'player': player - 1})
+    b = net.recv()
+    rm = json.loads(b)
+    room = rm['room']
+    if rm['room'] == 1:
+        myTurn = True
 
     textinput = GUINewGamePageTextBox.TextInput()           # 建立一個Textinput 的地方
     ResponseArea = pygame.Surface((600,150))
@@ -394,8 +403,8 @@ def game_newgame():
     token = True        # 模仿回合的結束 用來不給玩家在不是自己的回合中輸入
     # 呢邊是 Button 的東西 By Chin - Foot #
 
-    map = select.selectMap(2)
-    map = json.dumps(map)
+    net.send({'event': 5, 'player': player-1, 'room': room})
+    map = net.recv()
     map = select.constructMap(map)
 
     head_font = smallfont  ##建立文字物件 by Dan  Changed : pygame.font.SysFont(None, 60) -> smallfont (By Chin)
@@ -420,14 +429,15 @@ def game_newgame():
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if SendBtn.isOver(pos):
-                   print("TextBox Locked!")
-                   token = False                # 還未做出下一回合, 回恢權限 By Chin
+                    net.send({'event': 3, 'player': player-1, 'action': transComman})
+                    print("TextBox Locked!")
+                    myTurn = False
+                    token = False                # 還未做出下一回合, 回恢權限 By Chin
             if event.type == pygame.MOUSEMOTION:
                 if SendBtn.isOver(pos):
                     SendBtn.color = (light_blue)
                 else :
                     SendBtn.color = (blue)
-
 
         if count < 4 and token:
             if textinput.update(events):              # 輸入指令的地方 By Chin
@@ -465,6 +475,14 @@ def game_newgame():
 
         pygame.display.update()
         clock.tick(30)
+
+        try:
+            data = net.recv()
+            if data:
+                print(data)
+                break
+        except:
+            pass
 
 
 
@@ -557,10 +575,10 @@ class MySprite(pygame.sprite.Sprite):
         self.index += 1
 
 def game_loading():
-    # a = n.getP()
-    # # print(a)
-    # global player
-    # player = a['player']
+    a = net.getP()
+    print(a)
+    global player
+    player = a['player']
     pygame.init()
     my_sprite = MySprite()
     my_group = pygame.sprite.Group(my_sprite)

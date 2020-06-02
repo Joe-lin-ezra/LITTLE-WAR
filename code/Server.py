@@ -21,7 +21,7 @@ class Server():
             self.s.bind((IP, PORT))
         except socket.error as e:
             print(e)
-        self.s.listen(100)
+        self.s.listen(2)
     
     def loop(self, client, addr):
         while True:
@@ -35,13 +35,11 @@ class Server():
             except socket.error:
                 break
             if payload['event'] == RequestType.joinevent:
-                print(len(self.rooms))
                 if len(self.rooms) == 0:
                     self.rooms.append(Room())
                     self.rooms[len(self.rooms)-1].mapId = random.randint(1, 2)
                     room['room'] = len(self.rooms)
                     room['turn'] = 1
-                    print(room)
                     self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
                 else:
                     for r in self.rooms:
@@ -51,6 +49,7 @@ class Server():
                         room['room'] = len(self.rooms)
                         room['turn'] = 2
                         self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
+                        break
                     else:
                         self.rooms.append(Room())
                         self.rooms[len(self.rooms)-1].mapId = random.randint(1, 2)
@@ -60,23 +59,30 @@ class Server():
 
             elif payload['event'] == RequestType.sync:
                 for r in self.rooms:
-                    if(payload['place'] in r.user):
+                    if(payload['player'] in r.user):
                         for u in r.user:
-                            if u == payload['place']:
+                            if u == payload['player']:
                                 continue
                             else:
-                                payload['place'] = u
+                                payload['player'] = u
                                 self.userlist[u].send(bytes(json.dumps(payload).encode('utf-8')))
                                 self.userlist[payload['place']].send(bytes(json.dumps(d).encode('utf-8')))
             elif payload['event'] == RequestType.rank:
                 # print(payload)
                 pay = select.selectRank(payload['ID'])
-                # print(pay)
+                print(pay)
                 self.userlist[payload['player']].send(bytes(json.dumps(pay).encode('utf-8')))
             elif payload['event'] == RequestType.map:
                 map = select.selectMap(self.rooms[(payload['room']-1)].mapId)
                 print(map)
                 self.userlist[payload['player']].send(bytes(json.dumps(map).encode('utf-8')))
+            elif payload['event'] == RequestType.ac:
+                if payload['num'] == 1:
+                    data = UserSignUp.register(payload['name'])
+                elif payload['num'] == 2:
+                    data = UserSignUp.login(payload['name'])
+                self.
+
 
 
     def update(self):
@@ -88,12 +94,6 @@ class Server():
         self.userlist[(len(self.userlist)-1)].send(bytes(json.dumps(data).encode('utf-8')))
         start_new_thread(self.loop, (client, str(addr[1])))
 
-    def send(self, clientId):
-        for i in range (len(self.userlist)):
-            if self.userlist[i] == clientId:
-                print(i)
-                self.userlist[clientId].send()
-                break
 
 
 if __name__ == "__main__":
