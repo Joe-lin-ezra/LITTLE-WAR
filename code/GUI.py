@@ -19,13 +19,7 @@ import GUINewGamePageButtonClick
 import GUINewGamePageMap
 import GUINewGamePageTextBox
 
-pygame.init()
 
-display_width = 1024
-display_height = 768
-gameDisplay = pygame.display.set_mode((display_width, display_height))
-
-n = Network()
 # player = 0
 
 # player1 = Constructer.constructPlayer(select.selectDeploy(1)) ##生成自己玩家物件
@@ -38,6 +32,15 @@ import Army
 import Headquarter
 import Constructer ##by Dan
 
+pygame.init()
+# n = Network()
+
+
+display_width = 1024
+display_height = 768
+gameDisplay = pygame.display.set_mode((display_width, display_height))
+
+
 player1 = Player.Player()
 player2 = Player.Player()
 army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=2,y=1)
@@ -47,6 +50,7 @@ player2.army.append(army)
 
 player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
 player2.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
+
 
 transComman = []##紀錄指令的地方
 ##test-Dan
@@ -106,7 +110,6 @@ medfont = pygame.font.SysFont("comicsansms", 50)
 largefont = pygame.font.SysFont("comicsansms", 85)
 
 FPS = 3
-
 # map = open("map.json",'r')
 
 def score(score):
@@ -650,9 +653,9 @@ def gameLoop():
 
 # game_user()
 
-# game_intro()
+game_intro()
 
-game_newgame()
+# game_newgame()
 
 # game_rank()
 
