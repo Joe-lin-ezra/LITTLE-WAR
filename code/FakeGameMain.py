@@ -8,7 +8,7 @@ import Army
 import Headquarter
 import json
 import Constructer ##by Dan
-
+import DeCoder
 
 player1 = Player.Player()
 player2 = Player.Player()
@@ -29,6 +29,11 @@ transComman = []
 
 for i in range(len(map)):
     print(map[i])
+
+## run decoder
+# transCommandList = {'event': 3, 'player': 1, 'action': ['set 0 2 1', 'move 0 3 1', 'atk 0 0']}##假設收到的訊息為此dic
+# DeCoder.deCoder(transCommandList,1,map,player2,player1)
+
 while True:
     print(player2.hq.hp)
     print("X: "+str(player1.army[0].x))
@@ -50,6 +55,3 @@ while True:
         else:
             print("不紀錄")
 print(transCommandList)
-    ##先完善軍隊死亡(血量等於0)
-    ##完成紀律指令
-
