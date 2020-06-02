@@ -184,7 +184,7 @@ class TextInput:
 
     def callback(key):
         print(key)
-
+#
 # if __name__ == "__main__":
 #     pygame.init()
 #     screen = pygame.display.set_mode((1024, 768))
