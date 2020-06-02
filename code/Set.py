@@ -29,8 +29,7 @@ def set(player,player2 ,ForS,i,x,y,map):##傳入要設定的玩家，極其要�
             areas = json.loads(datas)["Player1_Area"]  ##生成區域要判斷
         elif ForS == 2:##是player2
             areas = json.loads(datas)["Player2_Area"]  ##生成區域要判斷
-        # if(x>=areas["x1"] and x <=areas["x2"] and y >= areas["y1"] and y<= areas["y1"]):##如果玩家要設定軍隊的座標再生成區域內
-        if x>=0 and x <=14 and y >= 0 and y<= 9:
+        if(x>=areas["x1"] and x <=areas["x2"] and y >= areas["y1"] and y<= areas["y2"]):##如果玩家要設定軍隊的座標再生成區域內
             try:##沒超過地圖大小
                 if(map[x][y]==0):##確認是否生成座標是否不再水面或是山上
                     for i in range (len(player2.army)):
