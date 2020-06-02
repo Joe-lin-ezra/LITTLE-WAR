@@ -39,6 +39,7 @@ def inputCommand(player,player2,ForS,command,map):##輸入指令
             print("玩家要求攻擊")
             comList[2] = comList[2].upper()
             TorF = ATK.atk(player,player2,comList[1],comList[2],map)##需要傳入自己player與對方player物件，並且傳入攻擊以及被攻擊軍隊的ID
+            # player.army[0].atked = 0 ##無限攻擊
             return TorF
         elif(comList[0] == "SET" and num == 4):
             print("玩家要求設置軍隊")
