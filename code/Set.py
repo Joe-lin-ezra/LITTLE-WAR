@@ -19,8 +19,11 @@ def set(player ,ForS,i,x,y,map):##傳入要設定的玩家，極其要設定的�
         print("此軍隊已經生成完畢") ##已經設置完成的軍隊不可再次設定
         return False
     except:##軍隊沒有設置過
+        i = float(i)
         i = int(i)
+        x = float(x)
         x = int(x)
+        y = float(y)
         y = int(y)
         if ForS == 1:##是player1
             areas = json.loads(datas)["Player1_Area"]  ##生成區域要判斷

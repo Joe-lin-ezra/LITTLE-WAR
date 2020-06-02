@@ -30,8 +30,11 @@ def countRange(armyX,armyY,distanceX,distanceY):
 def move(player,i,x,y,map):## x y 是要過去的座標
        road = 0 ##定義路面數字
        try:##如我軍對已經SET過
+              i = float(i)
               i = int(i)
+              x = float(x)
               x = int(x)
+              y = float(y)
               y = int(y)
               X = int(player.army[i].x)
               if (i <= (len(player.army) - 1)):  ##傭有此軍隊

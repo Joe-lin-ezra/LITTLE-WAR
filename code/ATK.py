@@ -7,6 +7,7 @@ hp = 10
 
 def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方player物件，並且傳入攻擊以及被攻擊軍隊的ID
     try:  ##如我軍對已經SET過
+        armyID = float(armyID)
         armyID = int(armyID)
         X = int(player1.army[armyID].x)
         try: ##對方軍隊已經set
@@ -15,6 +16,7 @@ def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方
                 if (player1.army[armyID].hp > 0):  ##玩家軍隊還活著
                     if (player1.army[armyID].atked == 0):  ##玩家此軍隊尚未攻擊
                         if (EnermyID != "HQ"):  ##如果不是指定總部
+                            EnermyID = float(EnermyID)
                             EnermyID = int(EnermyID)
                             X = int(player2.army[EnermyID].x)
                             if (EnermyID <= (len(player2.army) - 1)):  ##對方傭有此軍隊
