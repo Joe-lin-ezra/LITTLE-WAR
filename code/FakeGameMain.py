@@ -12,7 +12,7 @@ import DeCoder
 
 player1 = Player.Player()
 player2 = Player.Player()
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=None,y=None)
+army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=2,y=2)
 player1.army.append(army)
 army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=2)
 player2.army.append(army)

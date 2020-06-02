@@ -12,7 +12,7 @@ datas = json.dumps(datas)
 areas = json.loads(datas)["Player1_Area"]  ##生成區域要判斷
 # print(type(areas["x1"]))
 
-def set(player ,ForS,i,x,y,map):##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標 ForS first or second
+def set(player,player2 ,ForS,i,x,y,map):##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標 ForS first or second
     try:  ##如我軍對已經SET過
         i = int(i)
         X = int(player.army[i].x)
@@ -33,6 +33,10 @@ def set(player ,ForS,i,x,y,map):##傳入要設定的玩家，極其要設定的�
         if x>=0 and x <=14 and y >= 0 and y<= 9:
             try:##沒超過地圖大小
                 if(map[x][y]==0):##確認是否生成座標是否不再水面或是山上
+                    for i in range (len(player2.army)):
+                        if(player2.army[i].x == x and player2.army[i].y == y):
+                            print("與敵人重疊")
+                            return False
                     player.army[i].x = x  ##設定軍隊座標
                     player.army[i].y = y  ##設定軍隊座標
                     print("設定完成")

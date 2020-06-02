@@ -33,7 +33,7 @@ def inputCommand(player,player2,ForS,command,map):##輸入指令
         # print(num)
         if(comList[0] == "MOVE" and num == 4):
             print("玩家要求移動")
-            TorF = Move.move(player,comList[1],comList[2],comList[3],map)##傳入player物件，player的army的ID，以及此軍隊的X和Y
+            TorF = Move.move(player,player2,comList[1],comList[2],comList[3],map)##傳入player物件，player的army的ID，以及此軍隊的X和Y
             return TorF
         elif(comList[0] == "ATK" and num == 3):
             print("玩家要求攻擊")
@@ -43,7 +43,7 @@ def inputCommand(player,player2,ForS,command,map):##輸入指令
         elif(comList[0] == "SET" and num == 4):
             print("玩家要求設置軍隊")
             ##ForS first or second
-            TorF = Set.set(player ,ForS,comList[1],comList[2],comList[3],map)##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標
+            TorF = Set.set(player,player2 ,ForS,comList[1],comList[2],comList[3],map)##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標
             return TorF
         else:
             print("指令輸入錯誤")
