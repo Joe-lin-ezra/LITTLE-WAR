@@ -9,6 +9,7 @@ import Headquarter
 import json
 import Constructer ##by Dan
 import DeCoder
+import winOrLose
 
 # player1 = Player.Player()
 # player2 = Player.Player()
@@ -61,8 +62,12 @@ while True:
             player1.army[i].atked = 0
         tmpDic = {"action":transComman}
         transCommandList.update(tmpDic)
-        print("下一回合")
-        break
+        TorF = winOrLose.wOrL(player2)##判斷對方是否輸了
+        if TorF ==True:
+            print("你贏了")
+        else:
+            print("下一回合")
+            break
     else:
         TorF = Commander.inputCommand(player1, player2, 1, command,map)  ##這裡應該使GUI呼叫我的地方，我會回傳true or false
         if TorF == True:
