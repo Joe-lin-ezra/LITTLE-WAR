@@ -5,6 +5,8 @@ from Headquarter import Headquarter
 
 def constructPlayer(datas):
     datas = json.loads(datas)
+    datas = eval(datas) ##將str轉化成dict by Dan
+    # print(type(datas))
     # print(datas['0'])
     player1 = Player()
     for i in range(len(datas)):
@@ -18,8 +20,8 @@ def constructPlayer(datas):
                                  x=None,
                                  y=None))
         # ** search datas and give hq (x,y)
-        Player.hq = Headquarter(hp=20, x=0, y=0)##我隨便打數字喔，因為跑不動 by DannisMa
-
+        # Player.hq = Headquarter(hp=20, x=0, y=0)##我隨便打數字喔，因為跑不動 by DannisMa
+    return player1 ##需要return player 才能正確建構player在主程式by Dan
 
 
 def constructMap(datas):

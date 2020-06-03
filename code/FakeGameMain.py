@@ -10,34 +10,50 @@ import json
 import Constructer ##by Dan
 import DeCoder
 
-player1 = Player.Player()
-player2 = Player.Player()
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=1)
-player1.army.append(army)
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=2)
-player2.army.append(army)
+# player1 = Player.Player()
+# player2 = Player.Player()
+# army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=1)
+# player1.army.append(army)
+# army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=2)
+# player2.army.append(army)
+#
+# player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
+# player2.hq = Headquarter.Headquarter(hp=20, x=0, y=0)
 
-player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
-player2.hq = Headquarter.Headquarter(hp=20, x=0, y=0)
+player = select.selectDeploy(1)
+player = json.dumps(player)
+player1 = Constructer.constructPlayer(player)##正確建構玩家物件
+player2 = Constructer.constructPlayer(player)
+print(len(player1.army))
+print(player)
 
 datas = select.selectMap(1)
 datas = json.dumps(datas)
-map = select.constructMap(datas)
+print(datas)
+map = Constructer.constructMap(datas)
+datas = eval(datas)
+# print(datas["Player1_HQ"]["x"])
+# print(type(datas["Player1_HQ"]["x"]))
+player1.hq = Headquarter.Headquarter(hp=20, x=datas["Player1_HQ"]["x"], y=datas["Player1_HQ"]["y"])
+player2.hq = Headquarter.Headquarter(hp=20, x=datas["Player2_HQ"]["x"], y=datas["Player2_HQ"]["y"])
+print(player1.hq.hp)
+print(player1.hq.x)
+print(player1.hq.y)
 
 transCommandList = {'event':3,'player':1,}##player格子要再改
 transComman = []
 
-for i in range(len(map)):
-    print(map[i])
+# for i in range(len(map)):
+#     print(map[i])
 
 ## run decoder
 # transCommandList = {'event': 3, 'player': 1, 'action': ['set 0 2 1', 'move 0 3 1', 'atk 0 0']}##假設收到的訊息為此dic
 # DeCoder.deCoder(transCommandList,1,map,player2,player1)
 
 while True:
-    print(player2.hq.hp)
-    print("X: "+str(player1.army[0].x))
-    print("Y: "+str(player1.army[0].y))
+    # print(player2.hq.hp)
+    # print("X: "+str(player1.army[0].x))
+    # print("Y: "+str(player1.army[0].y))
     command = input("plz input ur command :\n")
     if (command == "leave"): ##button按下去要做的事情
         for i in range(len(player1.army)):
