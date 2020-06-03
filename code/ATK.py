@@ -29,6 +29,9 @@ def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方
                                             player2.army[EnermyID].hp = player2.army[EnermyID].hp - atker  ##敵人血量扣掉計算後的攻擊力
                                             player1.army[armyID].ammo = player1.army[armyID].ammo - 1
                                             player1.army[armyID].atked = 1  ##完成攻擊
+                                            if (player2.army[EnermyID].hp < 0): ##如果死掉拔掉他的x y
+                                                player2.army[EnermyID].x = None
+                                                player2.army[EnermyID].y = None
                                             print("攻擊成功")
                                             return True
                                     else:  ##對方軍隊已死亡
