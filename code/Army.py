@@ -1,9 +1,11 @@
 
 class Army:
-    def __init__(self, type, hp, movement, atk, atkRange, vision, x,y):
+    def __init__(self, type, hp, movement, ammo, fuel, atk, atkRange, vision, x,y):
         self.type = type
         self.hp = hp
         self.movement = movement
+        self.ammo = ammo
+        self.fuel = fuel
         self.atk = atk
         self.atkRange = atkRange
         self.vision = vision

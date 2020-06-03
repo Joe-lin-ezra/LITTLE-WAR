@@ -11,17 +11,8 @@ import Constructer ##by Dan
 import DeCoder
 import winOrLose
 
-# player1 = Player.Player()
-# player2 = Player.Player()
-# army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=1)
-# player1.army.append(army)
-# army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=2)
-# player2.army.append(army)
-#
-# player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
-# player2.hq = Headquarter.Headquarter(hp=20, x=0, y=0)
-
 player = select.selectDeploy(1)
+print(player)
 player = json.dumps(player)
 player1 = Constructer.constructPlayer(player)##正確建構玩家物件
 player2 = Constructer.constructPlayer(player)

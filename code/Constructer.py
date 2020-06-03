@@ -12,9 +12,11 @@ def constructPlayer(datas):
     for i in range(len(datas)):
         index = str(i)
         player1.army.append(Army(type=datas[index]['type'],
-                                 hp=10,
+                                 hp=100,
                                  movement=datas[index]['movement'],
-                                 atk=1,
+                                 ammo = datas[index]['ammo'],
+                                 fuel = datas[index]['fuel'],
+                                 atk=50,
                                  atkRange=datas[index]['range'],
                                  vision=datas[index]['vision'],
                                  x=None,
