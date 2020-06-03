@@ -131,4 +131,4 @@ def game_user():
         pygame.display.update()
         clock.tick(15)
 
-game_user()
+# game_user()

@@ -45,7 +45,7 @@ gameDisplay = pygame.display.set_mode((display_width, display_height))
 
 player1 = Player.Player()
 player2 = Player.Player()
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=2,y=1)
+army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=None,y=None)
 player1.army.append(army)
 army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=2)
 player2.army.append(army)
@@ -413,15 +413,17 @@ def game_newgame():
     token = True        # 模仿回合的結束 用來不給玩家在不是自己的回合中輸入
     # 呢邊是 Button 的東西 By Chin - Foot #
 
-    net.send({'event': 5, 'player': player-1, 'room': room})
-    map = net.recv()
+    # net.send({'event': 5, 'player': player-1, 'room': room})
+    # map = net.recv()
+    map = select.selectMap(2)
+    map = json.dumps(map)
     map = select.constructMap(map)
 
     head_font = smallfont  ##建立文字物件 by Dan  Changed : pygame.font.SysFont(None, 60) -> smallfont (By Chin)
     text_surface = head_font.render('illegal instruction', True, (255, 255, 255))  ##宣告文字物件的格式by Dan
 
-    Sx = 200  # Set up Army position x Default Value - By Chin
-    Sy = 90  # Set up Army position y Default Value - By Chin
+    Sx = None  # Set up Army position x Default Value - By Chin
+    Sy = None  # Set up Army position y Default Value - By Chin
 
     msg = smallfont  # 用於顯示不是目前玩家的回合
     MSG = msg.render("Not Your Turn", True, red)
@@ -449,6 +451,8 @@ def game_newgame():
                 else :
                     SendBtn.color = (blue)
 
+        GUINewGamePageMap.Map(gameDisplay,map)
+
         if count < 4 and token:
             if textinput.update(events):              # 輸入指令的地方 By Chin
                 # if count >= 3:
@@ -461,8 +465,11 @@ def game_newgame():
                 TorF = Commander.inputCommand(player1,player2,1,command,map)##呼叫commander來解析指令 by Dan
                 if TorF == True:##如果回傳值是true 就要記錄下來 by Dan
                     transComman.append(command)
+                    Sx = 200+player1.army[0].x*30                   #剩30是為了要看出他的移動變化, 但這會影響到他的移動範圍 - By Chin
+                    Sy = 100+player1.army[0].y*30
+                    print(player1.army[0].x)
                 else:##指令有問題
-                    print(player1.army[0].x, player1.army[0].y)
+                    print("DFG : ",player1.army[0].x, player1.army[0].y)
                     ResponseArea.blit(text_surface, (10, 30 + (y * n))) ##顯示文字物件 by Dan
                 count += 1
 
@@ -472,7 +479,12 @@ def game_newgame():
 
         gameDisplay.blit(textinput.get_surface(), (90, 585))         # TextInput position By Chin
 
-        GUINewGamePageMap.Map(gameDisplay,map)
+
+        if Sx and Sy:
+            gameDisplay.blit(Infantry_Self, (Sx, Sy))
+            # Sx = None
+            # Sy = None
+
 
         # draw HQ position - By Chin
         gameDisplay.blit(HQ, (200, 360))
@@ -480,7 +492,9 @@ def game_newgame():
         # for i in len(Player.army):
         # Sx = Player.army[i].x
         # Sy = Player.army[i].y
-        gameDisplay.blit(Infantry_Self, (Sx, Sy))
+
+        # gameDisplay.blit(Infantry_Self, (Sx, Sy))
+
         # draw Infantry - End By Chin
 
         pygame.display.update()
@@ -585,11 +599,11 @@ class MySprite(pygame.sprite.Sprite):
         self.index += 1
 
 def game_loading():
-    a = net.getP()
-    print(a)
-    global player
-    player = a['player']
-    pygame.init()
+    # a = net.getP()
+    # print(a)
+    # global player
+    # player = a['player']
+    # pygame.init()
     my_sprite = MySprite()
     my_group = pygame.sprite.Group(my_sprite)
 
