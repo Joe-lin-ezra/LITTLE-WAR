@@ -468,7 +468,7 @@ def game_newgame():
                     print("DFG : ",player1.army[0].x, player1.army[0].y)
                     ResponseArea.blit(text_surface, (10, 30 + (y * n))) ##顯示文字物件 by Dan
 
-        DisplayArmy(player1, player1.playerID, Sx, Sy)
+        DisplayArmy(player1,player2, Sx, Sy)
 
         # 如不是玩家回合則顯示MSG - By Chin
         if token == False:
@@ -507,11 +507,11 @@ def game_newgame():
 
 
 # Draw Army Function - By Chin
-def DisplayArmy(Player,PlayerID,Sx , Sy):                  #PlayerID Default is Player1 (Local Player)
-    for i in range (len(Player.army)):
-        if Player.army[i].x:
-            Sx = 200 + Player.army[i].x * 30
-            Sy = 100 + Player.army[i].y * 30
+def DisplayArmy(Player1,Player2,Sx , Sy):                  #PlayerID Default is Player1 (Local Player)
+    for i in range (len(Player1.army)):
+        if Player1.army[i].x:
+            Sx = 200 + Player1.army[i].x * 30
+            Sy = 100 + Player1.army[i].y * 30
             gameDisplay.blit(Infantry_Self, (Sx, Sy))
             # if Player.army[i].type == 'Infantry' :
             #     if PlayerID == 1:
@@ -536,7 +536,11 @@ def DisplayArmy(Player,PlayerID,Sx , Sy):                  #PlayerID Default is 
             #     print("Neotank")
             # elif Player.army[i].type == 'Megatank' :
             #     print("Megatank")
-
+    for i in range(len(Player2.army)):
+        if Player2.army[i].x:
+            Sx = 200 + Player2.army[i].x * 30
+            Sy = 100 + Player2.army[i].y * 30
+            gameDisplay.blit(Infantry_Enemy, (Sx, Sy))
 
 
 def pause():
