@@ -1,6 +1,5 @@
 import pygame
 import GUINewGamePageTextBox
-import GUIBrowser
 import GUIUserPageCreateGame
 pygame.init()
 

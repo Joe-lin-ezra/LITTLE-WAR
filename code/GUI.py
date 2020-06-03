@@ -35,7 +35,7 @@ import Headquarter
 import Constructer ##by Dan
 
 pygame.init()
-net = Network()
+# net = Network()
 
 
 display_width = 1024
@@ -396,12 +396,12 @@ def game_newgame():
     count = 0
     myTurn = False
 
-    a = net.send({'event': 1, 'player': player - 1})
-    b = net.recv()
-    rm = json.loads(b)
-    room = rm['room']
-    if rm['room'] == 1:
-        myTurn = True
+    # a = net.send({'event': 1, 'player': player - 1})
+    # b = net.recv()
+    # rm = json.loads(b)
+    # room = rm['room']
+    # if rm['room'] == 1:
+    #     myTurn = True
 
     textinput = GUINewGamePageTextBox.TextInput()           # 建立一個Textinput 的地方
     ResponseArea = pygame.Surface((600,150))
@@ -415,6 +415,7 @@ def game_newgame():
 
     # net.send({'event': 5, 'player': player-1, 'room': room})
     # map = net.recv()
+
     map = select.selectMap(2)
     map = json.dumps(map)
     map = select.constructMap(map)
