@@ -9,7 +9,7 @@ def deCoder (transCommandList,ForS,map,player2,player1):## ,player2,player1 ##�
     transCommandList = transCommandList["action"]
     for i in range (len(transCommandList)):
         TorF = Commander.inputCommand(player2,player1,ForS,transCommandList[i],map)
-    TorF = winOrLose.wOrL(player1)  ##判斷對方是否輸了
+    TorF = winOrLose.wOrL(player1)  ##判斷我方是否輸了
     if TorF == True:
         print("你輸了")
     else:

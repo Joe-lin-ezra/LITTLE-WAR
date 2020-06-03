@@ -20,19 +20,16 @@ import GUINewGamePageMap
 import GUINewGamePageTextBox
 import GUIUserPage
 import GUIUserPageCreateGame
-
-
-# player = 0
-
-# player1 = Constructer.constructPlayer(select.selectDeploy(1)) ##生成自己玩家物件
-# player2 = Constructer.constructPlayer(select.selectDeploy(2)) ##生成對方玩家物件
-
-##test  - Dan
+import winOrLose
 import select
 import Player
 import Army
 import Headquarter
 import Constructer ##by Dan
+
+
+
+##test  - Dan
 
 pygame.init()
 # net = Network()
@@ -41,17 +38,6 @@ pygame.init()
 display_width = 1024
 display_height = 768
 gameDisplay = pygame.display.set_mode((display_width, display_height))
-
-
-player1 = Player.Player()
-player2 = Player.Player()
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=None,y=None)
-player1.army.append(army)
-army = Army.Army(type='Infantry', hp=10, movement=1, atk=1, atkRange=1, vision=0, x=3,y=2)
-player2.army.append(army)
-
-player1.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
-player2.hq = Headquarter.Headquarter(hp=20, x=2, y=1)
 
 
 transComman = []##紀錄指令的地方
@@ -413,12 +399,21 @@ def game_newgame():
     token = True        # 模仿回合的結束 用來不給玩家在不是自己的回合中輸入
     # 呢邊是 Button 的東西 By Chin - Foot #
 
+    player = select.selectDeploy(1) ##1在這邊要接收 server告訴本地適用哪的玩家
+    player = json.dumps(player)
+    player1 = Constructer.constructPlayer(player)  ##正確建構玩家物件
+    player2 = Constructer.constructPlayer(player)
+
     # net.send({'event': 5, 'player': player-1, 'room': room})
     # map = net.recv()
 
     map = select.selectMap(2)
     map = json.dumps(map)
+    datas = eval(map) ##把map轉乘Dic儲存在datas，以便設置玩家基地時用
     map = select.constructMap(map)
+
+    player1.hq = Headquarter.Headquarter(hp=20, x=datas["Player1_HQ"]["x"], y=datas["Player1_HQ"]["y"]) ##建構玩家1物件
+    player2.hq = Headquarter.Headquarter(hp=20, x=datas["Player2_HQ"]["x"], y=datas["Player2_HQ"]["y"]) ##建構玩家2物件
 
     head_font = smallfont  ##建立文字物件 by Dan  Changed : pygame.font.SysFont(None, 60) -> smallfont (By Chin)
     text_surface = head_font.render('illegal instruction', True, (255, 255, 255))  ##宣告文字物件的格式by Dan
@@ -441,10 +436,15 @@ def game_newgame():
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
+                if TorF == True:
+                    print("對方輸了")
+                else:
+                    print("下一回合")
                 if SendBtn.isOver(pos):
-                    net.send({'event': 3, 'player': player-1, 'action': transComman})
+                    # net.send({'event': 3, 'player': player-1, 'action': transComman})
                     print("TextBox Locked!")
-                    myTurn = False
+                    # myTurn = False
                     token = False                # 還未做出下一回合, 回恢權限 By Chin
             if event.type == pygame.MOUSEMOTION:
                 if SendBtn.isOver(pos):
@@ -696,9 +696,9 @@ def gameLoop():
 
 # game_user()
 
-game_intro()
+# game_intro()
 
-# game_newgame()
+game_newgame()
 
 # game_rank()
 

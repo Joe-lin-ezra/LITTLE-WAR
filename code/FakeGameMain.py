@@ -25,21 +25,15 @@ player = select.selectDeploy(1)
 player = json.dumps(player)
 player1 = Constructer.constructPlayer(player)##正確建構玩家物件
 player2 = Constructer.constructPlayer(player)
-print(len(player1.army))
-print(player)
 
 datas = select.selectMap(1)
 datas = json.dumps(datas)
-print(datas)
 map = Constructer.constructMap(datas)
 datas = eval(datas)
 # print(datas["Player1_HQ"]["x"])
 # print(type(datas["Player1_HQ"]["x"]))
 player1.hq = Headquarter.Headquarter(hp=20, x=datas["Player1_HQ"]["x"], y=datas["Player1_HQ"]["y"])
 player2.hq = Headquarter.Headquarter(hp=20, x=datas["Player2_HQ"]["x"], y=datas["Player2_HQ"]["y"])
-print(player1.hq.hp)
-print(player1.hq.x)
-print(player1.hq.y)
 
 transCommandList = {'event':3,'player':1,}##player格子要再改
 transComman = []
@@ -52,9 +46,9 @@ transComman = []
 # DeCoder.deCoder(transCommandList,1,map,player2,player1)
 
 while True:
-    # print(player2.hq.hp)
-    # print("X: "+str(player1.army[0].x))
-    # print("Y: "+str(player1.army[0].y))
+    print("HQ:",player1.hq.hp,"X: ",player1.hq.x,"Y: ",player1.hq.y)
+    for i in range (len(player1.army)):
+        print("ID: ",i," HP:",player1.army[i].hp," X: ",player1.army[i].x," Y: ",player1.army[i].y)
     command = input("plz input ur command :\n")
     if (command == "leave"): ##button按下去要做的事情
         for i in range(len(player1.army)):
@@ -64,7 +58,7 @@ while True:
         transCommandList.update(tmpDic)
         TorF = winOrLose.wOrL(player2)##判斷對方是否輸了
         if TorF ==True:
-            print("你贏了")
+            print("對方輸了")
         else:
             print("下一回合")
             break
