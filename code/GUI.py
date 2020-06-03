@@ -379,7 +379,6 @@ def game_newgame():
     n = 0
     y = 0
     x = 0
-    count = 0
     myTurn = False
 
     # a = net.send({'event': 1, 'player': player - 1})
@@ -402,7 +401,9 @@ def game_newgame():
     player = select.selectDeploy(1) ##1在這邊要接收 server告訴本地適用哪的玩家
     player = json.dumps(player)
     player1 = Constructer.constructPlayer(player)  ##正確建構玩家物件
+    player1.playerID = 1 ##server give us - By Dan
     player2 = Constructer.constructPlayer(player)
+    player2.playerID = 2  ##server give us - By Dan
 
     # net.send({'event': 5, 'player': player-1, 'room': room})
     # map = net.recv()
@@ -454,11 +455,8 @@ def game_newgame():
 
         GUINewGamePageMap.Map(gameDisplay,map)
 
-        if count < 4 and token:
+        if token:
             if textinput.update(events):              # 輸入指令的地方 By Chin
-                # if count >= 3:
-                    # 會否考慮顥示訊息 讓玩家知道不能輸入? By Chin
-                # ResponseArea.blit(textinput.get_surface(), (10, 30 + (y * n)))
                 n += 1
                 y = 30
                 command = textinput.get_text()
@@ -466,13 +464,11 @@ def game_newgame():
                 TorF = Commander.inputCommand(player1,player2,1,command,map)##呼叫commander來解析指令 by Dan
                 if TorF == True:##如果回傳值是true 就要記錄下來 by Dan
                     transComman.append(command)
-                    Sx = 200+player1.army[0].x*30                   #剩30是為了要看出他的移動變化, 但這會影響到他的移動範圍 - By Chin
-                    Sy = 100+player1.army[0].y*30
-                    print(player1.army[0].x)
                 else:##指令有問題
                     print("DFG : ",player1.army[0].x, player1.army[0].y)
                     ResponseArea.blit(text_surface, (10, 30 + (y * n))) ##顯示文字物件 by Dan
-                count += 1
+
+        DisplayArmy(player1, player1.playerID, Sx, Sy)
 
         # 如不是玩家回合則顯示MSG - By Chin
         if token == False:
@@ -489,12 +485,11 @@ def game_newgame():
 
         # draw HQ position - By Chin
         gameDisplay.blit(HQ, (200, 360))
-        # draw Infantry - Start By Chin
-        # for i in len(Player.army):
-        # Sx = Player.army[i].x
-        # Sy = Player.army[i].y
 
-        # gameDisplay.blit(Infantry_Self, (Sx, Sy))
+        # draw Infantry - Start By Chin
+
+        # Get PlayerID , Sx , Sy
+        # Run DisplayArmy()
 
         # draw Infantry - End By Chin
 
@@ -511,34 +506,37 @@ def game_newgame():
 
 
 
-def game_controls():
-    gcont = True
+# Draw Army Function - By Chin
+def DisplayArmy(Player,PlayerID,Sx , Sy):                  #PlayerID Default is Player1 (Local Player)
+    for i in range (len(Player.army)):
+        if Player.army[i].x:
+            Sx = 200 + Player.army[i].x * 30
+            Sy = 100 + Player.army[i].y * 30
+            gameDisplay.blit(Infantry_Self, (Sx, Sy))
+            # if Player.army[i].type == 'Infantry' :
+            #     if PlayerID == 1:
+            #         gameDisplay.blit(Infantry_Self,(Sx,Sy))
+            #     else:
+            #         gameDisplay.blit(Infantry_Enemy,(Sx,Sy))
+            # elif Player.army[i].type == 'Mech' :
+            #     print('Mech')
+            # elif Player.army[i].type == 'Reoon' :
+            #     print("Reoon")
+            # elif Player.army[i].type == 'APC' :
+            #     print("ACP")
+            # elif Player.army[i].type == 'Artillery' :
+            #     print("Artillery")
+            # elif Player.army[i].type == 'Tank' :
+            #     print("Tank")
+            # elif Player.army[i].type == 'Rockets' :
+            #     print("Rockets")
+            # elif Player.army[i].type == 'Medium Tank' :
+            #     print("Medium Tank")
+            # elif Player.army[i].type == 'Neotank' :
+            #     print("Neotank")
+            # elif Player.army[i].type == 'Megatank' :
+            #     print("Megatank")
 
-    while gcont:
-        for event in pygame.event.get():
-            # print(event)
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
-
-        gameDisplay.fill(white)
-        message_to_screen("Controls", green, -100, size="large")
-        message_to_screen("Fire: Spacebar", black, -30)
-        message_to_screen("Move Turret: Up and Down arrows", black, 10)
-        message_to_screen("Move Tank: Left and Right arrows", black, 50)
-        message_to_screen("Pause: P", black, 90)
-
-        button("play", 150, 500, 100, 50, green, light_green, action="play")
-        button("Main", 350, 500, 100, 50, yellow, yellow, action="main")
-        button("quit", 550, 500, 100, 50, red, light_red, action="quit")
-
-        pygame.display.update()
-
-        clock.tick(15)
 
 
 def pause():
