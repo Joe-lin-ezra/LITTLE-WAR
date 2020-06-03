@@ -437,13 +437,13 @@ def game_newgame():
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
-                if TorF == True:
-                    print("對方輸了")
-                else:
-                    print("下一回合")
                 if SendBtn.isOver(pos):
                     # net.send({'event': 3, 'player': player-1, 'action': transComman})
+                    TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
+                    if TorF == True:
+                        print("對方輸了")
+                    else:
+                        print("下一回合")
                     print("TextBox Locked!")
                     # myTurn = False
                     token = False                # 還未做出下一回合, 回恢權限 By Chin
