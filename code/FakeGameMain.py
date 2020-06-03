@@ -15,7 +15,9 @@ player = select.selectDeploy(1)
 print(player)
 player = json.dumps(player)
 player1 = Constructer.constructPlayer(player)##正確建構玩家物件
+player1.playerID = 1
 player2 = Constructer.constructPlayer(player)
+player2.playerID = 2
 
 datas = select.selectMap(1)
 datas = json.dumps(datas)
@@ -43,6 +45,10 @@ while True:
     command = input("plz input ur command :\n")
     if (command == "leave"): ##button按下去要做的事情
         for i in range(len(player1.army)):
+            if(player1.army[i].moved == 0):##扣除油或體力
+                player1.army[i].fuel = player1.army[i].fuel - 5
+            if(player1.army[i].fuel <=0):
+                player1.army[i].hp = 0
             player1.army[i].moved = 0
             player1.army[i].atked = 0
         tmpDic = {"action":transComman}

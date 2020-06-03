@@ -26,8 +26,9 @@ def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方
                                         percent = math.ceil((player1.army[armyID].hp / hp).real)  ##血量換算百分比
                                         atker = player1.army[armyID].atk * percent  ##攻擊力依照血量變動
                                         player2.army[EnermyID].hp = player2.army[EnermyID].hp - atker  ##敵人血量扣掉計算後的攻擊力
-                                        print("攻擊成功")
+                                        player1.army[armyID].ammo = player1.army[armyID].ammo - 1
                                         player1.army[armyID].atked = 1  ##完成攻擊
+                                        print("攻擊成功")
                                         return True
                                 else:  ##對方軍隊已死亡
                                     print("對方軍隊已死亡")
