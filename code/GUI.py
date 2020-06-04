@@ -443,23 +443,22 @@ def game_newgame():
     msg = smallfont  # 用於顯示不是目前玩家的回合
     MSG = msg.render("Not Your Turn", True, red)
 
-    #help = pygame.image.load("../img/help.png").convert()
-    # HelpBtn = pygame.draw.rect(gameDisplay,)
+    PauseBtn = GUINewGamePageButtonClick.button(white,25,450,140,55,"More...")
     while intro:
         gameDisplay.fill(yellow)
         message_to_screen("Game Start", black, 1000, -340, size='large')
         gameDisplay.blit(ResponseArea, (80, 580))
         SendBtn.draw(gameDisplay)
+        PauseBtn.draw(gameDisplay)
         events = pygame.event.get()
         for event in events:
             pos = pygame.mouse.get_pos()
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:            # Pause 的按鈕位 - By Chin
-                if event.key == pygame.K_p and pygame.key.get_mods() & pygame.KMOD_CTRL:
-                    GUIPausePage.pause()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                # if PauseBtn.isOver(pos):
+                #     GUIPausePage.pause()
                 if SendBtn.isOver(pos):
                     # net.send({'event': 3, 'player': place-1, 'action': transComman})
                     TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
@@ -479,7 +478,7 @@ def game_newgame():
         GUINewGamePageMap.Map(gameDisplay,map)
 
         if token :
-            if textinput.update(events) and Pass:              # 輸入指令的地方 By Chin
+            if textinput.update(events):              # 輸入指令的地方 By Chin
                 n += 1
                 y = 30
                 command = textinput.get_text()
@@ -513,8 +512,12 @@ def game_newgame():
 
         # Get PlayerID , Sx , Sy
         # Run DisplayArmy()
-
         # draw Infantry - End By Chin
+
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PauseBtn.isOver(pos):
+                    GUIPausePage.pause()
 
         pygame.display.update()
         clock.tick(30)
@@ -692,9 +695,9 @@ def game_CreateGame(num):
 
 # game_user()
 
-game_intro()
+# game_intro()
 
-#game_newgame()
+game_newgame()
 
 # game_rank()
 
