@@ -20,6 +20,7 @@ import GUINewGamePageMap
 import GUINewGamePageTextBox
 import GUIUserPage
 import GUIUserPageCreateGame
+import GUIPausePage
 import winOrLose
 import select
 import Player
@@ -396,6 +397,7 @@ def game_newgame():
     # 呢邊是 Button 的東西 By Chin - Head #
     SendBtn = GUINewGamePageButtonClick.button(blue,750,590,170,120,"GO")  # color , x, y, width, height , text
     token = True        # 模仿回合的結束 用來不給玩家在不是自己的回合中輸入
+    Pass = False         # Pause 專用
     # 呢邊是 Button 的東西 By Chin - Foot #
 
     player = select.selectDeploy(1) ##1在這邊要接收 server告訴本地適用哪的玩家
@@ -425,6 +427,8 @@ def game_newgame():
     msg = smallfont  # 用於顯示不是目前玩家的回合
     MSG = msg.render("Not Your Turn", True, red)
 
+    help = pygame.image.load("../img/help.png").convert()
+    # HelpBtn = pygame.draw.rect(gameDisplay,)
     while intro:
         gameDisplay.fill(yellow)
         message_to_screen("Game Start", black, 1000, -340, size='large')
@@ -436,6 +440,9 @@ def game_newgame():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:            # Pause 的按鈕位 - By Chin
+                if event.key == pygame.K_p and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                    GUIPausePage.pause()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if SendBtn.isOver(pos):
                     # net.send({'event': 3, 'player': player-1, 'action': transComman})
@@ -455,8 +462,8 @@ def game_newgame():
 
         GUINewGamePageMap.Map(gameDisplay,map)
 
-        if token:
-            if textinput.update(events):              # 輸入指令的地方 By Chin
+        if token :
+            if textinput.update(events) and Pass:              # 輸入指令的地方 By Chin
                 n += 1
                 y = 30
                 command = textinput.get_text()
