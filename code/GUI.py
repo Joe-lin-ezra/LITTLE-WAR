@@ -33,7 +33,7 @@ import Constructer ##by Dan
 ##test  - Dan
 
 pygame.init()
-# net = Network()
+net = Network()
 
 
 display_width = 1024
@@ -266,7 +266,7 @@ def game_rank():
     run = True
 
     # Server Part By Paco - Head #
-    rank_get = {'event': 4, 'player': player-1, 'ID': 2}
+    rank_get = {'event': 4, 'player': place-1, 'ID': 2}
     a = net.send(rank_get)
     b = net.recv()
     #print(b)
@@ -382,12 +382,14 @@ def game_newgame():
     x = 0
     myTurn = False
 
-    # a = net.send({'event': 1, 'player': player - 1})
-    # b = net.recv()
-    # rm = json.loads(b)
-    # room = rm['room']
-    # if rm['room'] == 1:
-    #     myTurn = True
+    # open room By Paco
+    a = net.send({'event': 1, 'player': place - 1})
+    b = net.recv() #get dic {'room': value, 'turn': value} turn = 1 is player1, = 2 player2
+    rm = json.loads(b)
+    room = rm['room']
+    if rm['room'] == 1:
+        myTurn = True
+    # open room By Paco
 
     textinput = GUINewGamePageTextBox.TextInput()           # 建立一個Textinput 的地方
     ResponseArea = pygame.Surface((600,150))
@@ -400,20 +402,33 @@ def game_newgame():
     Pass = False         # Pause 專用
     # 呢邊是 Button 的東西 By Chin - Foot #
 
-    player = select.selectDeploy(1) ##1在這邊要接收 server告訴本地適用哪的玩家
-    player = json.dumps(player)
-    player1 = Constructer.constructPlayer(player)  ##正確建構玩家物件
-    player1.playerID = 1 ##server give us - By Dan
+    # player conn server select By Paco
+    net.send({'event': 7,'room': room,'player': place - 1})
+    player = net.recv()##1在這邊要接收 server告訴本地適用哪的玩家
+    player1 = Constructer.constructPlayer(player)
+    player1.playerID = 1  ##server give us - By Dan
     player2 = Constructer.constructPlayer(player)
     player2.playerID = 2  ##server give us - By Dan
+    # player conn server select By Paco
 
-    # net.send({'event': 5, 'player': player-1, 'room': room})
-    # map = net.recv()
+    #player = select.selectDeploy(1) ##1在這邊要接收 server告訴本地適用哪的玩家
+    #player = json.dumps(player)
+    #player1 = Constructer.constructPlayer(player)  ##正確建構玩家物件
+    #player1.playerID = 1 ##server give us - By Dan
+    #player2 = Constructer.constructPlayer(player)
+    #player2.playerID = 2  ##server give us - By Dan
 
-    map = select.selectMap(2)
-    map = json.dumps(map)
-    datas = eval(map) ##把map轉乘Dic儲存在datas，以便設置玩家基地時用
+    #server get map By Paco
+    net.send({'event': 5, 'player': place-1, 'room': room})
+    map = net.recv()
+    datas = eval(map)
     map = select.constructMap(map)
+    # server get map By Paco
+
+    #map = select.selectMap(2)
+    #map = json.dumps(map)
+    #datas = eval(map) ##把map轉乘Dic儲存在datas，以便設置玩家基地時用
+    #map = select.constructMap(json.dumps(map))
 
     player1.hq = Headquarter.Headquarter(hp=20, x=datas["Player1_HQ"]["x"], y=datas["Player1_HQ"]["y"]) ##建構玩家1物件
     player2.hq = Headquarter.Headquarter(hp=20, x=datas["Player2_HQ"]["x"], y=datas["Player2_HQ"]["y"]) ##建構玩家2物件
@@ -427,7 +442,7 @@ def game_newgame():
     msg = smallfont  # 用於顯示不是目前玩家的回合
     MSG = msg.render("Not Your Turn", True, red)
 
-    help = pygame.image.load("../img/help.png").convert()
+    #help = pygame.image.load("../img/help.png").convert()
     # HelpBtn = pygame.draw.rect(gameDisplay,)
     while intro:
         gameDisplay.fill(yellow)
@@ -445,7 +460,7 @@ def game_newgame():
                     GUIPausePage.pause()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if SendBtn.isOver(pos):
-                    # net.send({'event': 3, 'player': player-1, 'action': transComman})
+                    # net.send({'event': 3, 'player': place-1, 'action': transComman})
                     TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
                     if TorF == True:
                         print("對方輸了")
@@ -503,13 +518,6 @@ def game_newgame():
         pygame.display.update()
         clock.tick(30)
 
-        try:
-            data = net.recv()
-            if data:
-                print(data)
-                break
-        except:
-            pass
 
 
 
@@ -609,11 +617,13 @@ class MySprite(pygame.sprite.Sprite):
         self.index += 1
 
 def game_loading():
-    # a = net.getP()
-    # print(a)
-    # global player
-    # player = a['player']
-    # pygame.init()
+    # server conn By Paco
+    a = net.getP()
+    print(a)
+    global place
+    place = a['player']
+    # server conn By Paco
+    #pygame.init()
     my_sprite = MySprite()
     my_group = pygame.sprite.Group(my_sprite)
 
@@ -705,9 +715,9 @@ def gameLoop():
 
 # game_user()
 
-# game_intro()
+game_intro()
 
-game_newgame()
+#game_newgame()
 
 # game_rank()
 

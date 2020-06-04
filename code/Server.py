@@ -3,6 +3,7 @@ from _thread import *
 import socket
 import json
 from GameRoom import Room
+import UserSignUp
 import select
 import random
 
@@ -38,6 +39,7 @@ class Server():
                 if len(self.rooms) == 0:
                     self.rooms.append(Room())
                     self.rooms[len(self.rooms)-1].mapId = random.randint(1, 2)
+                    self.rooms[len(self.rooms) - 1].playerType = random.randint(1, 2)
                     room['room'] = len(self.rooms)
                     room['turn'] = 1
                     self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
@@ -53,6 +55,7 @@ class Server():
                     else:
                         self.rooms.append(Room())
                         self.rooms[len(self.rooms)-1].mapId = random.randint(1, 2)
+                        self.rooms[len(self.rooms) - 1].playerType = random.randint(1, 2)
                         room['room'] = len(self.rooms)
                         room['turn'] = 1
                         self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
@@ -74,14 +77,15 @@ class Server():
                 self.userlist[payload['player']].send(bytes(json.dumps(pay).encode('utf-8')))
             elif payload['event'] == RequestType.map:
                 map = select.selectMap(self.rooms[(payload['room']-1)].mapId)
-                print(map)
                 self.userlist[payload['player']].send(bytes(json.dumps(map).encode('utf-8')))
             elif payload['event'] == RequestType.ac:
                 if payload['num'] == 1:
                     data = UserSignUp.register(payload['name'])
                 elif payload['num'] == 2:
                     data = UserSignUp.login(payload['name'])
-                self.
+            elif payload['event'] == RequestType.player:
+                player = select.selectDeploy(self.rooms[payload['room']-1].mapId)
+                self.userlist[payload['player']].send(bytes(json.dumps(player).encode('utf-8')))
 
 
 
