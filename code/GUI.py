@@ -18,8 +18,6 @@ import pygame.locals as pl #By Chin
 import GUINewGamePageButtonClick
 import GUINewGamePageMap
 import GUINewGamePageTextBox
-import GUIUserPage
-import GUIUserPageCreateGame
 import GUIPausePage
 import winOrLose
 import select
@@ -92,6 +90,9 @@ brown = (153, 102, 51)
 gray = (102, 102, 102)
 light_gray = (230, 230, 230)
 
+orange = (255, 153, 0)
+light_orange = (255, 204, 0)
+
 clock = pygame.time.Clock()
 
 smallfont = pygame.font.SysFont("comicsansms", 25)
@@ -143,10 +144,10 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
                 game_newgame()
 
             if action == "Browse":
-                return GUIUserPageCreateGame.game_CreateGame()
+                return game_CreateGame(2)
 
             if action == "CreateGame":
-                GUIUserPageCreateGame.game_CreateGame()
+                game_CreateGame(1)
 
     else:
         pygame.draw.rect(gameDisplay, inactive_color, (x, y, width, height))
@@ -207,10 +208,21 @@ def game_user():
     run = True
     textinput = GUINewGamePageTextBox.TextInput()
 
-    # text_box = TextBox(350, 50, 500, 100, callback=callback)
-    while run:
-        events = pygame.event.get()
+    TextStyle = pygame.font.SysFont('Comic Sans MS',28)
 
+    MsgFontSize = medfont
+    IDTitle = MsgFontSize.render("ID", True, black)
+    NameTitle = MsgFontSize.render("Name",True,black)
+    # text_box = TextBox(350, 50, 500, 100, callback=callback)
+
+
+    MSG = smallfont.render("No Any Record", True, red)
+    BrowseReply = pygame.Surface((300, 100))
+
+    while run:
+        # BrowseReply.fill(black)
+
+        events = pygame.event.get()
         for event in events:
             # print(event)
             if event.type == pygame.QUIT:
@@ -222,20 +234,9 @@ def game_user():
                     quit()
 
         gameDisplay.fill(yellow)
-        # button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
-        # button("Setting", 450, 250, 180, 70, red, light_red, action="Setting")
-        Text = smallfont.render("Please Input your Username : ", 0, black)
-        gameDisplay.blit(Text, (150, 100))
-
-        # text_box.draw(gameDisplay)
-        pygame.draw.rect(gameDisplay, gray, (480,90,350,50))
-        if textinput.update(events):
-            print(textinput.get_text())
-        gameDisplay.blit(textinput.get_surface(), (500, 100))
-
-        # Select Character
-        button("GO!", 87, 579, 180, 70, blue, light_blue, action="Home")
-
+        # gameDisplay.blit(BrowseReply, (550, 500))
+        button("CreateGame", 150, 300, 300, 170, red, light_red, action="CreateGame")
+        button("Browse", 550, 300, 300, 170, green, light_green, action="Browse")
         pygame.display.update()
         clock.tick(15)
 
@@ -657,60 +658,36 @@ def game_loading():
     pygame.quit()
 
 
-def gameLoop():
-    gameExit = False
-    gameOver = False
-    FPS = 15
+def game_CreateGame(num):
+    pygame.init()
+    intro = True
 
-    while not gameExit:
+    textinputName = GUINewGamePageTextBox.TextInput()           # TextBox for UserName
+    textinputPw = GUINewGamePageTextBox.TextInput()             # TextBox for Set up Password
+    textinputPwC = GUINewGamePageTextBox.TextInput()            # TextBox for Confirm Password
+    TextArea = pygame.Surface((400, 55))
+    TextArea.fill(light_gray)
+    token = 0
+    while intro:
+        gameDisplay.fill(yellow)
 
-        if gameOver == True:
-            # gameDisplay.fill(white)
-            message_to_screen("Game Over", red, -50, size="large")
-            message_to_screen("Press C to play again or Q to exit", black, 50)
-            pygame.display.update()
-            while gameOver == True:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        gameExit = True
-                        gameOver = False
-
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_c:
-                            gameLoop()
-                        elif event.key == pygame.K_q:
-
-                            gameExit = True
-                            gameOver = False
-
-        for event in pygame.event.get():
-
+        events = pygame.event.get()
+        for event in events:
+            pos = pygame.mouse.get_pos()
             if event.type == pygame.QUIT:
-                gameExit = True
+                pygame.quit()
+                quit()
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    pass
-
-                elif event.key == pygame.K_RIGHT:
-                    pass
-
-                elif event.key == pygame.K_UP:
-                    pass
-
-
-                elif event.key == pygame.K_DOWN:
-                    pass
-
-                elif event.key == pygame.K_p:
-                    pause()
-
-        gameDisplay.fill(white)
+        message_to_screen("UserName", black, 1000, -130, size='medium')
+        gameDisplay.blit(TextArea, (300, 350))
+        gameDisplay.blit(textinputName.get_surface(), (310, 360))
+        if textinputName.update(events):
+            Name = textinputName.get_text()         # 在此取得UserName
+            net.send({'event': 6, 'name': Name, 'num': num})
+            print(Name)
+        button("Home",350,500,300,50,orange,light_orange,action="Home")
         pygame.display.update()
-        clock.tick(FPS)
-
-    pygame.quit()
-    quit()
+        clock.tick(30)
 
 
 # game_user()
