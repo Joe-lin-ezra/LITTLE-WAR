@@ -93,6 +93,8 @@ light_gray = (230, 230, 230)
 orange = (255, 153, 0)
 light_orange = (255, 204, 0)
 
+navy =(0, 43, 128)
+
 clock = pygame.time.Clock()
 
 smallfont = pygame.font.SysFont("comicsansms", 25)
@@ -443,13 +445,36 @@ def game_newgame():
     msg = smallfont  # 用於顯示不是目前玩家的回合
     MSG = msg.render("Not Your Turn", True, red)
 
-    PauseBtn = GUINewGamePageButtonClick.button(white,25,450,140,55,"More...")
     while intro:
         gameDisplay.fill(yellow)
         message_to_screen("Game Start", black, 1000, -340, size='large')
         gameDisplay.blit(ResponseArea, (80, 580))
         SendBtn.draw(gameDisplay)
-        PauseBtn.draw(gameDisplay)
+
+        # Infantry id 編號是? - By Chin #
+        Infantry = pygame.image.load("../img/Infantry-self.png")
+        Infantry = pygame.transform.scale(Infantry, (50, 50))
+        gameDisplay.blit(Infantry, (20, 80))
+        message_to_screen("Infantry", navy, 280, -290, size="small")
+        message_to_screen("> Move : 3 px", navy, 180, -230)
+        message_to_screen("> ATK : 1 px  ", navy, 182, -190)
+
+        # Mech id 編號是? - By Chin #
+        Mech = pygame.image.load("../img/Mech-self.png")
+        Mech = pygame.transform.scale(Mech, (50, 50))
+        gameDisplay.blit(Mech, (20, 230))
+        message_to_screen("Mech", navy, 280, -130)
+        message_to_screen("> Move : 2 px", navy, 180, -90)
+        message_to_screen("> ATK : 1 px ", navy, 178, -50)
+
+        # Reco id 編號是? - By Chin #
+        Reco = pygame.image.load("../img/Reco-self.png")
+        Reco = pygame.transform.scale(Reco,(50,50))
+        gameDisplay.blit(Reco,(20,380))
+        message_to_screen("Reco",navy,280,30)
+        message_to_screen("> Move : 2 px",navy,180,70)
+        message_to_screen("> ATK : 1 px  ",navy,180,110)
+
         events = pygame.event.get()
         for event in events:
             pos = pygame.mouse.get_pos()
@@ -457,8 +482,6 @@ def game_newgame():
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # if PauseBtn.isOver(pos):
-                #     GUIPausePage.pause()
                 if SendBtn.isOver(pos):
                     # net.send({'event': 3, 'player': place-1, 'action': transComman})
                     TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
@@ -476,6 +499,7 @@ def game_newgame():
                     SendBtn.color = (blue)
 
         GUINewGamePageMap.Map(gameDisplay,map)
+
 
         if token :
             if textinput.update(events):              # 輸入指令的地方 By Chin
@@ -513,11 +537,6 @@ def game_newgame():
         # Get PlayerID , Sx , Sy
         # Run DisplayArmy()
         # draw Infantry - End By Chin
-
-        for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if PauseBtn.isOver(pos):
-                    GUIPausePage.pause()
 
         pygame.display.update()
         clock.tick(30)
