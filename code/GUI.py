@@ -85,7 +85,8 @@ light_red = (255, 0, 0)
 green = (0, 153, 51)
 light_green = (51, 204, 51)
 
-brown = (153, 102, 51)
+Tobacco = (102, 51, 0)
+light_tobacco = (153, 102, 51)
 
 gray = (102, 102, 102)
 light_gray = (230, 230, 230)
@@ -438,12 +439,16 @@ def game_newgame():
 
     head_font = smallfont  ##建立文字物件 by Dan  Changed : pygame.font.SysFont(None, 60) -> smallfont (By Chin)
     text_surface = head_font.render('illegal instruction', True, (255, 255, 255))  ##宣告文字物件的格式by Dan
-
     Sx = None  # Set up Army position x Default Value - By Chin
     Sy = None  # Set up Army position y Default Value - By Chin
 
     msg = smallfont  # 用於顯示不是目前玩家的回合
     MSG = msg.render("Not Your Turn", True, red)
+
+    winmsg = largefont
+    Win = winmsg.render("You Win~", True, navy)
+
+    RankBtn = GUINewGamePageButtonClick.button(white,400,650,150,70,"Rank")     # Button to go to rank page after win or lost the game
 
     while intro:
         gameDisplay.fill(yellow)
@@ -486,6 +491,9 @@ def game_newgame():
                     # net.send({'event': 3, 'player': place-1, 'action': transComman})
                     TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
                     if TorF == True:
+                        gameDisplay.fill(yellow)
+                        gameDisplay.blit(Win,(300,310))
+                        RankBtn.draw(gameDisplay)
                         print("對方輸了")
                     else:
                         print("下一回合")
@@ -497,11 +505,14 @@ def game_newgame():
                     SendBtn.color = (light_blue)
                 else :
                     SendBtn.color = (blue)
-
+                if RankBtn.isOver(pos):
+                    RankBtn.color = (light_tobacco)
+                else:
+                    RankBtn.color = (Tobacco)
         GUINewGamePageMap.Map(gameDisplay,map)
 
 
-        if token :
+        if token :                  # token 改成 myTurn
             if textinput.update(events):              # 輸入指令的地方 By Chin
                 n += 1
                 y = 30
