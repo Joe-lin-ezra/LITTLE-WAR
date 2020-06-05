@@ -31,7 +31,7 @@ import Constructer ##by Dan
 ##test  - Dan
 
 pygame.init()
-#net = Network()
+net = Network()
 
 
 display_width = 1024
@@ -269,10 +269,10 @@ def game_rank():
     run = True
 
     # Server Part By Paco - Head #
-    #rank_get = {'event': 4, 'player': place-1, 'ID': 2}
-    #a = net.send(rank_get)
-    #b = net.recv()
-    #print(b)
+    rank_get = {'event': 4, 'player': place-1, 'ID': 2}
+    a = net.send(rank_get)
+    b = net.recv()
+    ##print(b)
     # Server Part By Paco - Foot#
 
     while run:
@@ -386,12 +386,12 @@ def game_newgame():
     myTurn = False
 
     # open room By Paco
-    #a = net.send({'event': 1, 'player': place - 1})
-    #b = net.recv() #get dic {'room': value, 'turn': value} turn = 1 is player1, = 2 player2
-    #rm = json.loads(b)
-    #room = rm['room']
-    #if rm['room'] == 1:
-    #    myTurn = True
+    a = net.send({'event': 1, 'player': place - 1})
+    b = net.recv() #get dic {'room': value, 'turn': value} turn = 1 is player1, = 2 player2
+    rm = json.loads(b)
+    room = rm['room']
+    if rm['room'] == 1:
+        myTurn = True
     # open room By Paco
 
     textinput = GUINewGamePageTextBox.TextInput()           # 建立一個Textinput 的地方
@@ -406,32 +406,32 @@ def game_newgame():
     # 呢邊是 Button 的東西 By Chin - Foot #
 
     # player conn server select By Paco
-    #net.send({'event': 7,'room': room,'player': place - 1})
-    #player = net.recv()##1在這邊要接收 server告訴本地適用哪的玩家
-    #player1 = Constructer.constructPlayer(player)
-    #player1.playerID = 1  ##server give us - By Dan
-    #player2 = Constructer.constructPlayer(player)
-    #player2.playerID = 2  ##server give us - By Dan
-    # player conn server select By Paco
-
-    player = select.selectDeploy(1) ##1在這邊要接收 server告訴本地適用哪的玩家
-    player = json.dumps(player)
-    player1 = Constructer.constructPlayer(player)  ##正確建構玩家物件
-    player1.playerID = 1 ##server give us - By Dan
+    net.send({'event': 7,'room': room,'player': place - 1})
+    player = net.recv()##1在這邊要接收 server告訴本地適用哪的玩家
+    player1 = Constructer.constructPlayer(player)
+    player1.playerID = 1  ##server give us - By Dan
     player2 = Constructer.constructPlayer(player)
     player2.playerID = 2  ##server give us - By Dan
+    # player conn server select By Paco
+
+    #player = select.selectDeploy(1) ##1在這邊要接收 server告訴本地適用哪的玩家
+    #player = json.dumps(player)
+    #player1 = Constructer.constructPlayer(player)  ##正確建構玩家物件
+    #player1.playerID = 1 ##server give us - By Dan
+    #player2 = Constructer.constructPlayer(player)
+    #player2.playerID = 2  ##server give us - By Dan
 
     #server get map By Paco
-    #net.send({'event': 5, 'player': place-1, 'room': room})
-    #map = net.recv()
-    #datas = eval(map)
-    #map = select.constructMap(map)
+    net.send({'event': 5, 'player': place-1, 'room': room})
+    map = net.recv()
+    datas = eval(map)
+    map = select.constructMap(map)
     # server get map By Paco
 
-    map = select.selectMap(2)
-    map = json.dumps(map)
-    datas = eval(map) ##把map轉乘Dic儲存在datas，以便設置玩家基地時用
-    map = select.constructMap(map)
+    #map = select.selectMap(2)
+    #map = json.dumps(map)
+    #datas = eval(map) ##把map轉乘Dic儲存在datas，以便設置玩家基地時用
+    #map = select.constructMap(map)
 
     player1.hq = Headquarter.Headquarter(hp=20, x=datas["Player1_HQ"]["x"], y=datas["Player1_HQ"]["y"]) ##建構玩家1物件
     player2.hq = Headquarter.Headquarter(hp=20, x=datas["Player2_HQ"]["x"], y=datas["Player2_HQ"]["y"]) ##建構玩家2物件
@@ -641,10 +641,10 @@ class MySprite(pygame.sprite.Sprite):
 
 def game_loading():
     # server conn By Paco
-    #a = net.getP()
-    #print(a)
-    #global place
-    #place = a['player']
+    a = net.getP()
+    print(a)
+    global place
+    place = a['player']
     # server conn By Paco
     #pygame.init()
     my_sprite = MySprite()
@@ -714,9 +714,9 @@ def game_CreateGame(num):
 
 # game_user()
 
-# game_intro()
+game_intro()
 
-game_newgame()
+#game_newgame()
 
 # game_rank()
 

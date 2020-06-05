@@ -1,4 +1,4 @@
-IP = '172.20.10.4'
+IP = '203.217.101.9'
 PORT = 25565
 
 from enum import Enum
