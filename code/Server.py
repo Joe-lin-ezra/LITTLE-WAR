@@ -81,8 +81,12 @@ class Server():
             elif payload['event'] == RequestType.ac:
                 if payload['num'] == 1:
                     data = UserSignUp.register(payload['name'])
+                    print(data)
+                    self.userlist[payload['player']].send(bytes(json.dumps(data).encode('utf-8')))
                 elif payload['num'] == 2:
                     data = UserSignUp.login(payload['name'])
+                    print(data)
+                    self.userlist[payload['player']].send(bytes(json.dumps(data).encode('utf-8')))
             elif payload['event'] == RequestType.player:
                 player = select.selectDeploy(self.rooms[payload['room']-1].mapId)
                 self.userlist[payload['player']].send(bytes(json.dumps(player).encode('utf-8')))

@@ -147,7 +147,7 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
                 game_newgame()
 
             if action == "Browse":
-                return game_CreateGame(2)
+                game_CreateGame(2)
 
             if action == "CreateGame":
                 game_CreateGame(1)
@@ -391,10 +391,10 @@ def game_newgame():
     b = net.recv() #get dic {'room': value, 'turn': value} turn = 1 is player1, = 2 player2
     rm = json.loads(b)
     room = rm['room']
-    if rm['room'] == 1:
+    if rm['turn'] == 1:
         myTurn = True
     # open room By Paco
-
+    print(myTurn)
     textinput = GUINewGamePageTextBox.TextInput()           # 建立一個Textinput 的地方
     ResponseArea = pygame.Surface((600,150))
     ResponseArea.fill(black)
@@ -410,9 +410,9 @@ def game_newgame():
     net.send({'event': 7,'room': room,'player': place - 1})
     player = net.recv()##1在這邊要接收 server告訴本地適用哪的玩家
     player1 = Constructer.constructPlayer(player)
-    player1.playerID = 1  ##server give us - By Dan
+    player1.playerID = rm['turn']  ##server give us - By Dan
     player2 = Constructer.constructPlayer(player)
-    player2.playerID = 2  ##server give us - By Dan
+    player2.playerID = rm['turn']  ##server give us - By Dan
     # player conn server select By Paco
 
     #player = select.selectDeploy(1) ##1在這邊要接收 server告訴本地適用哪的玩家
@@ -512,7 +512,7 @@ def game_newgame():
         GUINewGamePageMap.Map(gameDisplay,map)
 
 
-        if token :                  # token 改成 myTurn
+        if myTurn :                  # token 改成 myTurn
             if textinput.update(events):              # 輸入指令的地方 By Chin
                 n += 1
                 y = 30
@@ -716,8 +716,9 @@ def game_CreateGame(num):
         gameDisplay.blit(textinputName.get_surface(), (310, 360))
         if textinputName.update(events):
             Name = textinputName.get_text()         # 在此取得UserName
-            net.send({'event': 6, 'name': Name, 'num': num})
-            print(Name)
+            net.send({'event': 6, 'player': place-1, 'name': Name, 'num': num})
+            data = net.recv()
+            print(data)
         button("Home",350,500,300,50,orange,light_orange,action="Home")
         pygame.display.update()
         clock.tick(30)
