@@ -1,4 +1,4 @@
-IP = '172.20.10.4'
+IP = '192.168.0.13'
 PORT = 25565
 
 from enum import Enum
@@ -11,3 +11,4 @@ class RequestType:
     map = 5
     ac = 6
     player = 7
+    win = 8

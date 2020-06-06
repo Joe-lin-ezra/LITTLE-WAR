@@ -6,17 +6,20 @@ from Headquarter import Headquarter
 
 
 # get 3 max rank, and userself rank
-def selectRank(id):
+def selectRank(name):
     dic = dict()
     connection = sqlite3.connect("Gamedb.db")
     c = connection.cursor()
+    c.execute('SELECT MAX(Player_ID) FROM Player')
+    amount = c.fetchone()[0]
     c.execute("SELECT * FROM Player ORDER BY Win_times DESC")
-    for i in range(1, 4):
+    for i in range(1, amount):
         row = c.fetchone()
-        dic.update({i: [row[0], row[1], row[2]]})
-    c.execute("SELECT * FROM Player WHERE Player_ID = %d" % id)
-    row = c.fetchone()
-    dic.update({"4": [row[0], row[1], row[2]]})
+        if row[1] == name:
+            dic.update({str(4): [str(i), row[0], row[1], row[2]]})
+        if i <= 3:
+            dic.update({str(i): [str(i), row[0], row[1], row[2]]})
+    connection.close()
     return dic
 
 
@@ -93,7 +96,7 @@ def selectMap(id):
             mountain[i][j] = int(mountain[i][j])
     dic.update({'mountain': mountain})
     del mountain
-
+    connection.close()
     # for i, j in dic.items():
     #     print(i, ':', j)
 
@@ -121,8 +124,8 @@ def selectDeploy(id):
             dic.update({counter: {'type': tmp[0], 'movement': tmp[1], 'range': tmp[2], 'ammo': tmp[3],
                         'fuel': tmp[4], 'vision': tmp[5]}})
             counter += 1
-
-    return json.dumps(dic)
+    connection.close()
+    return dic
     # print(tmp, len(tmp))
     # for j in range(unit[i][1]):
     #     army = Army(type=tmp[0], hp=20, atk=None, atkRange=tmp[2], vision=tmp[5],x=None, y=None)

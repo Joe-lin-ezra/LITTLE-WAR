@@ -8,23 +8,23 @@ class Network():
         self.server = config.IP
         self.port = config.PORT
         self.addr = (self.server, self.port)
-        self.p = self.connect()
+        self.playerInfor = self.connect()
 
     def getP(self):
-        return self.p
+        return self.playerInfor
 
     def connect(self):
         try:
             self.client.connect(self.addr)
             data = self.client.recv(2048).decode('utf-8')
-            jload = json.loads(data)
-            return jload
+            j = json.loads(data)
+            return j
         except:
             pass
 
     def recv(self):
         data = self.client.recv(2048).decode('utf-8')
-        print(data)
+        # print(data)
         return data
 
     def send(self, data):

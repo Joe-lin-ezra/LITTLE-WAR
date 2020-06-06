@@ -5,9 +5,9 @@ def wOrL(player):
     if(player.hq.hp == 0):
         return True
     else:
-        for i in range (len(player.army)):
+        for i in range(len(player.army)):
             if(player.army[i].hp == 0):
-                counter=counter+1
+                counter += 1
         if (counter == len(player.army)):
             return True
         else:##對方沒輸
