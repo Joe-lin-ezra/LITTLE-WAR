@@ -83,7 +83,9 @@ def pause():
         message_to_screen("> Move : 2 pix",white,250,160)
         message_to_screen("> ATK : 1 pix  ",white,250,210)
 
-
+        APC = pygame.image.load("../img/APC-self.png")
+        APC = pygame.transform.scale(APC,(50,50))
+        gameDisplay.blit(APC,(50,650))
 
         pygame.display.update()
         clock.tick(5)

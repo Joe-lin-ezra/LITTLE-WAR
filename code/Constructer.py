@@ -5,7 +5,7 @@ from Headquarter import Headquarter
 
 def constructPlayer(datas):
     datas = json.loads(datas)
-    datas = eval(datas) ##將str轉化成dict by Dan
+    # datas = eval(datas) ##將str轉化成dict by Dan
     # print(type(datas))
     # print(datas['0'])
     player1 = Player()
@@ -27,8 +27,6 @@ def constructPlayer(datas):
 
 
 def constructMap(datas):
-    datas = json.loads(datas)
-    global map
     map = list()
     for i in range(datas['sizeX']):
         map.append([])

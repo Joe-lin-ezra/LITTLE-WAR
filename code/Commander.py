@@ -25,7 +25,7 @@ import Constructer ##by Dan
 
 
 ##指令判斷
-def inputCommand(player,player2,ForS,command,map):##輸入指令
+def inputCommand(player,player2,ForS,command,map, mapDetail):##輸入指令
     while True:
         comList = command.split()##字串切割，切割成list
         comList[0] = comList[0].upper()
@@ -44,7 +44,7 @@ def inputCommand(player,player2,ForS,command,map):##輸入指令
         elif(comList[0] == "SET" and num == 4):
             print("玩家要求設置軍隊")
             ##ForS first or second
-            TorF = Set.set(player,player2 ,ForS,comList[1],comList[2],comList[3],map)##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標
+            TorF = Set.set(player,player2,ForS,comList[1],comList[2],comList[3],map, mapDetail)##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標
             return TorF
         else:
             print("指令輸入錯誤")

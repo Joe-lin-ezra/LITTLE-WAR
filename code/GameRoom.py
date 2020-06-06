@@ -9,4 +9,5 @@ class Room():
     
     def adduser(self,id):
         self.user.append(id)
+        return self
         
