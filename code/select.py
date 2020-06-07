@@ -13,7 +13,7 @@ def selectRank(name):
     c.execute('SELECT MAX(Player_ID) FROM Player')
     amount = c.fetchone()[0]
     c.execute("SELECT * FROM Player ORDER BY Win_times DESC")
-    for i in range(1, amount):
+    for i in range(1, amount+):
         row = c.fetchone()
         if row[1] == name:
             dic.update({str(4): [str(i), row[0], row[1], row[2]]})
