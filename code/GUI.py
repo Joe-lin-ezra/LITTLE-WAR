@@ -204,6 +204,65 @@ def message_to_screen(msg, color, x_displace=0, y_displace=0, size="small"):
     textRect.center = (int(x_displace / 2), int(display_height / 2) + y_displace)
     gameDisplay.blit(textSurf, textRect)
 
+def BTN( x, y, width, height, inactive_color, active_color,action=None,enable=True):
+    cur = pygame.mouse.get_pos()
+    # print(cur)
+    click = pygame.mouse.get_pressed()
+    if x + width > cur[0] > x and y + height > cur[1] > y:
+        gameDisplay.blit(active_color,(x,y))
+        if click[0] == 1 and action != None:
+            if action == "quit":
+                pygame.quit()
+                quit()
+
+            if action == "controls":
+                click = None
+                game_controls()
+
+            if action == "play":
+                click = None
+                gameLoop()
+
+            if action == "main":
+                click = None
+                game_intro()
+
+            if action == "LoadingPage":
+                click = None
+                game_loading()
+
+            if action == "Ranking":
+                click = None
+                game_rank()
+            if action == "Home":
+                if enable:
+                    game_home()
+                else:
+                    pass
+                click = None
+
+            if action == "Setting":
+                click = None
+                game_setting()
+
+            if action == "NewGame":
+                # print("Comming Soon")
+                click = None
+                game_newgame()
+
+            if action == "Browse":
+                click = None
+                return game_CreateGame(2)
+
+            if action == "CreateGame":
+                click = None
+                game_CreateGame(1)
+
+            if action == 'game_user':
+                click = None
+                game_user()
+    else:
+       gameDisplay.blit(inactive_color,(x,y))
 
 def game_user():
     run = True
@@ -218,6 +277,18 @@ def game_user():
 
     MSG = smallfont.render("No Any Record", True, red)
     BrowseReply = pygame.Surface((300, 100))
+
+    CreateBtn = pygame.image.load("../img/CreateAcBtn.png")
+    CreateBtn = pygame.transform.scale(CreateBtn, (500, 500))
+
+    CreateBtn2 = pygame.image.load("../img/CreateAcBtn2.png")
+    CreateBtn2 = pygame.transform.scale(CreateBtn2, (500, 500))
+
+    UseYourBtn = pygame.image.load("../img/UseYourBtn.png")
+    UseYourBtn = pygame.transform.scale(UseYourBtn, (500, 500))
+
+    UseYourBtn2 = pygame.image.load("../img/UseYourBtn2.png")
+    UseYourBtn2 = pygame.transform.scale(UseYourBtn2, (500, 500))
 
     while run:
         # BrowseReply.fill(black)
@@ -234,9 +305,8 @@ def game_user():
                     quit()
 
         gameDisplay.fill(yellow)
-        # gameDisplay.blit(BrowseReply, (550, 500))
-        button("Create New Account", 150, 300, 300, 170, red, light_red, action="CreateGame")
-        button("Use yours", 550, 300, 300, 170, green, light_green, action="Browse")
+        BTN(0, 120, 400, 400, CreateBtn, CreateBtn2, action="CreateGame")
+        BTN(500, 120, 400, 400, UseYourBtn, UseYourBtn2, action="Browse")
         pygame.display.update()
         clock.tick(15)
 
@@ -257,7 +327,7 @@ def game_home():
 
         gameDisplay.fill(yellow)
         button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
-        button("Setting", 450, 250, 180, 70, red, light_red, action="Setting")
+        button("Control", 450, 250, 180, 70, red, light_red, action="Setting")
         button("Ranking", 450, 350, 180, 70, blue, light_blue, action="Ranking")
 
         pygame.display.update()
@@ -273,6 +343,12 @@ def game_rank():
     rank_infor = net.recv()
     # print(rank_infor)
     # Server Part By Paco - Foot#
+
+    HomeBtn = pygame.image.load("../img/homebtn.png")
+    HomeBtn = pygame.transform.scale(HomeBtn, (350, 300))
+
+    HomeBtn2 = pygame.image.load("../img/homebtn2.png")
+    HomeBtn2 = pygame.transform.scale(HomeBtn2, (350, 300))
 
     while run:
         for event in pygame.event.get():
@@ -368,7 +444,7 @@ def game_rank():
         SW = medfont.render(str(SelfW), True, black)
         gameDisplay.blit(SW, (800, 540))
 
-        button("Home", 60, 650, 157, 70, blue, light_blue, action="Home", btncolor=white)
+        BTN(0, 550, 400, 400, HomeBtn, HomeBtn2, action="Home")
 
         pygame.display.update()
         clock.tick(15)
@@ -386,9 +462,13 @@ def game_setting():
 
         gameDisplay.fill(yellow)
         # message_to_screen("Change ColorTheme",black,50,50,size="large")
-        Title = largefont.render("Change Color Theme", True, green)
+        Title = smallfont.render("Command : [ SET , ATK , MOVE ] [Nth Army] [Xposition] [Yposition]", True, green)
         gameDisplay.blit(Title, (80, 70))
-        button("Home", 87, 650, 180, 70, blue, light_blue, action="Home")
+        Title2 = smallfont.render("For example : set 0 1 0",True,green)
+        gameDisplay.blit(Title2,(80,110))
+        Title3 = smallfont.render("Army's type is showing on left hand side",True,green)
+        gameDisplay.blit(Title3,(80,200))
+        button("<- Back", 87, 650, 180, 70, blue, light_blue, action="Home")
 
         pygame.display.update()
         clock.tick(15)
@@ -403,9 +483,10 @@ def game_newgame():
             enemyAction = json.loads(enemyAction)
             if len(enemyAction) != 3:
                 continue
-            DeCoder.deCoder(enemyAction, (rm['turn'] + 1) % 2, map, player1, player2, mapInfor)
+            DeCoder.deCoder(enemyAction, (rm['turn'] + 1) % 2, map, player2, player1, mapInfor)
             DisplayArmy(player1, player2, 0, 0, rm['turn'])
             myTurn['turn'] = True
+            break
     # 都是 TextBox 的東西 By Chin - Head#
     n = 0
     y = 0
@@ -586,8 +667,8 @@ def game_newgame():
 # Draw Army Function - By Chin
 def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 (Local Player)
 
-    Sx = 200 + Player1.hq.x * 40
-    Sy = 100 + Player1.hq.y * 40
+    Sx = 200 + Player1.hq.x * 40-1
+    Sy = 100 + Player1.hq.y * 40-1
     gameDisplay.blit(HQ, (Sx, Sy))
     Sx = 200 + Player2.hq.x * 40
     Sy = 100 + Player2.hq.y * 40
