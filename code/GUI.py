@@ -208,6 +208,7 @@ def BTN( x, y, width, height, inactive_color, active_color,action=None,enable=Tr
     cur = pygame.mouse.get_pos()
     # print(cur)
     click = pygame.mouse.get_pressed()
+    # print(y+height ," : ",y,' : ',cur[1])
     if x + width > cur[0] > x and y + height > cur[1] > y:
         gameDisplay.blit(active_color,(x,y))
         if click[0] == 1 and action != None:
@@ -234,6 +235,7 @@ def BTN( x, y, width, height, inactive_color, active_color,action=None,enable=Tr
             if action == "Ranking":
                 click = None
                 game_rank()
+
             if action == "Home":
                 if enable:
                     game_home()
@@ -246,7 +248,6 @@ def BTN( x, y, width, height, inactive_color, active_color,action=None,enable=Tr
                 game_setting()
 
             if action == "NewGame":
-                # print("Comming Soon")
                 click = None
                 game_newgame()
 
@@ -313,6 +314,30 @@ def game_user():
 
 def game_home():
     run = True
+    size = 700
+    NewGameBtn = pygame.image.load("../img/NewGameBtn.png")
+    NewGameBtn = pygame.transform.scale(NewGameBtn, (size, size))
+
+    NewGameBtn2 = pygame.image.load("../img/NewGameBtn2.png")
+    NewGameBtn2 = pygame.transform.scale(NewGameBtn2, (size, size))
+
+    ControlBtn = pygame.image.load("../img/ControlBtn.png")
+    ControlBtn = pygame.transform.scale(ControlBtn, (size, size))
+
+    ControlBtn2 = pygame.image.load("../img/ControlBtn2.png")
+    ControlBtn2 = pygame.transform.scale(ControlBtn2, (size, size))
+
+    RankBtn = pygame.image.load("../img/RankBtn.png")
+    RankBtn = pygame.transform.scale(RankBtn,(size,size))
+
+    RankBtn2 = pygame.image.load("../img/RankBtn2.png")
+    RankBtn2 = pygame.transform.scale(RankBtn2,(size,size))
+
+    BackBtn = pygame.image.load("../img/BackBtn.png")
+    BackBtn = pygame.transform.scale(BackBtn,(size,size))
+
+    BackBtn2 = pygame.image.load("../img/BackBtn2.png")
+    BackBtn2 = pygame.transform.scale(BackBtn2,(size,size))
 
     while run:
         for event in pygame.event.get():
@@ -320,15 +345,20 @@ def game_home():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
 
         gameDisplay.fill(yellow)
-        button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
-        button("Control", 450, 250, 180, 70, red, light_red, action="Setting")
-        button("Ranking", 450, 350, 180, 70, blue, light_blue, action="Ranking")
+
+        BTN(-100,-150, 650,size-300, NewGameBtn, NewGameBtn2, action="NewGame")
+
+        BTN(430, 230, 650,-230+700, ControlBtn, ControlBtn2, action="Setting")
+
+        BTN(-100, 230, 650,size-300, RankBtn, RankBtn2, action="Ranking")
+
+        BTN(430, -150, 650,size-300, BackBtn, BackBtn2, action="main")
+
+        # button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
+        # button("Control", 450, 250, 180, 70, red, light_red, action="Setting")
+        # button("Ranking", 450, 350, 180, 70, blue, light_blue, action="Ranking")
 
         pygame.display.update()
         clock.tick(15)
@@ -444,7 +474,7 @@ def game_rank():
         SW = medfont.render(str(SelfW), True, black)
         gameDisplay.blit(SW, (800, 540))
 
-        BTN(0, 550, 400, 400, HomeBtn, HomeBtn2, action="Home")
+        BTN(0, 550, 350, 300, HomeBtn, HomeBtn2, action="Home")
 
         pygame.display.update()
         clock.tick(15)
@@ -453,6 +483,11 @@ def game_rank():
 def game_setting():
     run = True
 
+    HomeBtn = pygame.image.load("../img/homebtn.png")
+    HomeBtn = pygame.transform.scale(HomeBtn, (350, 300))
+
+    HomeBtn2 = pygame.image.load("../img/homebtn2.png")
+    HomeBtn2 = pygame.transform.scale(HomeBtn2, (350, 300))
     while run:
         for event in pygame.event.get():
             # print(event)
@@ -468,7 +503,8 @@ def game_setting():
         gameDisplay.blit(Title2,(80,110))
         Title3 = smallfont.render("Army's type is showing on left hand side",True,green)
         gameDisplay.blit(Title3,(80,200))
-        button("<- Back", 87, 650, 180, 70, blue, light_blue, action="Home")
+        # button("<- Back", 87, 650, 180, 70, blue, light_blue, action="Home")
+        BTN(0, 550, 400, 400, HomeBtn, HomeBtn2, action="Home")
 
         pygame.display.update()
         clock.tick(15)
@@ -509,6 +545,11 @@ def game_newgame():
 
     # 呢邊是 Button 的東西 By Chin - Head #
     SendBtn = GUINewGamePageButtonClick.button(blue, 750, 590, 170, 120, "GO")  # color , x, y, width, height , text
+    GOBtn = pygame.image.load("../img/GoBtn.png")
+    GOBtn = pygame.transform.scale(GOBtn,(320,320))
+
+    GOBtn2 = pygame.image.load("../img/GoBtn2.png")
+    GOBtn2 = pygame.transform.scale(GOBtn2,(320,320))
     token = True  # 模仿回合的結束 用來不給玩家在不是自己的回合中輸入
     Pass = False  # Pause 專用
     # 呢邊是 Button 的東西 By Chin - Foot #
@@ -569,7 +610,7 @@ def game_newgame():
         message_to_screen("Game Start", black, 1000, -340, size='large')
         gameDisplay.blit(ResponseArea, (80, 580))
         SendBtn.draw(gameDisplay)
-
+        BTN(680,490,200,200,GOBtn,GOBtn2)
         # Infantry id 編號是? - By Chin #
         Infantry = pygame.image.load("../img/Infantry-self.png")
         Infantry = pygame.transform.scale(Infantry, (50, 50))
@@ -834,10 +875,10 @@ def game_loading():
 
 def game_CreateGame(num):
     pygame.init()
-
+    print(num)
     textinputName = GUINewGamePageTextBox.TextInput()  # TextBox for UserName
     TextArea = pygame.Surface((400, 50))
-    TextArea.fill((0, 0, 0))
+    TextArea.fill((62, 71, 74))
     textColor = yellow
     textMessage = ''
     buttonColor = yellow
@@ -891,7 +932,7 @@ game_intro()
 
 # game_newgame()
 
-# game_rank()
+# game_home()
 
 # gameLoop()
 

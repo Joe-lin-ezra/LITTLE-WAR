@@ -24,8 +24,8 @@ class TextInput:
             font_family="",
             font_size=35,
             antialias=True,        #反鋸齒
-            text_color=(255,255,255),
-            cursor_color=(0,0,1),   #游標color
+            text_color=(71,179,84),
+            cursor_color=(255,255,255),   #游標color
             repeat_keys_initial_ms=400,  #感應字元輸入速度
             repeat_keys_interval_ms=35,
             max_string_length=-1):
@@ -84,11 +84,7 @@ class TextInput:
                     self.keyrepeat_counters[event.key] = [0, event.unicode]
 
                 if event.key == pl.K_BACKSPACE:
-                    self.input_string = (
-                        self.input_string[:max(self.cursor_position - len(self.input_string)+1, 2)]     # origin : len(self.input_string)+1  = 1
-                        + self.input_string[self.cursor_position:]
-                    )
-                    self.tmp_string = self.input_string
+                    self.input_string = self.input_string[0:-1]
                     # Subtract one from cursor_pos, but do not go below zero:
                     self.cursor_position = max(self.cursor_position - 1, 2)
                 elif event.key == pl.K_DELETE:
