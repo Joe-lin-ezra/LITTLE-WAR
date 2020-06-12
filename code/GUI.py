@@ -206,8 +206,8 @@ def message_to_screen(msg, color, x_displace=0, y_displace=0, size="small"):
 
 def BTN( x, y, Wt,Wb,Ht,Hb, inactive_color, active_color,action=None,enable=True):
     cur = pygame.mouse.get_pos()
-    # print(cur)
-    # print(cur[0])
+    print(cur)
+    # print(cur[1])
     if Wb > cur[0] > Wt and Hb > cur[1] > Ht:
         click = pygame.mouse.get_pressed()
         gameDisplay.blit(active_color,(x,y))
@@ -315,11 +315,11 @@ def game_user():
 def game_setting():
     run = True
 
-    HomeBtn = pygame.image.load("../img/homebtn.png")
-    HomeBtn = pygame.transform.scale(HomeBtn, (350, 300))
+    HomeBtn = pygame.image.load("../img/GoBackBtn.png")
+    HomeBtn = pygame.transform.scale(HomeBtn, (70,70))
 
-    HomeBtn2 = pygame.image.load("../img/homebtn2.png")
-    HomeBtn2 = pygame.transform.scale(HomeBtn2, (350, 300))
+    HomeBtn2 = pygame.image.load("../img/GoBackBtn2.png")
+    HomeBtn2 = pygame.transform.scale(HomeBtn2, (70,70))
     while run:
         for event in pygame.event.get():
             # print(event)
@@ -334,37 +334,30 @@ def game_setting():
         gameDisplay.blit(Title2,(80,110))
         Title3 = smallfont.render("Army's type is showing on left hand side",True,green)
         gameDisplay.blit(Title3,(80,200))
-        BTN(0, 550,70,290,653,750, HomeBtn, HomeBtn2, action="Home")
+        BTN(6,15,6,41,15,47, HomeBtn, HomeBtn2, action="Home")
 
         pygame.display.update()
         clock.tick(15)
 
 def game_home():
     run = True
-    size = 700
+
     NewGameBtn = pygame.image.load("../img/NewGameBtn.png")
-    NewGameBtn = pygame.transform.scale(NewGameBtn, (size, size))
 
     NewGameBtn2 = pygame.image.load("../img/NewGameBtn2.png")
-    NewGameBtn2 = pygame.transform.scale(NewGameBtn2, (size, size))
 
     ControlBtn = pygame.image.load("../img/ControlBtn.png")
-    ControlBtn = pygame.transform.scale(ControlBtn, (size, size))
 
     ControlBtn2 = pygame.image.load("../img/ControlBtn2.png")
-    ControlBtn2 = pygame.transform.scale(ControlBtn2, (size, size))
 
     RankBtn = pygame.image.load("../img/RankBtn.png")
-    RankBtn = pygame.transform.scale(RankBtn,(size,size))
 
     RankBtn2 = pygame.image.load("../img/RankBtn2.png")
-    RankBtn2 = pygame.transform.scale(RankBtn2,(size,size))
 
     BackBtn = pygame.image.load("../img/BackBtn.png")
-    BackBtn = pygame.transform.scale(BackBtn,(size,size))
 
     BackBtn2 = pygame.image.load("../img/BackBtn2.png")
-    BackBtn2 = pygame.transform.scale(BackBtn2,(size,size))
+
 
     while run:
         for event in pygame.event.get():
@@ -382,10 +375,6 @@ def game_home():
         BTN(415, -150,570,1000,85,320, BackBtn, BackBtn2, action="main")
 
         BTN(-100, 230, 33, 470, 465, 700, RankBtn, RankBtn2, action="Ranking")
-
-        # button("New Game", 450, 150, 180, 70, green, light_green, action="NewGame")
-        # button("Control", 450, 250, 180, 70, red, light_red, action="Setting")
-        # button("Ranking", 450, 350, 180, 70, blue, light_blue, action="Ranking")
 
         pygame.display.update()
         clock.tick(15)
@@ -878,6 +867,10 @@ def game_CreateGame(num):
     buttonHoverColor = yellow
     buttonMessage = ''
     enable = False
+
+    GoOnBtn = pygame.image.load("../img/BgColor.png")
+    GoOnBtn2 = pygame.image.load("../img/BgColor.png")
+
     while True:
         gameDisplay.fill(yellow)
 
@@ -897,6 +890,8 @@ def game_CreateGame(num):
             result = net.recv()
             result = json.loads(result)
             if result['result']:
+                GoOnBtn = pygame.image.load("../img/GoOnBtn.png")  # 使用較小的圖案按鈕取代原有Button (debug) By Chin
+                GoOnBtn2 = pygame.image.load("../img/GoOnBtn2.png")
                 buttonMessage = 'Success, press here to go on.'
                 buttonColor = orange
                 buttonHoverColor = light_orange
@@ -912,7 +907,8 @@ def game_CreateGame(num):
                     textMessage = 'The name is nonexistent.'
                 textColor = red
                 enable = False
-        button(buttonMessage, 310, 450, 380, 50, buttonColor, buttonHoverColor, action='Home', enable=enable)
+        # button(buttonMessage, 310, 450, 380, 50, buttonColor, buttonHoverColor, action='Home', enable=enable)
+        BTN(700,330,731,765,365,390,GoOnBtn,GoOnBtn2,action='Home',enable=enable)
         message_to_screen(textMessage, textColor, 1000, 95, size='medium')
         button("Back", 350, 550, 300, 50, orange, light_orange, action="game_user")
         pygame.display.update()
