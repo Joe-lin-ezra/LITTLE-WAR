@@ -476,13 +476,15 @@ def game_newgame():
     while True:
         gameDisplay.fill(yellow)
         message_to_screen("Game Start", black, 1000, -340, size='large')
-        gameDisplay.blit(ResponseArea, (80, 580))
+        gameDisplay.blit(ResponseArea, (80, 580)) # 畫出錯誤訊息區域 By Chin
         SendBtn.draw(gameDisplay)
         BTN(680,490,740,940,600,700,GOBtn,GOBtn2)
+
+        # 左邊顯示的資訊
         # Infantry id 編號是? - By Chin #
         Infantry = pygame.image.load("../img/Infantry-self.png")
         Infantry = pygame.transform.scale(Infantry, (50, 50))
-        gameDisplay.blit(Infantry, (20, 80))
+        gameDisplay.blit(Infantry, (20, 80))            # 畫出Infantry 的icon By Chin
         message_to_screen("Infantry", navy, 280, -290, size="small")
         message_to_screen("> Move : 3 px", navy, 180, -230)
         message_to_screen("> ATK : 1 px  ", navy, 182, -190)
@@ -490,7 +492,7 @@ def game_newgame():
         # Mech id 編號是? - By Chin #
         Mech = pygame.image.load("../img/Mech-self.png")
         Mech = pygame.transform.scale(Mech, (50, 50))
-        gameDisplay.blit(Mech, (20, 230))
+        gameDisplay.blit(Mech, (20, 230))           # 畫出Mech 的icon By Chin
         message_to_screen("Mech", navy, 280, -130)
         message_to_screen("> Move : 2 px", navy, 180, -90)
         message_to_screen("> ATK : 1 px ", navy, 178, -50)
@@ -498,7 +500,7 @@ def game_newgame():
         # Reco id 編號是? - By Chin #
         Reco = pygame.image.load("../img/Reco-self.png")
         Reco = pygame.transform.scale(Reco, (50, 50))
-        gameDisplay.blit(Reco, (20, 380))
+        gameDisplay.blit(Reco, (20, 380))         # 畫出Reco的icon By Chin
         message_to_screen("Reco", navy, 280, 30)
         message_to_screen("> Move : 2 px", navy, 180, 70)
         message_to_screen("> ATK : 1 px  ", navy, 180, 110)
@@ -531,7 +533,7 @@ def game_newgame():
                 else:
                     SendBtn.color = blue
 
-        GUINewGamePageMap.Map(gameDisplay, map)
+        GUINewGamePageMap.Map(gameDisplay, map)             # 畫出Map的function By Chin
 
         if myTurn['turn']:
             if textinput.update(events):  # 輸入指令的地方 By Chin
@@ -551,9 +553,9 @@ def game_newgame():
 
         # 如不是玩家回合則顯示MSG - By Chin
         if myTurn['turn'] == False:
-            gameDisplay.blit(MSG, (750, 720))
+            gameDisplay.blit(MSG, (750, 720))           #顯示錯誤訊息的地方 By Chin
 
-        gameDisplay.blit(textinput.get_surface(), (90, 585))  # TextInput position By Chin
+        gameDisplay.blit(textinput.get_surface(), (90, 585))  # 畫出 TextInput  By Chin
 
         # if Sx and Sy:
         #     gameDisplay.blit(Infantry_Self, (Sx, Sy))
@@ -692,19 +694,19 @@ def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 
 
     Sx = 200 + Player1.hq.x * 40-1
     Sy = 100 + Player1.hq.y * 40-1
-    gameDisplay.blit(HQ, (Sx, Sy))
+    gameDisplay.blit(HQ, (Sx, Sy))              # 畫出Player 1 的HQ By Chin
     Sx = 200 + Player2.hq.x * 40
     Sy = 100 + Player2.hq.y * 40
-    gameDisplay.blit(HQ, (Sx, Sy))
+    gameDisplay.blit(HQ, (Sx, Sy))              # 畫出Player 2 的HQ By Chin
 
     for i in range(len(Player1.army)):
         if Player1.army[i].x:
             Sx = 200 + Player1.army[i].x * 40
             Sy = 100 + Player1.army[i].y * 40
             if turn == 1:
-                gameDisplay.blit(Infantry_Self, (Sx, Sy))
+                gameDisplay.blit(Infantry_Self, (Sx, Sy))       # 畫出自己步兵(Infantry) By Chin
             else:
-                gameDisplay.blit(Infantry_Enemy, (Sx, Sy))
+                gameDisplay.blit(Infantry_Enemy, (Sx, Sy))      # 畫出敵人步兵(Infantry) By Chin  (如果發現沒用之後可能會删掉)
             # if Player.army[i].type == 'Infantry' :
             #     if PlayerID == 1:
             #         gameDisplay.blit(Infantry_Self,(Sx,Sy))
@@ -728,7 +730,7 @@ def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 
             #     print("Neotank")
             # elif Player.army[i].type == 'Megatank' :
             #     print("Megatank")
-    for i in range(len(Player2.army)):
+    for i in range(len(Player2.army)):                          # 畫出敵人步兵(Infantry) By Chin
         if Player2.army[i].x:
             Sx = 200 + Player2.army[i].x * 30
             Sy = 100 + Player2.army[i].y * 30
