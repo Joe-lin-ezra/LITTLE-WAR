@@ -48,9 +48,7 @@ class Server():
                     for r in self.rooms:
                         if r.isfull():
                             continue
-                        print('room member:', r.user)
-                        r = r.adduser(payload['player'])
-                        print('room member:', r.user)
+                        self.rooms[len(self.rooms) - 1].user.append(payload['player'])
                         room['room'] = len(self.rooms)
                         room['turn'] = 2
                         self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
@@ -65,20 +63,14 @@ class Server():
                         self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
 
             elif payload['event'] == RequestType.sync:
-                for r in self.rooms:
-                    if(payload['player'] in r.user):
-                        for u in r.user:
-                            print(payload['player'], u)
-                            if u == payload['player']:
-                                continue
-                            else:
-                                payload['player'] = u
-                                self.userlist[u].send(bytes(json.dumps(payload).encode('utf-8')))
-                                self.userlist[payload['player']].send(bytes(json.dumps(d).encode('utf-8')))
+                u = 0
+                for i in range(2):
+                    if self.rooms[payload['room']-1].user[i] != payload['player']:
+                        u = self.rooms[payload['room']-1].user[i]
+                        break
+                self.userlist[u].send(bytes(json.dumps(payload).encode('utf-8')))
             elif payload['event'] == RequestType.rank:
-                # print(payload)
                 pay = select.selectRank(payload['name'])
-                # print(pay)
                 self.userlist[payload['player']].send(bytes(json.dumps(pay).encode('utf-8')))
             elif payload['event'] == RequestType.map:
                 map = select.selectMap(self.rooms[(payload['room']-1)].mapId)
