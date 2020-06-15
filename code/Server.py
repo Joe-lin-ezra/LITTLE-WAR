@@ -63,7 +63,6 @@ class Server():
                         self.userlist[payload['player']].send(bytes(json.dumps(room).encode('utf-8')))
 
             elif payload['event'] == RequestType.sync:
-                u = 0
                 for i in range(2):
                     if self.rooms[payload['room']-1].user[i] != payload['player']:
                         u = self.rooms[payload['room']-1].user[i]
