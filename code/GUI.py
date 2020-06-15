@@ -29,6 +29,7 @@ import Headquarter
 import Constructer  ##by Dan
 
 ##test  - Dan
+myTurn = False
 pygame.init()
 net = Network()
 
@@ -378,28 +379,23 @@ def game_home():
         pygame.display.update()
         clock.tick(15)
 
-def recieve():
-    print('turn on second thread')
-    global myTurn
-    global take
-    global enemyAction
-    while True:
-        enemyAction = net.recv()
-        enemyAction = json.loads(enemyAction)
-        if enemyAction['event'] == 3:
-            take = 1
-            enemyAction['event'] = 1
-
 def game_newgame():
-    global myTurn
-    global enemyAction
-    global take
-    myTurn = False
-    take = 0
+    def recieve():
+        print('turn on second thread')
+        while True:
+            enemyAction = net.recv()
+            enemyAction = json.loads(enemyAction)
+            if len(enemyAction) != 3:
+                continue
+            DeCoder.deCoder(enemyAction, (rm['turn'] + 1) % 2, map, player2, player1, mapInfor)
+            DisplayArmy(player1, player2, 0, 0, rm['turn'])
+            myTurn['turn'] = True
+            break
     # 都是 TextBox 的東西 By Chin - Head#
     n = 0
     y = 0
     x = 0
+    myTurn = {'turn': False}
 
     # open room By Paco
     a = net.send({'event': 1, 'player': place - 1})
@@ -407,7 +403,7 @@ def game_newgame():
     rm = json.loads(b)
     room = rm['room']
     if rm['turn'] == 1:
-        myTurn = True
+        myTurn['turn'] = True
     # open room By Paco
 
     textinput = GUINewGamePageTextBox.TextInput()  # 建立一個Textinput 的地方
@@ -426,21 +422,37 @@ def game_newgame():
     Pass = False  # Pause 專用
     # 呢邊是 Button 的東西 By Chin - Foot #
     # player conn server select By Paco
+
     net.send({'event': 7, 'room': room, 'player': place - 1})
+
     player = net.recv()  ##1在這邊要接收 server告訴本地適用哪的玩家
+
     player1 = Constructer.constructPlayer(player)
     player1.playerID = place - 1  ##server give us - By Dan
     player2 = Constructer.constructPlayer(player)
     player2.playerID = None  ##server give us - By Dan
     # player conn server select By Paco
 
+    # player = select.selectDeploy(1) ##1在這邊要接收 server告訴本地適用哪的玩家
+    # player1 = Constructer.constructPlayer(player)  ##正確建構玩家物件
+    # player1.playerID = 1 ##server give us - By Dan
+    # player2 = Constructer.constructPlayer(player)
+    # player2.playerID = 2  ##server give us - By Dan
+
     # server get map By Paco
     net.send({'event': 5, 'player': place - 1, 'room': room})
     mapInfor = net.recv()
     mapInfor = json.loads(mapInfor)
+    # mapInfor = eval(mapInfor)
+    # print('get map informaiton.')
+    # print('map data', mapInfor, type(mapInfor))
     map = Constructer.constructMap(mapInfor)
     # server get map By Paco
 
+    # map = select.selectMap(2)
+    # map = json.dumps(map)
+    # datas = eval(map) ##把map轉乘Dic儲存在datas，以便設置玩家基地時用
+    # map = select.constructMap(map)
     if rm["turn"] == 1:
         player1.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player1_HQ"]["x"],
                                              y=mapInfor["Player1_HQ"]["y"])  ##建構玩家1物件
@@ -491,10 +503,6 @@ def game_newgame():
         message_to_screen("> Move : 2 px", navy, 180, 70)
         message_to_screen("> ATK : 1 px  ", navy, 180, 110)
 
-        GUINewGamePageMap.Map(gameDisplay, map)
-        DisplayArmy(player1, player2, Sx, Sy, rm['turn'])
-        gameDisplay.blit(textinput.get_surface(), (90, 585))  # TextInput position By Chin
-
         events = pygame.event.get()
         for event in events:
             pos = pygame.mouse.get_pos()
@@ -505,13 +513,14 @@ def game_newgame():
                 # if PauseBtn.isOver(pos):
                 #     GUIPausePage.pause()
                 if SendBtn.isOver(pos) and myTurn:
-                    net.send({'event': 3, 'room': room, 'player': place - 1, 'action': transComman})
+                    net.send({'event': 3, 'player': place - 1, 'action': transComman})
                     TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
                     if TorF == True:
                         net.send({'event': 8, 'player': place - 1, 'name': name})
                         print("對方輸了")
                     else:
-                        myTurn = False
+                        myTurn['turn'] = False
+                        threading.Thread(target=recieve).start()
                         print("下一回合")
                         print("TextBox Locked!")
 
@@ -522,7 +531,9 @@ def game_newgame():
                 else:
                     SendBtn.color = blue
 
-        if myTurn:
+        GUINewGamePageMap.Map(gameDisplay, map)
+
+        if myTurn['turn']:
             if textinput.update(events):  # 輸入指令的地方 By Chin
                 n += 1
                 y = 30
@@ -535,17 +546,14 @@ def game_newgame():
                 else:  ##指令有問題
                     print("DFG : ", player1.army[0].x, player1.army[0].y)
                     ResponseArea.blit(text_surface, (10, 30 + (y * n)))  ##顯示文字物件 by Dan
-        else:# 如不是玩家回合則顯示MSG - By Chin
-            gameDisplay.blit(MSG, (750, 720))
-            if take == 1:
-                print(enemyAction)
-                DeCoder.deCoder(enemyAction, (rm['turn'] + 1) % 2, map, player2, player1, mapInfor)
-                DisplayArmy(player1, player2, 0, 0, rm['turn'])
-                print(123)
-                myTurn = True
-                print(456)
-                take = 0
 
+        DisplayArmy(player1, player2, Sx, Sy, rm['turn'])
+
+        # 如不是玩家回合則顯示MSG - By Chin
+        if myTurn['turn'] == False:
+            gameDisplay.blit(MSG, (750, 720))
+
+        gameDisplay.blit(textinput.get_surface(), (90, 585))  # TextInput position By Chin
 
         # if Sx and Sy:
         #     gameDisplay.blit(Infantry_Self, (Sx, Sy))
