@@ -16,7 +16,6 @@ class Server():
         self.ip = IP
         self.port = PORT
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
         try:
             self.s.bind((IP, PORT))
         except socket.error as e:
@@ -81,7 +80,7 @@ class Server():
                     data = UserSignUp.register(payload['name'])
                 elif payload['num'] == 2:
                     data = UserSignUp.login(payload['name'])
-                self.
+                self.userlist[payload['player']].send(bytes(json.dumps(data).encode('utf-8')))
 
 
 
