@@ -17,6 +17,7 @@ import threading
 
 # NewGame Page 系列 - By Chin
 # import GUINewGamePage
+
 import GUINewGamePageButtonClick
 import GUINewGamePageMap
 import GUINewGamePageTextBox
@@ -206,8 +207,6 @@ def message_to_screen(msg, color, x_displace=0, y_displace=0, size="small"):
 
 def BTN( x, y, Wt,Wb,Ht,Hb, inactive_color, active_color,action=None,enable=True):
     cur = pygame.mouse.get_pos()
-    print(cur)
-    # print(cur[1])
     if Wb > cur[0] > Wt and Hb > cur[1] > Ht:
         click = pygame.mouse.get_pressed()
         gameDisplay.blit(active_color,(x,y))
@@ -468,7 +467,8 @@ def game_newgame():
     threading.Thread(target=recieve).start()
     while True:
         gameDisplay.fill(yellow)
-        message_to_screen("Game Start", black, 1000, -340, size='large')
+        pygame.display.set_caption("Game Start")
+        # message_to_screen("Game Start", black, 1000, -340, size='large')
         gameDisplay.blit(ResponseArea, (80, 580))
         SendBtn.draw(gameDisplay)
         BTN(680,490,740,940,600,700,GOBtn,GOBtn2)
@@ -682,18 +682,37 @@ def game_rank():
 
 # Draw Army Function - By Chin
 def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 (Local Player)
+    LeftTopX = 200          # (0,0) 會在左上角
+    LeftTopY = 50
 
-    Sx = 200 + Player1.hq.x * 40-1
-    Sy = 100 + Player1.hq.y * 40-1
+    RightTopX = 900
+    RightTopY = 50
+
+    LeftBottomX = 200
+    LeftBottomY = 500
+
+    RightBottomX = 900
+    RightBottomY = 500
+
+    Sx = LeftTopX
+    Sy = LeftTopY
+    Sx = Sx + Player1.hq.x  + Player1.hq.x * 50  # 52 因應HQ 的圖像而定, 標準為50
+    Sy = Sy + Player1.hq.y  + Player1.hq.y * 50 - 50          # 45 因應HQ 的圖像而定, 標準為50
     gameDisplay.blit(HQ, (Sx, Sy))
-    Sx = 200 + Player2.hq.x * 40
-    Sy = 100 + Player2.hq.y * 40
+    # print("HQ:",Player1.hq.x,Player1.hq.y)
+
+    Sx = RightTopX
+    Sy = RightTopY
+    # pygame.draw.rect(gameDisplay, red, (Sx,Sy,10,10))
+    Sx = Sx - Player2.hq.x + 15
+    Sy = Sy - Player2.hq.y + 50
     gameDisplay.blit(HQ, (Sx, Sy))
+    # print("HQ:",Player2.hq.x,Player2.hq.y)
 
     for i in range(len(Player1.army)):
         if Player1.army[i].x:
-            Sx = 200 + Player1.army[i].x * 40
-            Sy = 100 + Player1.army[i].y * 40
+            Sx = LeftTopX + Player1.army[i].x * 50
+            Sy = LeftTopY + Player1.army[i].y * 50
             if turn == 1:
                 gameDisplay.blit(Infantry_Self, (Sx, Sy))
             else:
@@ -723,8 +742,8 @@ def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 
             #     print("Megatank")
     for i in range(len(Player2.army)):
         if Player2.army[i].x:
-            Sx = 200 + Player2.army[i].x * 30
-            Sy = 100 + Player2.army[i].y * 30
+            Sx = RightTopX - Player2.army[i].x + 15
+            Sy = RightTopY - Player2.army[i].y + 50
             if turn == 2:
                 gameDisplay.blit(Infantry_Self, (Sx, Sy))
             else:
@@ -850,7 +869,6 @@ def game_loading():
 
 def game_CreateGame(num):
     pygame.init()
-    print(num)
     textinputName = GUINewGamePageTextBox.TextInput()  # TextBox for UserName
     TextArea = pygame.Surface((400, 50))
     TextArea.fill((62, 71, 74))

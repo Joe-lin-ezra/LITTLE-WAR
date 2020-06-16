@@ -178,6 +178,7 @@ def main():
     # map = json.loads(map)
     # for i, j in map.items():
     #     print(i, ':', j)
+    print(selectMap(1)['water'])
     constructPlayer(selectDeploy(1))
     constructMap(selectMap(1))
     pass
