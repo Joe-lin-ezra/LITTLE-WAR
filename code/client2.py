@@ -29,6 +29,7 @@ import Headquarter
 import Constructer  ##by Dan
 
 ##test  - Dan
+myTurn = False
 pygame.init()
 net = Network()
 
@@ -391,15 +392,15 @@ def recieve():
             enemyAction['event'] = 1
 
 def game_newgame():
+    # 都是 TextBox 的東西 By Chin - Head#
+    n = 0
+    y = 0
+    x = 0
     global myTurn
     global enemyAction
     global take
     myTurn = False
     take = 0
-    # 都是 TextBox 的東西 By Chin - Head#
-    n = 0
-    y = 0
-    x = 0
 
     # open room By Paco
     a = net.send({'event': 1, 'player': place - 1})
@@ -426,13 +427,17 @@ def game_newgame():
     Pass = False  # Pause 專用
     # 呢邊是 Button 的東西 By Chin - Foot #
     # player conn server select By Paco
+
     net.send({'event': 7, 'room': room, 'player': place - 1})
+
     player = net.recv()  ##1在這邊要接收 server告訴本地適用哪的玩家
+
     player1 = Constructer.constructPlayer(player)
     player1.playerID = place - 1  ##server give us - By Dan
     player2 = Constructer.constructPlayer(player)
     player2.playerID = None  ##server give us - By Dan
     # player conn server select By Paco
+
 
     # server get map By Paco
     net.send({'event': 5, 'player': place - 1, 'room': room})
@@ -490,10 +495,7 @@ def game_newgame():
         message_to_screen("Reco", navy, 280, 30)
         message_to_screen("> Move : 2 px", navy, 180, 70)
         message_to_screen("> ATK : 1 px  ", navy, 180, 110)
-
         GUINewGamePageMap.Map(gameDisplay, map)
-        DisplayArmy(player1, player2, Sx, Sy, rm['turn'])
-        gameDisplay.blit(textinput.get_surface(), (90, 585))  # TextInput position By Chin
 
         events = pygame.event.get()
         for event in events:
@@ -539,13 +541,13 @@ def game_newgame():
             gameDisplay.blit(MSG, (750, 720))
             if take == 1:
                 print(enemyAction)
-                DeCoder.deCoder(enemyAction, (rm['turn'] + 1) % 2, map, player2, player1, mapInfor)
+                DeCoder.deCoder(enemyAction, (rm['turn'] %2)+1, map, player2, player1, mapInfor)
                 DisplayArmy(player1, player2, 0, 0, rm['turn'])
-                print(123)
                 myTurn = True
-                print(456)
                 take = 0
 
+        DisplayArmy(player1, player2, Sx, Sy, rm['turn'])
+        gameDisplay.blit(textinput.get_surface(), (90, 585))  # TextInput position By Chin
 
         # if Sx and Sy:
         #     gameDisplay.blit(Infantry_Self, (Sx, Sy))

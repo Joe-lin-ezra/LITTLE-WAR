@@ -60,7 +60,7 @@ def Map(gameDisplay,map):
                 Color = blue
             elif (map[xIndex][yIndex] == 2):
                 Color = brown
-            pygame.draw.rect(gameDisplay, Color, (x, y, 50, 50))
+            pygame.draw.rect(gameDisplay, Color, (x, y, 40, 40))
             x += 40
             # y+=40
             xIndex += 1

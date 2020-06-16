@@ -27,8 +27,10 @@ def set(player,player2 ,ForS,i,x,y,map, datas):##傳入要設定的玩家，極�
         y = int(y)
         if ForS == 1:##是player1
             areas = datas["Player1_Area"]  ##生成區域要判斷
+            print(1)
         elif ForS == 2:##是player2
             areas = datas["Player2_Area"]  ##生成區域要判斷
+            print(2)
         if(player.army[i].hp >= 0):
             if(x>=areas["x1"] and x <=areas["x2"] and y >= areas["y1"] and y<= areas["y2"]):##如果玩家要設定軍隊的座標再生成區域內
                 try:##沒超過地圖大小
