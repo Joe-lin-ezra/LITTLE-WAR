@@ -1,21 +1,20 @@
 import sqlite3
 
 
-def playerUpdate(name, winTimes):
-    connection = sqlite3.connect('gamedb.db')
+def winTimesUpdate(name):
+    connection = sqlite3.connect('Gamedb.db')
     c = connection.cursor()
-    c.execute('SELECT MAX(Player_ID) FROM Player')
-    max = c.fetchone()[0]
-    if None == max:
-        c.execute('INSERT INTO Player (Player_ID, Name, Win_times) VALUES (1, "%s", %d)' % (name, winTimes))
-    else:
-        max += 1
-        c.execute('INSERT INTO Player (Player_ID, Name, Win_times) VALUES (%d, "%s", %d)' % (max, name, winTimes))
+    c.execute('SELECT * FROM Player WHERE name="%s"' % name)
+    row = c.fetchone()
+    id = row[0]
+    max = row[2]
+    max += 1
+    c.execute('INSERT INTO Player (Player_ID, Name, Win_times) VALUES (%d, "%s", %d)' % (id, name, max))
     connection.commit()
     connection.close()
 
-def main():
-    playerUpdate('Brian', 1)
-
-if __name__ == '__main__':
-    main()
+# def main():
+#     playerUpdate('Brian', 1)
+#
+# if __name__ == '__main__':
+#     main()

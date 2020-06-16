@@ -8,7 +8,7 @@ import os.path
 
 import pygame
 import pygame.locals as pl
-
+import GUIPausePage
 pygame.font.init()
 
 class TextInput:
@@ -24,8 +24,8 @@ class TextInput:
             font_family="",
             font_size=35,
             antialias=True,        #反鋸齒
-            text_color=(255,255,255),
-            cursor_color=(0,0,1),   #游標color
+            text_color=(71,179,84),
+            cursor_color=(255,255,255),   #游標color
             repeat_keys_initial_ms=400,  #感應字元輸入速度
             repeat_keys_interval_ms=35,
             max_string_length=-1):
@@ -84,11 +84,7 @@ class TextInput:
                     self.keyrepeat_counters[event.key] = [0, event.unicode]
 
                 if event.key == pl.K_BACKSPACE:
-                    self.input_string = (
-                        self.input_string[:max(self.cursor_position - 1, 2)]
-                        + self.input_string[self.cursor_position:]
-                    )
-                    self.tmp_string = self.input_string
+                    self.input_string = self.input_string[0:-1]
                     # Subtract one from cursor_pos, but do not go below zero:
                     self.cursor_position = max(self.cursor_position - 1, 2)
                 elif event.key == pl.K_DELETE:
@@ -115,6 +111,9 @@ class TextInput:
 
                 elif event.key == pl.K_HOME:
                     self.cursor_position = 0
+
+                elif  event.key == pygame.K_p and pygame.key.get_mods() & pygame.KMOD_CTRL:
+                    print("pause")
 
                 elif len(self.input_string) < self.max_string_length or self.max_string_length == -1:
                     # If no special key is pressed, add unicode of key to input_string
@@ -184,7 +183,7 @@ class TextInput:
 
     def callback(key):
         print(key)
-#
+
 # if __name__ == "__main__":
 #     pygame.init()
 #     screen = pygame.display.set_mode((1024, 768))

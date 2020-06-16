@@ -56,6 +56,7 @@ def move(player,player2,i,x,y,map):## x y 是要過去的座標
                                    player.army[i].x = x  ##移動軍隊
                                    player.army[i].y = y
                                    player.army[i].moved = 1
+                                   player.army[i].fuel = player.army[i].fuel - 10
                                    print("移動成功")
                                    return True
                             else:  ##非法移動範圍
