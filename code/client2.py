@@ -47,6 +47,7 @@ Infantry_Self = pygame.transform.scale(Infantry_Self, (40, 40))
 Infantry_Enemy = pygame.image.load('../img/Infantry-enmy.png')
 Infantry_Enemy = pygame.transform.scale(Infantry_Enemy, (40, 40))
 
+Mech_self = pygame.image.load('../img/Mech-self.png')
 HQ = pygame.image.load("../img/HQ.png")
 HQ = pygame.transform.scale(HQ, (40, 40))
 
@@ -443,6 +444,7 @@ def game_newgame():
     mapInfor = net.recv()
     mapInfor = json.loads(mapInfor)
     map = Constructer.constructMap(mapInfor)
+    print("Map number is " , mapInfor['Id'])
     # server get map By Paco
 
     if rm["turn"] == 1:
@@ -472,9 +474,12 @@ def game_newgame():
         gameDisplay.blit(ResponseArea, (80, 580))
         SendBtn.draw(gameDisplay)
         BTN(680,490,740,940,600,700,GOBtn,GOBtn2)
+
         # Infantry id 編號是? - By Chin #
         Infantry = pygame.image.load("../img/Infantry-self.png")
         Infantry = pygame.transform.scale(Infantry, (50, 50))
+        # InfantryBTN = GUINewGamePageButtonClick.button(white, 5, 70, 190, 150, "")            #用於按下Button 顯示可移動及生成位置(運用pause page 原理)
+        # InfantryBTN.draw(gameDisplay)
         gameDisplay.blit(Infantry, (20, 80))
         message_to_screen("Infantry", navy, 280, -290, size="small")
         message_to_screen("> Move : 3 px", navy, 180, -230)
@@ -506,8 +511,6 @@ def game_newgame():
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # if PauseBtn.isOver(pos):
-                #     GUIPausePage.pause()
                 if SendBtn.isOver(pos) and myTurn:
                     net.send({'event': 3, 'room': room, 'player': place - 1, 'action': transComman})
                     TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
@@ -516,6 +519,13 @@ def game_newgame():
                         print("對方輸了")
                     else:
                         myTurn = False
+                        for i in range(len(player1.army)):
+                            if (player1.army[i].moved == 0):  ##扣除油或體力
+                                player1.army[i].fuel = player1.army[i].fuel - 5
+                            if (player1.army[i].fuel <= 0):
+                                player1.army[i].hp = 0
+                            player1.army[i].moved = 0
+                            player1.army[i].atked = 0
                         print("下一回合")
                         print("TextBox Locked!")
 
@@ -742,8 +752,8 @@ def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 
             #     print("Megatank")
     for i in range(len(Player2.army)):
         if Player2.army[i].x:
-            Sx = RightTopX - Player2.army[i].x + 15
-            Sy = RightTopY - Player2.army[i].y + 50
+            Sx = LeftTopX + Player2.army[i].x * 50
+            Sy = LeftTopY + Player2.army[i].y * 50
             if turn == 2:
                 gameDisplay.blit(Infantry_Self, (Sx, Sy))
             else:
