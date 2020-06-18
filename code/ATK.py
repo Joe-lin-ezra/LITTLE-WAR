@@ -6,6 +6,9 @@ import math
 hp = 10
 
 def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方player物件，並且傳入攻擊以及被攻擊軍隊的ID
+    if (i > len(player1.army)):
+        print("你沒有那麼多部隊")
+        return False
     try:  ##如我軍對已經SET過
         armyID = float(armyID)
         armyID = int(armyID)
