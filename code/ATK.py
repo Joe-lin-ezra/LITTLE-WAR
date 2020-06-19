@@ -12,6 +12,9 @@ def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方
         X = int(player1.army[armyID].x)
         try: ##對方軍隊已經set
             armyID = int(armyID)
+            if armyID >= len(player1.army):
+                print("你沒有那麼多部隊")
+                return False
             if (armyID <= (len(player1.army) - 1)):  ##玩家傭有此軍隊
                 if (player1.army[armyID].hp > 0):  ##玩家軍隊還活著
                     if (player1.army[armyID].atked == 0):  ##玩家此軍隊尚未攻擊
@@ -19,6 +22,9 @@ def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方
                             if (EnermyID != "HQ"):  ##如果不是指定總部
                                 EnermyID = float(EnermyID)
                                 EnermyID = int(EnermyID)
+                                if EnermyID >= len(player2.army):
+                                    print("敵人沒有那麼多部隊")
+                                    return False
                                 X = int(player2.army[EnermyID].x)
                                 if (EnermyID <= (len(player2.army) - 1)):  ##對方傭有此軍隊
                                     if (player2.army[EnermyID].hp > 0):  ##對方軍隊活著

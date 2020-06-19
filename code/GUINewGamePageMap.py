@@ -23,50 +23,60 @@ clock = pygame.time.Clock()
 # gameDisplay = pygame.display.set_mode((1024, 768))
 
 def Map(gameDisplay,map):
-    # gameDisplay.fill((255, 255, 000))
+    run = True
+    SeaArea = []           # GUI 中的地圖海洋座標
+    MountainArea = []      # GUI 中的地圖山座標
 
-    # map = np.array(select.constructMap(map))
-    # map = map.transpose()
+    xpix = len(map)     # 15
+    ypix = len(map[0])  # 10
 
+    Ax = 200
+    Ay = 50
+
+    Ix = 250
+
+    Bx = 800
+    By = 50
+
+    Cx = 200
+    Cy = 400
+
+    Dx = 800
+    Dy = 400
+    count = 0
+
+    tmpX = 0
+    tmpY = 0    #用來虛擬mapIndex
+    size = 50
     # print(map)
-    # map -> color
-    # 0 - green (normal)
-    # 1 - blue (water)
-    # 2 - brown (mountain)
+    for x in range(len(map)):
+        for y in range(len(map[0])):
+            if map[x][y] == 1:
+                SeaArea.append([x,y])
+    # print(SeaArea)
+    for x in range(len(map)):
+        for y in range(len(map[0])):
+            if map[x][y] == 2:
+                MountainArea.append([x, y])
+    # print(MountainArea)
 
-    x = 200
-    y = 50
+    tmpX = 0
+    tmpY = 0
+    for k in range(Ay,Cy+3*size,size):
+        tmpX = 0
+        for i in range(Ax,Bx+3*size,size):
+            color = green
+            for q in range(len(SeaArea)):
+                if tmpX == SeaArea[q][0] and tmpY == SeaArea[q][1]:
+                    color = blue
+            for q in range(len(MountainArea)):
+                if tmpX == MountainArea[q][0] and tmpY == MountainArea[q][1]:
+                    color = brown
 
-    xAis = len(map)  # 15
-    yAis = len(map[2])  # 10
-
-    xIndex = 0
-    yIndex = 0
-    # print(map[xIndex])
-    # print(map[xIndex][yIndex])
-
-    while yAis:
-        if (yIndex == yAis):
-            break
-        xIndex = 0
-        y += 40
-        x = 200
-        while xAis:
-            if (xIndex == xAis):
-                break
-            if (map[xIndex][yIndex] == 0):
-                Color = light_green
-            elif (map[xIndex][yIndex] == 1):
-                Color = blue
-            elif (map[xIndex][yIndex] == 2):
-                Color = brown
-            pygame.draw.rect(gameDisplay, Color, (x, y, 50, 50))
-            x += 40
-            # y+=40
-            xIndex += 1
-        yIndex += 1
-
-    pygame.display.update()
-
+            pygame.draw.rect(gameDisplay, color, (i, k, size, size))
+            pygame.draw.rect(gameDisplay, black, pygame.Rect(i, k, size, size),2)          # draw rect border with 2 px
+            tmpX += 1
+        tmpY += 1
+    # print(i,k)
 
 # Map(gameDisplay)

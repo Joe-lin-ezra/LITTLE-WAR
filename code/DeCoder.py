@@ -15,4 +15,11 @@ def deCoder (transCommandList,ForS,map,player2,player1, mapDetail):## ,player2,p
         print("你輸了")
     else:
         print("下一回合")
+    for i in range(len(player1.army)):
+        if (player1.army[i].moved == 0):  ##扣除油或體力
+            player1.army[i].fuel = player1.army[i].fuel - 5
+        if (player1.army[i].fuel <= 0):
+            player1.army[i].hp = 0
+        player1.army[i].moved = 0
+        player1.army[i].atked = 0
 

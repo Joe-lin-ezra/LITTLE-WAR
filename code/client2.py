@@ -17,6 +17,7 @@ import threading
 
 # NewGame Page 系列 - By Chin
 # import GUINewGamePage
+
 import GUINewGamePageButtonClick
 import GUINewGamePageMap
 import GUINewGamePageTextBox
@@ -29,6 +30,7 @@ import Headquarter
 import Constructer  ##by Dan
 
 ##test  - Dan
+myTurn = False
 pygame.init()
 net = Network()
 
@@ -45,6 +47,7 @@ Infantry_Self = pygame.transform.scale(Infantry_Self, (40, 40))
 Infantry_Enemy = pygame.image.load('../img/Infantry-enmy.png')
 Infantry_Enemy = pygame.transform.scale(Infantry_Enemy, (40, 40))
 
+Mech_self = pygame.image.load('../img/Mech-self.png')
 HQ = pygame.image.load("../img/HQ.png")
 HQ = pygame.transform.scale(HQ, (40, 40))
 
@@ -205,8 +208,6 @@ def message_to_screen(msg, color, x_displace=0, y_displace=0, size="small"):
 
 def BTN( x, y, Wt,Wb,Ht,Hb, inactive_color, active_color,action=None,enable=True):
     cur = pygame.mouse.get_pos()
-    print(cur)
-    # print(cur[1])
     if Wb > cur[0] > Wt and Hb > cur[1] > Ht:
         click = pygame.mouse.get_pressed()
         gameDisplay.blit(active_color,(x,y))
@@ -391,15 +392,15 @@ def recieve():
             enemyAction['event'] = 1
 
 def game_newgame():
+    # 都是 TextBox 的東西 By Chin - Head#
+    n = 0
+    y = 0
+    x = 0
     global myTurn
     global enemyAction
     global take
     myTurn = False
     take = 0
-    # 都是 TextBox 的東西 By Chin - Head#
-    n = 0
-    y = 0
-    x = 0
 
     # open room By Paco
     a = net.send({'event': 1, 'player': place - 1})
@@ -426,19 +427,24 @@ def game_newgame():
     Pass = False  # Pause 專用
     # 呢邊是 Button 的東西 By Chin - Foot #
     # player conn server select By Paco
+
     net.send({'event': 7, 'room': room, 'player': place - 1})
+
     player = net.recv()  ##1在這邊要接收 server告訴本地適用哪的玩家
+
     player1 = Constructer.constructPlayer(player)
     player1.playerID = place - 1  ##server give us - By Dan
     player2 = Constructer.constructPlayer(player)
     player2.playerID = None  ##server give us - By Dan
     # player conn server select By Paco
 
+
     # server get map By Paco
     net.send({'event': 5, 'player': place - 1, 'room': room})
     mapInfor = net.recv()
     mapInfor = json.loads(mapInfor)
     map = Constructer.constructMap(mapInfor)
+    print("Map number is " , mapInfor['Id'])
     # server get map By Paco
 
     if rm["turn"] == 1:
@@ -463,13 +469,17 @@ def game_newgame():
     threading.Thread(target=recieve).start()
     while True:
         gameDisplay.fill(yellow)
-        message_to_screen("Game Start", black, 1000, -340, size='large')
+        pygame.display.set_caption("Game Start")
+        # message_to_screen("Game Start", black, 1000, -340, size='large')
         gameDisplay.blit(ResponseArea, (80, 580))
         SendBtn.draw(gameDisplay)
         BTN(680,490,740,940,600,700,GOBtn,GOBtn2)
+
         # Infantry id 編號是? - By Chin #
         Infantry = pygame.image.load("../img/Infantry-self.png")
         Infantry = pygame.transform.scale(Infantry, (50, 50))
+        # InfantryBTN = GUINewGamePageButtonClick.button(white, 5, 70, 190, 150, "")            #用於按下Button 顯示可移動及生成位置(運用pause page 原理)
+        # InfantryBTN.draw(gameDisplay)
         gameDisplay.blit(Infantry, (20, 80))
         message_to_screen("Infantry", navy, 280, -290, size="small")
         message_to_screen("> Move : 3 px", navy, 180, -230)
@@ -490,7 +500,6 @@ def game_newgame():
         message_to_screen("Reco", navy, 280, 30)
         message_to_screen("> Move : 2 px", navy, 180, 70)
         message_to_screen("> ATK : 1 px  ", navy, 180, 110)
-
         GUINewGamePageMap.Map(gameDisplay, map)
         DisplayArmy(player1, player2, Sx, Sy, rm['turn'])
         gameDisplay.blit(textinput.get_surface(), (90, 585))  # TextInput position By Chin
@@ -502,8 +511,6 @@ def game_newgame():
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # if PauseBtn.isOver(pos):
-                #     GUIPausePage.pause()
                 if SendBtn.isOver(pos) and myTurn:
                     net.send({'event': 3, 'room': room, 'player': place - 1, 'action': transComman})
                     TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
@@ -512,6 +519,13 @@ def game_newgame():
                         print("對方輸了")
                     else:
                         myTurn = False
+                        for i in range(len(player1.army)):
+                            if (player1.army[i].moved == 0):  ##扣除油或體力
+                                player1.army[i].fuel = player1.army[i].fuel - 5
+                            if (player1.army[i].fuel <= 0):
+                                player1.army[i].hp = 0
+                            player1.army[i].moved = 0
+                            player1.army[i].atked = 0
                         print("下一回合")
                         print("TextBox Locked!")
 
@@ -539,13 +553,10 @@ def game_newgame():
             gameDisplay.blit(MSG, (750, 720))
             if take == 1:
                 print(enemyAction)
-                DeCoder.deCoder(enemyAction, (rm['turn'] + 1) % 2, map, player2, player1, mapInfor)
+                DeCoder.deCoder(enemyAction, (rm['turn'] %2)+1, map, player2, player1, mapInfor)
                 DisplayArmy(player1, player2, 0, 0, rm['turn'])
-                print(123)
                 myTurn = True
-                print(456)
                 take = 0
-
 
         # if Sx and Sy:
         #     gameDisplay.blit(Infantry_Self, (Sx, Sy))
@@ -681,18 +692,37 @@ def game_rank():
 
 # Draw Army Function - By Chin
 def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 (Local Player)
+    LeftTopX = 200          # (0,0) 會在左上角
+    LeftTopY = 50
 
-    Sx = 200 + Player1.hq.x * 40-1
-    Sy = 100 + Player1.hq.y * 40-1
+    RightTopX = 900
+    RightTopY = 50
+
+    LeftBottomX = 200
+    LeftBottomY = 500
+
+    RightBottomX = 900
+    RightBottomY = 500
+
+    Sx = LeftTopX
+    Sy = LeftTopY
+    Sx = Sx + Player1.hq.x  + Player1.hq.x * 50  # 52 因應HQ 的圖像而定, 標準為50
+    Sy = Sy + Player1.hq.y  + Player1.hq.y * 50 - 50          # 45 因應HQ 的圖像而定, 標準為50
     gameDisplay.blit(HQ, (Sx, Sy))
-    Sx = 200 + Player2.hq.x * 40
-    Sy = 100 + Player2.hq.y * 40
+    # print("HQ:",Player1.hq.x,Player1.hq.y)
+
+    Sx = RightTopX
+    Sy = RightTopY
+    # pygame.draw.rect(gameDisplay, red, (Sx,Sy,10,10))
+    Sx = Sx - Player2.hq.x + 15
+    Sy = Sy - Player2.hq.y + 50
     gameDisplay.blit(HQ, (Sx, Sy))
+    # print("HQ:",Player2.hq.x,Player2.hq.y)
 
     for i in range(len(Player1.army)):
         if Player1.army[i].x:
-            Sx = 200 + Player1.army[i].x * 40
-            Sy = 100 + Player1.army[i].y * 40
+            Sx = LeftTopX + Player1.army[i].x * 50
+            Sy = LeftTopY + Player1.army[i].y * 50
             if turn == 1:
                 gameDisplay.blit(Infantry_Self, (Sx, Sy))
             else:
@@ -722,8 +752,8 @@ def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 
             #     print("Megatank")
     for i in range(len(Player2.army)):
         if Player2.army[i].x:
-            Sx = 200 + Player2.army[i].x * 30
-            Sy = 100 + Player2.army[i].y * 30
+            Sx = LeftTopX + Player2.army[i].x * 50
+            Sy = LeftTopY + Player2.army[i].y * 50
             if turn == 2:
                 gameDisplay.blit(Infantry_Self, (Sx, Sy))
             else:
@@ -849,7 +879,6 @@ def game_loading():
 
 def game_CreateGame(num):
     pygame.init()
-    print(num)
     textinputName = GUINewGamePageTextBox.TextInput()  # TextBox for UserName
     TextArea = pygame.Surface((400, 50))
     TextArea.fill((62, 71, 74))

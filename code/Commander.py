@@ -27,10 +27,15 @@ import Constructer ##by Dan
 ##指令判斷
 def inputCommand(player,player2,ForS,command,map, mapDetail):##輸入指令
     while True:
+        ##debuger
+        a=0
+        for a in range(len(player.army)):
+            print("編號: ",a,"屬性: ",player.army[a].type,"移動: ",player.army[a].moved,"攻擊: ",player.army[a].atked)
+
+        ##debuger
         comList = command.split()##字串切割，切割成list
         comList[0] = comList[0].upper()
         num = len(comList)
-        # print(num)
         if(comList[0] == "MOVE" and num == 4):
             print("玩家要求移動")
             TorF = Move.move(player,player2,comList[1],comList[2],comList[3],map)##傳入player物件，player的army的ID，以及此軍隊的X和Y
