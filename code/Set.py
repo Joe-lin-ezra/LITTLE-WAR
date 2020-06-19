@@ -13,11 +13,11 @@ import json
 # print(type(areas["x1"]))
 
 def set(player,player2 ,ForS,i,x,y,map, datas):##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標 ForS first or second
-    if(i > len(player.army)):
-        print("你沒有那麼多部隊")
-        return False
     try:  ##如我軍對已經SET過
         i = int(i)
+        if (i > len(player.army)):
+            print("你沒有那麼多部隊")
+            return False
         X = int(player.army[i].x)
         print("此軍隊已經生成完畢") ##已經設置完成的軍隊不可再次設定
         return False
