@@ -22,11 +22,12 @@ light_gray = (230, 230, 230)
 clock = pygame.time.Clock()
 # gameDisplay = pygame.display.set_mode((1024, 768))
 
-def Map(gameDisplay,map):
+def Map(gameDisplay,map,mapInfor,turn):
     run = True
     SeaArea = []           # GUI 中的地圖海洋座標
     MountainArea = []      # GUI 中的地圖山座標
-
+    Player1Area = []
+    Player2Area = []
     xpix = len(map)     # 15
     ypix = len(map[0])  # 10
 
@@ -48,7 +49,28 @@ def Map(gameDisplay,map):
     tmpX = 0
     tmpY = 0    #用來虛擬mapIndex
     size = 50
-    # print(map)
+
+    # 畫出可生成地區
+    Player1_x1 = mapInfor['Player1_Area']['x1']
+    Player1_y1 = mapInfor["Player1_Area"]['y1']
+
+    Player1_x2 = mapInfor["Player1_Area"]['x2']
+    Player1_y2 = mapInfor["Player1_Area"]['y2']
+
+    for x in range(Player1_x1,Player1_x2+1):
+        for y in range(Player1_y1,Player1_y2+1):
+            Player1Area.append([x,y])
+
+    Player2_x1 = mapInfor['Player2_Area']['x1']
+    Player2_y1 = mapInfor["Player2_Area"]['y1']
+
+    Player2_x2 = mapInfor["Player2_Area"]['x2']
+    Player2_y2 = mapInfor["Player2_Area"]['y2']
+
+    for x in range(Player2_x1,Player2_x2+1):
+        for y in range(Player2_y1,Player2_y2+1):
+            Player2Area.append([x,y])
+
     for x in range(len(map)):
         for y in range(len(map[0])):
             if map[x][y] == 1:
@@ -62,6 +84,7 @@ def Map(gameDisplay,map):
 
     tmpX = 0
     tmpY = 0
+    check = 0       # 0 : 能夠生成的 1 : 不能生成的
     for k in range(Ay,Cy+3*size,size):
         tmpX = 0
         for i in range(Ax,Bx+3*size,size):
@@ -72,9 +95,26 @@ def Map(gameDisplay,map):
             for q in range(len(MountainArea)):
                 if tmpX == MountainArea[q][0] and tmpY == MountainArea[q][1]:
                     color = brown
-
             pygame.draw.rect(gameDisplay, color, (i, k, size, size))
             pygame.draw.rect(gameDisplay, black, pygame.Rect(i, k, size, size),2)          # draw rect border with 2 px
+            if turn == 1:
+                for q in range(len(Player1Area)):
+                    check = 0
+                    if tmpX == Player1Area[q][0] and tmpY == Player1Area[q][1]:
+                        bg_img = pygame.Surface((size, size))
+                        bg_img.set_alpha(150)
+                        pygame.draw.rect(bg_img, red, bg_img.get_rect())
+                        if check != 1:
+                            gameDisplay.blit(bg_img, (i,k))
+            else:
+                for q in range(len(Player2Area)):
+                    check = 0
+                    if tmpX == Player2Area[q][0] and tmpY == Player2Area[q][1]:
+                        bg_img = pygame.Surface((size, size))
+                        bg_img.set_alpha(150)
+                        pygame.draw.rect(bg_img, red, bg_img.get_rect())
+                        if check != 1:
+                            gameDisplay.blit(bg_img, (i,k))
             tmpX += 1
         tmpY += 1
     # print(i,k)

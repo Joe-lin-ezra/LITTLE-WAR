@@ -24,7 +24,7 @@ class TextInput:
             font_family="",
             font_size=35,
             antialias=True,        #反鋸齒
-            text_color=(71,179,84),
+            text_color=(19,255,0),
             cursor_color=(255,255,255),   #游標color
             repeat_keys_initial_ms=400,  #感應字元輸入速度
             repeat_keys_interval_ms=35,
