@@ -32,7 +32,7 @@ def move(player,player2,i,x,y,map):## x y 是要過去的座標
        try:##如我軍對已經SET過
               i = float(i)
               i = int(i)
-              if (i > len(player.army)):
+              if i >= len(player.army):
                      print("你沒有那麼多部隊")
                      return False
               x = float(x)

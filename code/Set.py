@@ -15,7 +15,9 @@ import json
 def set(player,player2 ,ForS,i,x,y,map, datas):##傳入要設定的玩家，極其要設定的該軍隊，即要設定的XY座標 ForS first or second
     try:  ##如我軍對已經SET過
         i = int(i)
-        if (i > len(player.army)):
+        ##print(i)
+        ##print(len(player.army))
+        if i >= len(player.army):
             print("你沒有那麼多部隊")
             return False
         X = int(player.army[i].x)

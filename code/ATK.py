@@ -12,7 +12,7 @@ def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方
         X = int(player1.army[armyID].x)
         try: ##對方軍隊已經set
             armyID = int(armyID)
-            if (armyID > len(player1.army)):
+            if armyID >= len(player1.army):
                 print("你沒有那麼多部隊")
                 return False
             if (armyID <= (len(player1.army) - 1)):  ##玩家傭有此軍隊
@@ -22,7 +22,7 @@ def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方
                             if (EnermyID != "HQ"):  ##如果不是指定總部
                                 EnermyID = float(EnermyID)
                                 EnermyID = int(EnermyID)
-                                if (EnermyID > len(player2.army)):
+                                if EnermyID >= len(player2.army):
                                     print("敵人沒有那麼多部隊")
                                     return False
                                 X = int(player2.army[EnermyID].x)
