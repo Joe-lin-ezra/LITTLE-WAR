@@ -496,6 +496,8 @@ def game_newgame():
         message_to_screen("> Move : 2 px", navy, 180, 70)
         message_to_screen("> ATK : 1 px  ", navy, 180, 110)
         GUINewGamePageMap.Map(gameDisplay, map)
+        DisplayArmy(player1, player2, Sx, Sy, rm['turn'])
+        gameDisplay.blit(textinput.get_surface(), (90, 585))  # TextInput position By Chin
 
         events = pygame.event.get()
         for event in events:
@@ -542,12 +544,9 @@ def game_newgame():
             if take == 1:
                 print(enemyAction)
                 DeCoder.deCoder(enemyAction, (rm['turn'] + 1) % 2, map, player2, player1, mapInfor)
-                DisplayArmy(player1, player2, 0, 0, rm['turn'])
+                #DisplayArmy(player1, player2, 0, 0, rm['turn'])
                 myTurn = True
                 take = 0
-
-        DisplayArmy(player1, player2, Sx, Sy, rm['turn'])
-        gameDisplay.blit(textinput.get_surface(), (90, 585))  # TextInput position By Chin
 
         # if Sx and Sy:
         #     gameDisplay.blit(Infantry_Self, (Sx, Sy))
