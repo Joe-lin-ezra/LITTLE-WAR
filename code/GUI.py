@@ -21,7 +21,7 @@ import threading
 import GUINewGamePageButtonClick
 import GUINewGamePageMap
 import GUINewGamePageTextBox
-import GUIPausePage
+import GUIWinPage
 import winOrLose
 import select
 import Player
@@ -480,6 +480,10 @@ def game_newgame():
     MSG = msg.render("Not Your Turn", True, MSGColor)
 
     threading.Thread(target=recieve).start()
+
+    RankBtn = pygame.image.load("../img/RankBtn.png")
+    RankBtn2 = pygame.image.load("../img/RankBtn2.png")
+
     while True:
         gameDisplay.fill(yellow)
         pygame.display.set_caption("Game Start")
@@ -529,7 +533,8 @@ def game_newgame():
                     TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
                     if TorF == True:
                         net.send({'event': 8, 'player': place - 1, 'name': name})
-                        print("對方輸了")
+                        GUIWinPage.Win(gameDisplay)
+                        BTN(0, 550,70,290,653,750, RankBtn, RankBtn2, action="Ranking")
                     else:
                         myTurn = False
                         for i in range(len(player1.army)):
@@ -583,7 +588,7 @@ def game_newgame():
                 DisplayArmy(player1, player2, 0, 0, rm['turn'])
                 myTurn = True
                 take = 0
-
+                # if decoder
 
         pygame.display.update()
         clock.tick(30)
