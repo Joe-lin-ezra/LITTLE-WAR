@@ -26,16 +26,27 @@ def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方
                                     print("敵人沒有那麼多部隊")
                                     return False
                                 X = int(player2.army[EnermyID].x)
+                                print("A")
                                 if (EnermyID <= (len(player2.army) - 1)):  ##對方傭有此軍隊
+                                    print("B")
                                     if (player2.army[EnermyID].hp > 0):  ##對方軍隊活著
-                                        range = Move.countRange(player1.army[armyID].x, player2.army[armyID].y,player2.army[EnermyID].x, player1.army[EnermyID].y)
+                                        print("C")
+                                        range = Move.countRange(player1.army[armyID].x, player1.army[armyID].y,player2.army[EnermyID].x, player2.army[EnermyID].y)
+                                        print("計算完成")
                                         if (range <= player1.army[armyID].atkRange):  ##合法攻擊範圍
+                                            print("D")
                                             percent = math.ceil((player1.army[armyID].hp / hp).real)  ##血量換算百分比
+                                            print("血量換算成功")
                                             atker = player1.army[armyID].atk * percent  ##攻擊力依照血量變動
+                                            print("攻擊力計算完成")
                                             player2.army[EnermyID].hp = player2.army[EnermyID].hp - atker  ##敵人血量扣掉計算後的攻擊力
+                                            print("扣寫完成")
                                             player1.army[armyID].ammo = player1.army[armyID].ammo - 1
+                                            print("彈藥計算完成")
                                             player1.army[armyID].atked = 1  ##完成攻擊
-                                            if (player2.army[EnermyID].hp < 0): ##如果死掉拔掉他的x y
+                                            print("完成攻擊")
+                                            if (player2.army[EnermyID].hp <= 0): ##如果死掉拔掉他的x y
+                                                print("E")
                                                 player2.army[EnermyID].x = None
                                                 player2.army[EnermyID].y = None
                                             print("攻擊成功")
