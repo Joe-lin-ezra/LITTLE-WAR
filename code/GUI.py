@@ -574,6 +574,11 @@ def game_newgame():
             gameDisplay.blit(MSG, (730, 715))
             if take == 1:
                 print(enemyAction)
+                # ---------------bug------------------
+                transComman.clear()
+                for i in range(len(player1.army)):
+                    player2.army[i].moved = 0
+                # ---------------bug------------------
                 DeCoder.deCoder(enemyAction, (rm['turn'] %2)+1, map, player2, player1, mapInfor)
                 DisplayArmy(player1, player2, 0, 0, rm['turn'])
                 myTurn = True
