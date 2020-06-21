@@ -542,21 +542,30 @@ def game_newgame():
         message_to_screen("Move : 3 px", navy, 120, -230)
         message_to_screen("ATK   : 1 px", navy, 120, -190)
 
+        Infantry = pygame.image.load("../img/Infantry-self.png")
+        Infantry = pygame.transform.scale(Infantry, (50, 50))
+        # InfantryBTN = GUINewGamePageButtonClick.button(white, 5, 70, 190, 150, "")            #用於按下Button 顯示可移動及生成位置(運用pause page 原理)
+        # InfantryBTN.draw(gameDisplay)
+        gameDisplay.blit(Infantry, (20, 230))
+        message_to_screen("NO. 1", navy, 250, -130, size="medium")
+        message_to_screen("Move : 3 px", navy, 120, -90)
+        message_to_screen("ATK   : 1 px", navy, 120, -50)
+
         # Mech id 編號是? - By Chin #
         Mech = pygame.image.load("../img/Mech-self.png")
         Mech = pygame.transform.scale(Mech, (50, 50))
-        gameDisplay.blit(Mech, (20, 230))
-        message_to_screen("NO. 1", navy, 250, -130, size="medium")
-        message_to_screen("Move : 2 px", navy, 120, -90)
-        message_to_screen("ATK   : 1 px", navy, 120, -50)
-
-        # Reco id 編號是? - By Chin #
-        Reco = pygame.image.load("../img/Reco-self.png")
-        Reco = pygame.transform.scale(Reco, (50, 50))
-        gameDisplay.blit(Reco, (20, 380))
+        gameDisplay.blit(Mech, (20, 380))
         message_to_screen("NO. 2", navy, 250, 30, size="medium")
         message_to_screen("Move : 2 px", navy, 120, 70)
         message_to_screen("ATK   : 1 px", navy, 120, 110)
+
+        # Reco id 編號是? - By Chin #
+        # Reco = pygame.image.load("../img/Reco-self.png")
+        # Reco = pygame.transform.scale(Reco, (50, 50))
+        # gameDisplay.blit(Reco, (20, 380))
+        # message_to_screen("NO. 2", navy, 250, 30, size="medium")
+        # message_to_screen("Move : 2 px", navy, 120, 70)
+        # message_to_screen("ATK   : 1 px", navy, 120, 110)
         GUINewGamePageMap.Map(gameDisplay, map,mapInfor,rm['turn'])
         DisplayArmy(player1, player2, Sx, Sy, rm['turn'])
         gameDisplay.blit(textinput.get_surface(), (90, 585))  # TextInput position By Chin
@@ -782,18 +791,18 @@ def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 
             Sx = LeftTopX + Player1.army[i].x * 50
             Sy = LeftTopY + Player1.army[i].y * 50
             if turn == 1:
-                if i == 0 :
+                if Player1.army[i].type == "Infantry" :
                     gameDisplay.blit(Infantry_Self, (Sx, Sy))
-                elif i == 1:
+                elif Player1.army[i].type == "Mech":
                     gameDisplay.blit(Mech_self,(Sx,Sy))
-                elif i == 2:
+                elif Player1.army[i].type == "Reco":
                     gameDisplay.blit(Reco_self,(Sx,Sy))
             else:
-                if i == 0 :
+                if Player2.army[i].type == "Infantry" :
                     gameDisplay.blit(Infantry_Enemy, (Sx, Sy))
-                elif i == 1:
+                elif Player2.army[i].type == "Mech":
                     gameDisplay.blit(Mech_Enemy,(Sx,Sy))
-                elif i == 2:
+                elif Player2.army[i].type == "Reco":
                     gameDisplay.blit(Reco_Enemy,(Sx,Sy))
 
     for i in range(len(Player2.army)):
@@ -801,18 +810,18 @@ def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 
             Sx = LeftTopX + Player2.army[i].x * 50
             Sy = LeftTopY + Player2.army[i].y * 50
             if turn == 1:
-                if i == 0 :
+                if Player2.army[i].type == "Infantry" :
                     gameDisplay.blit(Infantry_Enemy, (Sx, Sy))
-                elif i == 1:
+                elif Player2.army[i].type == "Mech":
                     gameDisplay.blit(Mech_Enemy,(Sx,Sy))
-                elif i == 2:
+                elif Player2.army[i].type == "Reco":
                     gameDisplay.blit(Reco_Enemy,(Sx,Sy))
             else:
-                if i == 0 :
+                if Player1.army[i].type == "Infantry" :
                     gameDisplay.blit(Infantry_Self, (Sx, Sy))
-                elif i == 1:
+                elif Player1.army[i].type == "Mech":
                     gameDisplay.blit(Mech_self,(Sx,Sy))
-                elif i == 2:
+                elif Player1.army[i].type == "Reco":
                     gameDisplay.blit(Reco_self,(Sx,Sy))
 
 
