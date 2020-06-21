@@ -14,6 +14,7 @@ import os.path  # By Chin
 import pygame.locals as pl  # By Chin
 import DeCoder
 import threading
+import socket
 
 # NewGame Page 系列 - By Chin
 # import GUINewGamePage
@@ -435,7 +436,10 @@ def recieve():
     global take
     global enemyAction
     while True:
-        enemyAction = net.recv()
+        try:
+            enemyAction = net.recv()
+        except:
+            continue
         enemyAction = json.loads(enemyAction)
         if enemyAction['event'] == 3:
             take = 1
