@@ -2,7 +2,7 @@
 
 def wOrL(player):
     counter = 0 ##計算幾隻部隊陣亡
-    if(player.hq.hp == 0):
+    if(player.hq.hp <= 0):
         return True
     else:
         for i in range(len(player.army)):

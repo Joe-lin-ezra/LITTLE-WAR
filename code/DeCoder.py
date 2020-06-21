@@ -13,6 +13,7 @@ def deCoder (transCommandList,ForS,map,player2,player1, mapDetail):## ,player2,p
     TorF = winOrLose.wOrL(player1)  ##判斷我方是否輸了
     if TorF == True:
         print("你輸了")
+        return True
     else:
         print("下一回合")
     for i in range(len(player1.army)):
@@ -22,4 +23,4 @@ def deCoder (transCommandList,ForS,map,player2,player1, mapDetail):## ,player2,p
             player1.army[i].hp = 0
         player1.army[i].moved = 0
         player1.army[i].atked = 0
-
+    return TorF

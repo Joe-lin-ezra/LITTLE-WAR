@@ -21,12 +21,12 @@ class TextInput:
     def __init__(
             self,
             initial_string="> ",
-            font_family="",
+            font_family="Agency FB",
             font_size=35,
             antialias=True,        #反鋸齒
-            text_color=(71,179,84),
+            text_color=(19,255,0),
             cursor_color=(255,255,255),   #游標color
-            repeat_keys_initial_ms=400,  #感應字元輸入速度
+            repeat_keys_initial_ms=300,  #感應字元輸入速度
             repeat_keys_interval_ms=35,
             max_string_length=-1):
         """
@@ -84,7 +84,9 @@ class TextInput:
                     self.keyrepeat_counters[event.key] = [0, event.unicode]
 
                 if event.key == pl.K_BACKSPACE:
-                    self.input_string = self.input_string[0:-1]
+                    if (len(self.input_string) > 2 ):
+                        self.input_string = self.input_string[:-1]
+
                     # Subtract one from cursor_pos, but do not go below zero:
                     self.cursor_position = max(self.cursor_position - 1, 2)
                     # self.input_string = "> "
@@ -185,44 +187,44 @@ class TextInput:
     def callback(key):
         print(key)
 
-if __name__ == "__main__":
-    pygame.init()
-    screen = pygame.display.set_mode((1024, 768))
-    display_height = 768
-
-    # Create TextInput-object
-    textinput = TextInput()
-    TextArea = pygame.Surface((580,460))
-    TextArea.fill((123,206,206))
-
-
-    clock = pygame.time.Clock()
-    token = 1
-    y = 0
-    n = 0
-    msg = [{}]
-    while True:
-        screen.fill((225, 225, 225))
-        screen.blit(TextArea,(80,120))
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                exit()
-
-        # Feed it with events every frame
-        # textinput.update(events)
-        screen.blit(textinput.get_surface(), (10, 20))
-
-        if textinput.update(events):
-            n += 1
-            y = 50
-            TextArea.blit(textinput.get_surface(), (10, 20+(y*n)))
-
-            print(textinput.get_text())             # 透過get_text() 取得輸入的資訊
-        # Blit its surface onto the screen
-
-
-
-
-        pygame.display.update()
-        clock.tick(30)
+# if __name__ == "__main__":
+#     pygame.init()
+#     screen = pygame.display.set_mode((1024, 768))
+#     display_height = 768
+#
+#     # Create TextInput-object
+#     textinput = TextInput()
+#     TextArea = pygame.Surface((580,460))
+#     TextArea.fill((123,206,206))
+#
+#
+#     clock = pygame.time.Clock()
+#     token = 1
+#     y = 0
+#     n = 0
+#     msg = [{}]
+#     while True:
+#         screen.fill((225, 225, 225))
+#         screen.blit(TextArea,(80,120))
+#         events = pygame.event.get()
+#         for event in events:
+#             if event.type == pygame.QUIT:
+#                 exit()
+#
+#         # Feed it with events every frame
+#         # textinput.update(events)
+#         screen.blit(textinput.get_surface(), (10, 20))
+#
+#         if textinput.update(events):
+#             n += 1
+#             y = 50
+#             TextArea.blit(textinput.get_surface(), (10, 20+(y*n)))
+#
+#             print(textinput.get_text())             # 透過get_text() 取得輸入的資訊
+#         # Blit its surface onto the screen
+#
+#
+#
+#
+#         pygame.display.update()
+#         clock.tick(30)
