@@ -6,10 +6,9 @@ def winTimesUpdate(name):
     c = connection.cursor()
     c.execute('SELECT * FROM Player WHERE name="%s"' % name)
     row = c.fetchone()
-    id = row[0]
     max = row[2]
     max += 1
-    c.execute('INSERT INTO Player (Player_ID, Name, Win_times) VALUES (%d, "%s", %d)' % (id, name, max))
+    c.execute('UPDATE Player SET (Win_times=%d) WHERE Player_ID=%d' % (max, id))
     connection.commit()
     connection.close()
 
