@@ -5,7 +5,6 @@ import json
 class Network():
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.setblocking(False)
         self.server = config.IP
         self.port = config.PORT
         self.addr = (self.server, self.port)
