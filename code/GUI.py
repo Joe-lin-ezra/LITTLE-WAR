@@ -515,8 +515,8 @@ def game_newgame():
     MSGColor = red
     MSG = msg.render("Not Your Turn", True, MSGColor)
 
-    threading.Thread(target=recieve).start()
-
+    thread = threading.Thread(target=recieve)
+    thread.start()
     RankBtn = pygame.image.load("../img/RankBtn.png")
     RankBtn2 = pygame.image.load("../img/RankBtn2.png")
     print(player1.hq.hp, player2.hq.hp)
@@ -570,6 +570,7 @@ def game_newgame():
                     if TorF == True:
                         print("Player 1 win")
                         net.send({'event': 8, 'player': place - 1, 'name': name})
+                        thread.join()
                         WinPage(gameDisplay,1)
                     else:
                         myTurn = False
