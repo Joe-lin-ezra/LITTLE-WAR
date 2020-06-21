@@ -1,7 +1,11 @@
 import sqlite3
 
 
-def winTimesUpdate(name):
+def winTimesUpdate(name, win):
+    if win:
+        pass
+    else:
+        return 0
     connection = sqlite3.connect('Gamedb.db')
     c = connection.cursor()
     c.execute('SELECT * FROM Player WHERE name="%s"' % name)

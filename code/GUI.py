@@ -436,11 +436,13 @@ def recieve():
     global take
     global enemyAction
     while True:
-        try:
-            enemyAction = net.recv()
-        except:
-            continue
+        enemyAction = net.recv()
         enemyAction = json.loads(enemyAction)
+        # signal of terminate thread
+        print(enemyAction)
+        if enemyAction['event'] == 9:
+            break
+
         if enemyAction['event'] == 3:
             take = 1
             enemyAction['event'] = 1
@@ -582,7 +584,8 @@ def game_newgame():
                     TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
                     if TorF == True:
                         print("Player 1 win")
-                        net.send({'event': 8, 'player': place - 1, 'name': name})
+                        net.send({'event': 8, 'player': place - 1, 'name': name, 'win':True})
+                        # net.send({'event': 9, 'player': place - 1})
                         thread.join()
                         WinPage(gameDisplay,1)
                     else:
@@ -640,6 +643,8 @@ def game_newgame():
                 take = 0
                 if Lose == True:
                     print("Lose")
+                    net.send({'event': 8, 'player': place - 1, 'name': name, 'win': False})
+                    thread.join()
                     WinPage(gameDisplay,0)
 
         pygame.display.update()

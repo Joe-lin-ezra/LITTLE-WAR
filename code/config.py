@@ -1,4 +1,4 @@
-IP = '203.217.101.9'
+IP = '192.168.0.13'
 PORT = 25565
 
 from enum import Enum
@@ -12,3 +12,5 @@ class RequestType:
     ac = 6
     player = 7
     win = 8
+    # for turn off thread
+    game_end = 9

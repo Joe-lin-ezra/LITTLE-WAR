@@ -31,6 +31,7 @@ class Server():
             try:
                 data = client.recv(2048).decode('utf-8')
                 if data:
+                    print(data)
                     payload = json.loads(data)
                     print(payload)
             except socket.error:
@@ -85,7 +86,12 @@ class Server():
                 player = select.selectDeploy(self.rooms[payload['room']-1].mapId)
                 self.userlist[payload['player']].send(bytes(json.dumps(player).encode('utf-8')))
             elif payload['event'] == RequestType.win:
-                updatePlayer.winTimesUpdate(name=payload['name'])
+                print('event 8 success.')
+                updatePlayer.winTimesUpdate(name=payload['name'], win=payload['win'])
+                self.userlist[payload['player']].send(bytes(json.dumps({'event': 9}).encode('utf-8')))
+            elif payload['event'] == RequestType.game_end:
+                print('in the game end event', payload)
+                self.userlist[payload['player']].send(bytes(json.dumps({'event': 9}).encode('utf-8')))
 
 
 
