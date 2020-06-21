@@ -499,14 +499,11 @@ def game_newgame():
     # server get map By Paco
 
     if rm["turn"] == 1:
-        player1.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player1_HQ"]["x"],
-                                             y=mapInfor["Player1_HQ"]["y"])  ##建構玩家1物件
+        player1.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player1_HQ"]["x"], y=mapInfor["Player1_HQ"]["y"])  ##建構玩家1物件
         player2.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player2_HQ"]["x"], y=mapInfor["Player2_HQ"]["y"])
     else:
-        player2.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player2_HQ"]["x"],
-                                             y=mapInfor["Player2_HQ"]["y"])  ##建構玩家2物件
-        player1.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player1_HQ"]["x"], y=mapInfor["Player1_HQ"]["y"])
-
+        player1.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player2_HQ"]["x"], y=mapInfor["Player2_HQ"]["y"])  ##建構玩家2物件
+        player2.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player1_HQ"]["x"], y=mapInfor["Player1_HQ"]["y"])
 
     head_font = medfont  ##建立文字物件 by Dan  Changed : pygame.font.SysFont(None, 60) -> smallfont (By Chin)
     text_surface = head_font.render('Illegal instruction', True, (255, 255, 255))  ##宣告文字物件的格式by Dan

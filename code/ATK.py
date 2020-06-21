@@ -47,12 +47,20 @@ def atk(player1,player2,armyID,EnermyID,map):##需要傳入自己player與對方
                                     print("對方無此軍隊")
                                     return False
                             else: ##如果指定總部
-                                range = Move.countRange(player1.army[armyID].x, player1.army[armyID].y,player2.hq.x, player2.hq.y)
-                                if (range <= player1.army[armyID].atkRange):  ##合法攻擊範圍
+                                print(player1.army[armyID].x,player1.army[armyID].y)
+                                print(player2.hq.x, player2.hq.y)
+                                print(player1.hq.x, player1.hq.y)
+                                ansRange = Move.countRange(player1.army[armyID].x, player1.army[armyID].y,player2.hq.x, player2.hq.y)
+                                print(ansRange)
+                                print(type(ansRange))
+                                print(player1.army[armyID].atkRange)
+                                print(type(player1.army[armyID].atkRange))
+                                if (ansRange <= player1.army[armyID].atkRange):  ##合法攻擊範圍
                                     percent = math.ceil((player1.army[armyID].hp / hp).real)  ##血量換算百分比
                                     atker = player1.army[armyID].atk * percent  ##攻擊力依照血量變動
+                                    print(type(player2.hq.hp))
                                     player2.hq.hp = player2.hq.hp - atker  ##敵人血量扣掉計算後的攻擊力
-                                    print("攻擊成功")
+                                    print("攻擊基地成功")
                                     player1.army[armyID].atked = 1  ##完成攻擊
                                     return True
                         else:##沒有子彈
