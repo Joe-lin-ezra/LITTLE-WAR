@@ -73,7 +73,8 @@ class Server():
                 pay = select.selectRank(payload['name'])
                 self.userlist[payload['player']].send(bytes(json.dumps(pay).encode('utf-8')))
             elif payload['event'] == RequestType.map:
-                map = select.selectMap(self.rooms[(payload['room']-1)].mapId)
+                #map = select.selectMap(self.rooms[(payload['room']-1)].mapId)
+                map = select.selectMap(1)
                 self.userlist[payload['player']].send(bytes(json.dumps(map).encode('utf-8')))
             elif payload['event'] == RequestType.ac:
                 if payload['num'] == 1:
