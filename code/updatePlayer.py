@@ -8,7 +8,7 @@ def winTimesUpdate(name):
     row = c.fetchone()
     max = row[2]
     max += 1
-    c.execute('UPDATE Player SET (Win_times=%d) WHERE name=%s' % (max, name))
+    c.execute('UPDATE Player SET Win_times = "%d" WHERE name="%s"' % (max, name))
     connection.commit()
     connection.close()
 

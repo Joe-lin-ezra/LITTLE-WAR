@@ -21,7 +21,6 @@ import threading
 import GUINewGamePageButtonClick
 import GUINewGamePageMap
 import GUINewGamePageTextBox
-import GUIWinPage
 import winOrLose
 import select
 import Player
@@ -91,7 +90,7 @@ clock = pygame.time.Clock()
 
 smallfont = pygame.font.SysFont("Agency FB", 25)
 medfont = pygame.font.SysFont("Agency FB", 50)
-largefont = pygame.font.SysFont("Agency FB", 85)
+largefont = pygame.font.SysFont("Agency FB", 150)
 
 FPS = 3
 
@@ -268,6 +267,46 @@ def BTN( x, y, Wt,Wb,Ht,Hb, inactive_color, active_color,action=None,enable=True
     else:
        gameDisplay.blit(inactive_color,(x,y))
 
+def WinPage(gameDisplay,WorL):
+    intro = True
+    window = pygame.Surface((1024, 768))
+    window.fill(yellow)
+    window.set_alpha(0)
+
+    winmsg = largefont
+    if WorL == 1:
+        Win = winmsg.render("You Win~", True, black)
+    else:
+        Win = winmsg.render("You Lose~", True, black)
+    msg = medfont
+    Msg = msg.render("--Click To Check Your Rank--",True,gray)
+
+    current_time = pygame.time.get_ticks()
+    exit_time = current_time + 1000
+
+    while intro:
+        for event in pygame.event.get():
+            # print(event)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
+        gameDisplay.fill(yellow)
+        current_time = pygame.time.get_ticks()
+
+
+        if WorL == 1:
+            gameDisplay.blit(Win, (310, 250))
+        else:
+            gameDisplay.blit(Win,(290,250))
+        gameDisplay.blit(Msg,(280,600))
+        if current_time >= exit_time:
+            BTN(0, 0, 0, 1024, 0, 768, window, window, action="Ranking")
+        pygame.display.update()
+        clock.tick(15)
 
 def game_user():
     run = True
@@ -483,7 +522,7 @@ def game_newgame():
 
     RankBtn = pygame.image.load("../img/RankBtn.png")
     RankBtn2 = pygame.image.load("../img/RankBtn2.png")
-
+    print(player1.hq.hp, player2.hq.hp)
     while True:
         gameDisplay.fill(yellow)
         pygame.display.set_caption("Game Start")
@@ -532,9 +571,9 @@ def game_newgame():
                     net.send({'event': 3, 'room': room, 'player': place - 1, 'action': transComman})
                     TorF = winOrLose.wOrL(player2)  ##判斷對方是否輸了
                     if TorF == True:
+                        print("Player 1 win")
                         net.send({'event': 8, 'player': place - 1, 'name': name})
-                        GUIWinPage.Win(gameDisplay)
-                        BTN(0, 550,70,290,653,750, RankBtn, RankBtn2, action="Ranking")
+                        WinPage(gameDisplay,1)
                     else:
                         myTurn = False
                         for i in range(len(player1.army)):
@@ -556,7 +595,7 @@ def game_newgame():
 
             if event.type == pygame.KEYDOWN:                #當按下Enter 後重新畫出ResponseArea By Chin
                 if event.key == pygame.K_RETURN:
-                    print('in')
+                    print(player1.hq.hp, player2.hq.hp)
                     ResponseArea = pygame.Surface((600, 150))
                     ResponseArea.fill(black)
                     gameDisplay.blit(ResponseArea, (80, 580))
@@ -584,11 +623,13 @@ def game_newgame():
                 for i in range(len(player1.army)):
                     player2.army[i].moved = 0
                 # ---------------bug------------------
-                DeCoder.deCoder(enemyAction, (rm['turn'] %2)+1, map, player2, player1, mapInfor)
+                Lose = DeCoder.deCoder(enemyAction, (rm['turn'] %2)+1, map, player2, player1, mapInfor)
                 DisplayArmy(player1, player2, 0, 0, rm['turn'])
                 myTurn = True
                 take = 0
-                # if decoder
+                if Lose == True:
+                    print("Lose")
+                    WinPage(gameDisplay,0)
 
         pygame.display.update()
         clock.tick(30)
@@ -953,7 +994,7 @@ def game_CreateGame(num):
 
 game_intro()
 
-# game_setting()
+# WinPage(gameDisplay,1)
 
 # game_home()
 

@@ -22,4 +22,4 @@ def deCoder (transCommandList,ForS,map,player2,player1, mapDetail):## ,player2,p
             player1.army[i].hp = 0
         player1.army[i].moved = 0
         player1.army[i].atked = 0
-
+    return TorF

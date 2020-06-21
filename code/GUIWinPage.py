@@ -16,8 +16,6 @@ largefont = pygame.font.SysFont("Agency FB", 140)
 display_width = 1024
 display_height = 768
 
-gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption('Slither')
 clock = pygame.time.Clock()
 
 RankBtn = pygame.image.load("../img/RankBtn.png")
@@ -39,44 +37,7 @@ def message_to_screen(msg, color, x_displace = 0,y_displace=0, size="small"):
     gameDisplay.blit(textSurf, textRect)
 
 
-def WinPage(gameDisplay):
-    intro = True
-    winmsg = largefont
-    Win = winmsg.render("You Win~", True, black)
-    while intro:
-        for event in pygame.event.get():
-            # print(event)
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
-        gameDisplay.fill(yellow)
-        gameDisplay.blit(Win, (310, 250))
-        pygame.display.update()
-        clock.tick(15)
 
-def LosePage():
-    intro = True
-    winmsg = largefont
-    Win = winmsg.render("You Lose~", True, black)
-    while intro:
-        for event in pygame.event.get():
-            # print(event)
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
-
-        gameDisplay.fill(yellow)
-        gameDisplay.blit(Win, (310, 250))
-        pygame.display.update()
-        clock.tick(15)
 
 
 # WinPage()
