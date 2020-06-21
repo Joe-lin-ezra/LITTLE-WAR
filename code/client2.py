@@ -84,7 +84,7 @@ light_gray = (230, 230, 230)
 orange = (255, 153, 0)
 light_orange = (255, 204, 0)
 
-navy = (0, 43, 128)
+navy =(0, 43, 128)
 
 clock = pygame.time.Clock()
 
@@ -155,7 +155,7 @@ def button(text, x, y, width, height, inactive_color, active_color, action=None,
     else:
         pygame.draw.rect(gameDisplay, inactive_color, (x, y, width, height))
 
-    text_to_button(text, btncolor, x, y, width, height, "medium")
+    text_to_button(text, btncolor, x, y, width, height,"medium")
 
 
 def button_draw(Btn):  # Btn stands for button         Use for newgamepage (By Chin)
@@ -208,12 +208,11 @@ def message_to_screen(msg, color, x_displace=0, y_displace=0, size="small"):
     textRect.center = (int(x_displace / 2), int(display_height / 2) + y_displace)
     gameDisplay.blit(textSurf, textRect)
 
-
-def BTN(x, y, Wt, Wb, Ht, Hb, inactive_color, active_color, action=None, enable=True):
+def BTN( x, y, Wt,Wb,Ht,Hb, inactive_color, active_color,action=None,enable=True):
     cur = pygame.mouse.get_pos()
     if Wb > cur[0] > Wt and Hb > cur[1] > Ht:
         click = pygame.mouse.get_pressed()
-        gameDisplay.blit(active_color, (x, y))
+        gameDisplay.blit(active_color,(x,y))
         if click[0] == 1 and action != None:
             if action == "quit":
                 pygame.quit()
@@ -266,10 +265,9 @@ def BTN(x, y, Wt, Wb, Ht, Hb, inactive_color, active_color, action=None, enable=
                 click = None
                 game_user()
     else:
-        gameDisplay.blit(inactive_color, (x, y))
+       gameDisplay.blit(inactive_color,(x,y))
 
-
-def WinPage(gameDisplay, WorL):
+def WinPage(gameDisplay,WorL):
     intro = True
     window = pygame.Surface((1024, 768))
     window.fill(yellow)
@@ -281,7 +279,7 @@ def WinPage(gameDisplay, WorL):
     else:
         Win = winmsg.render("You Lose~", True, black)
     msg = medfont
-    Msg = msg.render("--Click To Check Your Rank--", True, gray)
+    Msg = msg.render("--Click To Check Your Rank--",True,gray)
 
     current_time = pygame.time.get_ticks()
     exit_time = current_time + 1000
@@ -299,16 +297,16 @@ def WinPage(gameDisplay, WorL):
         gameDisplay.fill(yellow)
         current_time = pygame.time.get_ticks()
 
+
         if WorL == 1:
             gameDisplay.blit(Win, (310, 250))
         else:
-            gameDisplay.blit(Win, (290, 250))
-        gameDisplay.blit(Msg, (280, 600))
+            gameDisplay.blit(Win,(290,250))
+        gameDisplay.blit(Msg,(280,600))
         if current_time >= exit_time:
             BTN(0, 0, 0, 1024, 0, 768, window, window, action="Ranking")
         pygame.display.update()
         clock.tick(15)
-
 
 def game_user():
     run = True
@@ -351,23 +349,23 @@ def game_user():
                     quit()
 
         gameDisplay.fill(yellow)
-        BTN(0, 120, 100, 410, 290, 450, CreateBtn, CreateBtn2, action="CreateGame")
-        BTN(500, 120, 600, 910, 290, 450, UseYourBtn, UseYourBtn2, action="Browse")
+        BTN(0, 120,100,410,290,450 ,CreateBtn, CreateBtn2, action="CreateGame")
+        BTN(500, 120,600,910,290,450, UseYourBtn, UseYourBtn2, action="Browse")
         pygame.display.update()
         clock.tick(15)
-
 
 def game_setting():
     run = True
 
     HomeBtn = pygame.image.load("../img/homebtn.png")
-    HomeBtn = pygame.transform.scale(HomeBtn, (200, 200))
+    HomeBtn = pygame.transform.scale(HomeBtn, (200,200))
 
     HomeBtn2 = pygame.image.load("../img/homebtn2.png")
-    HomeBtn2 = pygame.transform.scale(HomeBtn2, (200, 200))
+    HomeBtn2 = pygame.transform.scale(HomeBtn2, (200,200))
 
     IntroImg = pygame.image.load("../img/Intro.png")
-    IntroImg = pygame.transform.scale(IntroImg, (900, 700))
+    IntroImg = pygame.transform.scale(IntroImg,(900,700))
+
 
     while run:
 
@@ -377,20 +375,19 @@ def game_setting():
                 pygame.quit()
                 quit()
         gameDisplay.fill(yellow)
-        gameDisplay.blit(IntroImg, (90, 0))
-        gameDisplay.blit(HQ, (200, 700))
-        message_to_screen("HQ", black, 550, 335, "medium")
+        gameDisplay.blit(IntroImg,(90,0))
+        gameDisplay.blit(HQ,(200,700))
+        message_to_screen("HQ",black,550,335,"medium")
         # Title = smallfont.render("Command : [ SET , ATK , MOVE ] [Nth Army] [Xposition] [Yposition]", True, green)
         # gameDisplay.blit(Title, (80, 70))
         # Title2 = smallfont.render("For example : set 0 1 0",True,green)
         # gameDisplay.blit(Title2,(80,110))
         # Title3 = smallfont.render("Army's type is showing on left hand side",True,green)
         # gameDisplay.blit(Title3,(80,200))
-        BTN(450, 620, 494, 692, 677, 742, HomeBtn, HomeBtn2, action="Home")
+        BTN(450,620,494,692,677,742, HomeBtn, HomeBtn2, action="Home")
 
         pygame.display.update()
         clock.tick(15)
-
 
 def game_home():
     run = True
@@ -411,6 +408,7 @@ def game_home():
 
     BackBtn2 = pygame.image.load("../img/BackBtn2.png")
 
+
     while run:
         for event in pygame.event.get():
             # print(event)
@@ -420,17 +418,16 @@ def game_home():
 
         gameDisplay.fill(yellow)
 
-        BTN(-100, -150, 33, 470, 85, 320, NewGameBtn, NewGameBtn2, action="NewGame")
+        BTN(-100,-150,33,470,85,320, NewGameBtn, NewGameBtn2, action="NewGame")
 
-        BTN(415, 230, 570, 1000, 465, 700, ControlBtn, ControlBtn2, action="Setting")
+        BTN(415, 230,570,1000,465,700, ControlBtn, ControlBtn2, action="Setting")
 
-        BTN(415, -150, 570, 1000, 85, 320, BackBtn, BackBtn2, action="main")
+        BTN(415, -150,570,1000,85,320, BackBtn, BackBtn2, action="main")
 
         BTN(-100, 230, 33, 470, 465, 700, RankBtn, RankBtn2, action="Ranking")
 
         pygame.display.update()
         clock.tick(15)
-
 
 def recieve():
     print('turn on second thread')
@@ -443,7 +440,6 @@ def recieve():
         if enemyAction['event'] == 3:
             take = 1
             enemyAction['event'] = 1
-
 
 def game_newgame():
     # 都是 TextBox 的東西 By Chin - Head#
@@ -473,10 +469,10 @@ def game_newgame():
     # 呢邊是 Button 的東西 By Chin - Head #
     SendBtn = GUINewGamePageButtonClick.button(blue, 750, 590, 170, 120, "GO")  # color , x, y, width, height , text
     GOBtn = pygame.image.load("../img/GoBtn.png")
-    GOBtn = pygame.transform.scale(GOBtn, (320, 320))
+    GOBtn = pygame.transform.scale(GOBtn,(320,320))
 
     GOBtn2 = pygame.image.load("../img/GoBtn2.png")
-    GOBtn2 = pygame.transform.scale(GOBtn2, (320, 320))
+    GOBtn2 = pygame.transform.scale(GOBtn2,(320,320))
     token = True  # 模仿回合的結束 用來不給玩家在不是自己的回合中輸入
     Pass = False  # Pause 專用
     # 呢邊是 Button 的東西 By Chin - Foot #
@@ -496,20 +492,18 @@ def game_newgame():
     net.send({'event': 5, 'player': place - 1, 'room': room})
     mapInfor = net.recv()
     mapInfor = json.loads(mapInfor)
-    print('mapInfor : ', mapInfor)
+    print('mapInfor : ',mapInfor)
     map = Constructer.constructMap(mapInfor)
-    print("Map number is ", mapInfor['Id'])
+    print("Map number is " , mapInfor['Id'])
     # print(mapInfor)
     # server get map By Paco
 
     if rm["turn"] == 1:
-        player1.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player1_HQ"]["x"],
-                                             y=mapInfor["Player1_HQ"]["y"])  ##建構玩家1物件
+        player1.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player1_HQ"]["x"], y=mapInfor["Player1_HQ"]["y"])  ##建構玩家1物件
         player2.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player2_HQ"]["x"], y=mapInfor["Player2_HQ"]["y"])
     else:
-        player2.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player2_HQ"]["x"],
-                                             y=mapInfor["Player2_HQ"]["y"])  ##建構玩家2物件
-        player1.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player1_HQ"]["x"], y=mapInfor["Player1_HQ"]["y"])
+        player1.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player2_HQ"]["x"], y=mapInfor["Player2_HQ"]["y"])  ##建構玩家2物件
+        player2.hq = Headquarter.Headquarter(hp=20, x=mapInfor["Player1_HQ"]["x"], y=mapInfor["Player1_HQ"]["y"])
 
     head_font = medfont  ##建立文字物件 by Dan  Changed : pygame.font.SysFont(None, 60) -> smallfont (By Chin)
     text_surface = head_font.render('Illegal instruction', True, (255, 255, 255))  ##宣告文字物件的格式by Dan
@@ -521,8 +515,8 @@ def game_newgame():
     MSGColor = red
     MSG = msg.render("Not Your Turn", True, MSGColor)
 
-    threading.Thread(target=recieve).start()
-
+    thread = threading.Thread(target=recieve)
+    thread.start()
     RankBtn = pygame.image.load("../img/RankBtn.png")
     RankBtn2 = pygame.image.load("../img/RankBtn2.png")
     print(player1.hq.hp, player2.hq.hp)
@@ -532,7 +526,7 @@ def game_newgame():
         # message_to_screen("Game Start", black, 1000, -340, size='large')
         gameDisplay.blit(ResponseArea, (80, 580))
         SendBtn.draw(gameDisplay)
-        BTN(680, 490, 740, 940, 600, 700, GOBtn, GOBtn2)
+        BTN(680,490,740,940,600,700,GOBtn,GOBtn2)
 
         # Infantry id 編號是? - By Chin #
         Infantry = pygame.image.load("../img/Infantry-self.png")
@@ -544,22 +538,31 @@ def game_newgame():
         message_to_screen("Move : 3 px", navy, 120, -230)
         message_to_screen("ATK   : 1 px", navy, 120, -190)
 
+        Infantry = pygame.image.load("../img/Infantry-self.png")
+        Infantry = pygame.transform.scale(Infantry, (50, 50))
+        # InfantryBTN = GUINewGamePageButtonClick.button(white, 5, 70, 190, 150, "")            #用於按下Button 顯示可移動及生成位置(運用pause page 原理)
+        # InfantryBTN.draw(gameDisplay)
+        gameDisplay.blit(Infantry, (20, 230))
+        message_to_screen("NO. 1", navy, 250, -130, size="medium")
+        message_to_screen("Move : 3 px", navy, 120, -90)
+        message_to_screen("ATK   : 1 px", navy, 120, -50)
+
         # Mech id 編號是? - By Chin #
         Mech = pygame.image.load("../img/Mech-self.png")
         Mech = pygame.transform.scale(Mech, (50, 50))
-        gameDisplay.blit(Mech, (20, 230))
-        message_to_screen("NO. 1", navy, 250, -130, size="medium")
-        message_to_screen("Move : 2 px", navy, 120, -90)
-        message_to_screen("ATK   : 1 px", navy, 120, -50)
-
-        # Reco id 編號是? - By Chin #
-        Reco = pygame.image.load("../img/Reco-self.png")
-        Reco = pygame.transform.scale(Reco, (50, 50))
-        gameDisplay.blit(Reco, (20, 380))
+        gameDisplay.blit(Mech, (20, 380))
         message_to_screen("NO. 2", navy, 250, 30, size="medium")
         message_to_screen("Move : 2 px", navy, 120, 70)
         message_to_screen("ATK   : 1 px", navy, 120, 110)
-        GUINewGamePageMap.Map(gameDisplay, map, mapInfor, rm['turn'])
+
+        # Reco id 編號是? - By Chin #
+        # Reco = pygame.image.load("../img/Reco-self.png")
+        # Reco = pygame.transform.scale(Reco, (50, 50))
+        # gameDisplay.blit(Reco, (20, 380))
+        # message_to_screen("NO. 2", navy, 250, 30, size="medium")
+        # message_to_screen("Move : 2 px", navy, 120, 70)
+        # message_to_screen("ATK   : 1 px", navy, 120, 110)
+        GUINewGamePageMap.Map(gameDisplay, map,mapInfor,rm['turn'])
         DisplayArmy(player1, player2, Sx, Sy, rm['turn'])
         gameDisplay.blit(textinput.get_surface(), (90, 585))  # TextInput position By Chin
 
@@ -576,7 +579,8 @@ def game_newgame():
                     if TorF == True:
                         print("Player 1 win")
                         net.send({'event': 8, 'player': place - 1, 'name': name})
-                        WinPage(gameDisplay, 1)
+                        thread.join()
+                        WinPage(gameDisplay,1)
                     else:
                         myTurn = False
                         for i in range(len(player1.army)):
@@ -596,7 +600,7 @@ def game_newgame():
                 else:
                     SendBtn.color = blue
 
-            if event.type == pygame.KEYDOWN:  # 當按下Enter 後重新畫出ResponseArea By Chin
+            if event.type == pygame.KEYDOWN:                #當按下Enter 後重新畫出ResponseArea By Chin
                 if event.key == pygame.K_RETURN:
                     print(player1.hq.hp, player2.hq.hp)
                     ResponseArea = pygame.Surface((600, 150))
@@ -615,9 +619,9 @@ def game_newgame():
                     transComman.append(command)
                 else:  ##指令有問題
                     text_surface = head_font.render('Illegal Instruction', True, (255, 255, 255))  # By Chin
-                ResponseArea.blit(text_surface, (10, y))  ##顯示文字物件 by Dan
+                ResponseArea.blit(text_surface, (10,y))  ##顯示文字物件 by Dan
 
-        else:  # 如不是玩家回合則顯示MSG - By Chin
+        else:# 如不是玩家回合則顯示MSG - By Chin
             gameDisplay.blit(MSG, (730, 715))
             if take == 1:
                 print(enemyAction)
@@ -626,17 +630,16 @@ def game_newgame():
                 for i in range(len(player1.army)):
                     player2.army[i].moved = 0
                 # ---------------bug------------------
-                Lose = DeCoder.deCoder(enemyAction, (rm['turn'] % 2) + 1, map, player2, player1, mapInfor)
+                Lose = DeCoder.deCoder(enemyAction, (rm['turn'] %2)+1, map, player2, player1, mapInfor)
                 DisplayArmy(player1, player2, 0, 0, rm['turn'])
                 myTurn = True
                 take = 0
                 if Lose == True:
                     print("Lose")
-                    WinPage(gameDisplay, 0)
+                    WinPage(gameDisplay,0)
 
         pygame.display.update()
         clock.tick(30)
-
 
 def game_rank():
     run = True
@@ -748,15 +751,14 @@ def game_rank():
         SW = medfont.render(str(SelfW), True, black)
         gameDisplay.blit(SW, (800, 540))
 
-        BTN(0, 550, 70, 290, 653, 750, HomeBtn, HomeBtn2, action="Home")
+        BTN(0, 550,70,290,653,750, HomeBtn, HomeBtn2, action="Home")
 
         pygame.display.update()
         clock.tick(15)
 
-
 # Draw Army Function - By Chin
 def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 (Local Player)
-    LeftTopX = 200  # (0,0) 會在左上角
+    LeftTopX = 200          # (0,0) 會在左上角
     LeftTopY = 50
 
     RightTopX = 900
@@ -770,53 +772,53 @@ def DisplayArmy(Player1, Player2, Sx, Sy, turn):  # PlayerID Default is Player1 
 
     Sx = LeftTopX
     Sy = LeftTopY
-    Sx = Sx + Player1.hq.x + Player1.hq.x * 50  # 52 因應HQ 的圖像而定, 標準為50
-    Sy = Sy + Player1.hq.y + Player1.hq.y * 50  # 45 因應HQ 的圖像而定, 標準為50
+    Sx = Sx + Player1.hq.x  + Player1.hq.x * 50  # 52 因應HQ 的圖像而定, 標準為50
+    Sy = Sy + Player1.hq.y  + Player1.hq.y * 50     # 45 因應HQ 的圖像而定, 標準為50
     gameDisplay.blit(HQ, (Sx, Sy))
     # print("HQ:",Player1.hq.x,Player1.hq.y)
 
     Sx = LeftTopX
     Sy = LeftTopY
-    Sx = Sx + Player1.hq.x + Player2.hq.x * 50
-    Sy = Sy + Player1.hq.y + Player2.hq.y * 50
+    Sx = Sx + Player1.hq.x  + Player2.hq.x * 50
+    Sy = Sy + Player1.hq.y  + Player2.hq.y * 50
     gameDisplay.blit(HQ, (Sx, Sy))
     for i in range(len(Player1.army)):
         if Player1.army[i].x != None:
             Sx = LeftTopX + Player1.army[i].x * 50
             Sy = LeftTopY + Player1.army[i].y * 50
             if turn == 1:
-                if i == 0:
+                if Player1.army[i].type == "Infantry" :
                     gameDisplay.blit(Infantry_Self, (Sx, Sy))
-                elif i == 1:
-                    gameDisplay.blit(Mech_self, (Sx, Sy))
-                elif i == 2:
-                    gameDisplay.blit(Reco_self, (Sx, Sy))
+                elif Player1.army[i].type == "Mech":
+                    gameDisplay.blit(Mech_self,(Sx,Sy))
+                elif Player1.army[i].type == "Reco":
+                    gameDisplay.blit(Reco_self,(Sx,Sy))
             else:
-                if i == 0:
+                if Player2.army[i].type == "Infantry" :
                     gameDisplay.blit(Infantry_Enemy, (Sx, Sy))
-                elif i == 1:
-                    gameDisplay.blit(Mech_Enemy, (Sx, Sy))
-                elif i == 2:
-                    gameDisplay.blit(Reco_Enemy, (Sx, Sy))
+                elif Player2.army[i].type == "Mech":
+                    gameDisplay.blit(Mech_Enemy,(Sx,Sy))
+                elif Player2.army[i].type == "Reco":
+                    gameDisplay.blit(Reco_Enemy,(Sx,Sy))
 
     for i in range(len(Player2.army)):
         if Player2.army[i].x != None:
             Sx = LeftTopX + Player2.army[i].x * 50
             Sy = LeftTopY + Player2.army[i].y * 50
             if turn == 1:
-                if i == 0:
+                if Player2.army[i].type == "Infantry" :
                     gameDisplay.blit(Infantry_Enemy, (Sx, Sy))
-                elif i == 1:
-                    gameDisplay.blit(Mech_Enemy, (Sx, Sy))
-                elif i == 2:
-                    gameDisplay.blit(Reco_Enemy, (Sx, Sy))
+                elif Player2.army[i].type == "Mech":
+                    gameDisplay.blit(Mech_Enemy,(Sx,Sy))
+                elif Player2.army[i].type == "Reco":
+                    gameDisplay.blit(Reco_Enemy,(Sx,Sy))
             else:
-                if i == 0:
+                if Player1.army[i].type == "Infantry" :
                     gameDisplay.blit(Infantry_Self, (Sx, Sy))
-                elif i == 1:
-                    gameDisplay.blit(Mech_self, (Sx, Sy))
-                elif i == 2:
-                    gameDisplay.blit(Reco_self, (Sx, Sy))
+                elif Player1.army[i].type == "Mech":
+                    gameDisplay.blit(Mech_self,(Sx,Sy))
+                elif Player1.army[i].type == "Reco":
+                    gameDisplay.blit(Reco_self,(Sx,Sy))
 
 
 def pause():
@@ -988,7 +990,7 @@ def game_CreateGame(num):
                 textColor = red
                 enable = False
         # button(buttonMessage, 310, 450, 380, 50, buttonColor, buttonHoverColor, action='Home', enable=enable)
-        BTN(700, 330, 731, 765, 365, 390, GoOnBtn, GoOnBtn2, action='Home', enable=enable)
+        BTN(700,330,731,765,365,390,GoOnBtn,GoOnBtn2,action='Home',enable=enable)
         message_to_screen(textMessage, textColor, 1000, 95, size='medium')
         button("Back", 350, 550, 300, 50, orange, light_orange, action="game_user")
         pygame.display.update()
@@ -999,7 +1001,7 @@ def game_CreateGame(num):
 
 game_intro()
 
-# WinPage(gameDisplay, 1)
+# WinPage(gameDisplay,1)
 
 # game_home()
 
