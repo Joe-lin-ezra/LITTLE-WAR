@@ -1,5 +1,5 @@
 ### Introduction
-This project is a war-game with 3-tier architecture, client, server, database.
+This project is war-game with 3-tier architecture, client, server, database.
 * Client: the view of user, using mouse and keyboard to play this game.
 * Server: is used to control and monitor each game, win-or-lose, whether the user lose the connection.
 * Databas: store maps's information.
