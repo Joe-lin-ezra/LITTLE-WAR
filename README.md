@@ -11,3 +11,13 @@ This project is war-game with 3-tier architecture, client, server, database.
 In client, mainly use pygame module to draw our game window, and socket module to connect server.  
 In server, mainly use socket module to build server and listening, and use sqlite3 to read/write database.  
 In database, use sqlite to simplify the process to build a mySQL server(or others), and reduce the error occurrence rate in database.  
+
+
+
+
+
+
+
+
+This project got the prize of "深碗專題競賽".
+Thanks for the contribution of each person in this project team.
