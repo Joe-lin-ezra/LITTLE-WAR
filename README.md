@@ -42,3 +42,5 @@ python GUI.py
   
 This project got the prize of "深碗專題競賽".  
 Thanks for the contribution of each person in this project team.  
+
+try fork pull request.
